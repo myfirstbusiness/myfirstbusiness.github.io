@@ -2,7 +2,7 @@
 /* ---------------------------------------------------------------------------
    5. THE BLOCKER RESPONSES
    Whatever the user said is stopping them gets answered directly, by name,
-   inside their own document. Section 8 of every playbook.
+   inside their own document. Section 11 of every playbook.
    ------------------------------------------------------------------------ */
 const BLOCKERS = {
   noidea:{ t:'"I don\'t know what to do."',
@@ -58,6 +58,9 @@ function buildPdf(a, ranked){
   const top = ranked[0], m = top.m;
   const alts = ranked.slice(1,3);
   const bl = BLOCKERS[a.blocker];
+  const ind = INDUSTRIES[a.industry] || INDUSTRIES.notsure;
+  const car = CAREERS[a.career] || CAREERS.none;
+  const hasIdea = !!a.idea;
   const today = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
 
   const content = [];
@@ -69,7 +72,10 @@ function buildPdf(a, ranked){
     {canvas:[{type:'rect',x:0,y:0,w:70,h:5,color:VOLT}], margin:[0,26,0,26]},
     {text:m.name.toUpperCase(), color:VOLT, fontSize:13, bold:true, characterSpacing:1.5},
     {text:m.line, color:'#98A4B8', fontSize:11.5, margin:[0,10,0,0], lineHeight:1.4, width:400},
-    {text:'Generated '+today+'  ·  from 12 answers  ·  free, and yours to keep', color:'#616D80', fontSize:9, margin:[0,120,0,0]},
+    hasIdea
+      ? {text:'\u201C'+a.idea+'\u201D', color:'#FFFFFF', fontSize:13, italics:true, margin:[0,22,0,0], lineHeight:1.35}
+      : {text:'', margin:[0,0,0,0]},
+    {text:'Generated '+today+'  ·  built for '+ind.name.toLowerCase()+'  ·  free, and yours to keep', color:'#616D80', fontSize:9, margin:[0,120,0,0]},
     {text:'Educational content only. Not financial, legal or tax advice.', color:'#6B7688', fontSize:8, margin:[0,6,0,0], pageBreak:'after'}
   );
 
@@ -78,11 +84,13 @@ function buildPdf(a, ranked){
     pdfP('A plan that ignores your constraints is fiction. Here is what you told us, written back to you as the boundary conditions everything else in this document had to fit inside.'),
     {table:{widths:[150,'*'], body:[
       ['Where you are', LABEL.stage[a.stage]],
+      ['What you have in mind', hasIdea ? '\u201C'+a.idea+'\u201D' : 'nothing specific yet'],
+      ['The field', LABEL.industry[a.industry]],
+      ['What you have done for work', a.career==='none' ? 'nothing yet' : LABEL.career[a.career]+' \u2014 '+YEARS_LABEL[a.years]],
       ['Capital you can risk', capLabel(a.capital)],
       ['Time you can protect', timeLabel(a.time)],
       ['Financial pressure', LABEL.urgency[a.urgency]],
       ['Skills you already have', list(a.skills, LABEL.skills)],
-      ['Subjects you care about', list(a.interests, LABEL.interests)],
       ['Where your customers are', LABEL.reach[a.reach]],
       ['How you want to work', LABEL.style[a.style]],
       ['Asking for money', LABEL.sales[a.sales]],
@@ -104,6 +112,10 @@ function buildPdf(a, ranked){
       ], margin:[14,14,14,14]
     }]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,0,0,14]},
     pdfP(m.what),
+    {table:{widths:['*'],body:[[{stack:[
+      {text:'IN ONE LINE', color:VOLTINK, fontSize:8, bold:true, characterSpacing:1.6, margin:[0,0,0,6]},
+      {text:sharpen(a, m), fontSize:12.5, bold:true, color:INK, lineHeight:1.35}
+    ], margin:[14,12,14,12]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,4,0,14]},
     {columns:[
       {width:'*', stack:[{text:'STARTING CAPITAL', style:'micro'},{text:m.capital, style:'stat'}]},
       {width:'*', stack:[{text:'FIRST DOLLAR IN', style:'micro'},{text:m.firstDollar, style:'stat'}]},
@@ -125,11 +137,68 @@ function buildPdf(a, ranked){
     ])}, layout:'lightHorizontalLines', margin:[0,0,0,26]}
   );
 
-  /* ---------- 03 OFFER ----------
-     Deliberately no page break before this one: section 02 runs a little long
-     for some models, and an orphan page with three lines on it looks broken.
-     Letting 02 and 03 share a spread keeps every page full. */
-  content.push(pdfKicker('SECTION 03'), pdfH2('Your offer'),
+  /* ---------- 03 THE SPECIFIC BUSINESS ----------
+     The industry layer. Without this, two people with identical constraints
+     get an identical document even though one wants a bakery and the other
+     wants to detail cars. */
+  content.push({text:'', pageBreak:'before'},
+    pdfKicker('SECTION 03'), pdfH2(hasIdea ? 'Your idea, made specific' : 'Where your customers actually are'),
+    hasIdea
+      ? {table:{widths:['*'],body:[[{stack:[
+          {text:'WHAT YOU TOLD US', color:VOLTINK, fontSize:8, bold:true, characterSpacing:1.6, margin:[0,0,0,7]},
+          {text:'\u201C'+a.idea+'\u201D', fontSize:15, italics:true, color:INK, lineHeight:1.35}
+        ], margin:[16,14,16,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,0,0,16]}
+      : pdfP('You said you have nothing specific in mind yet, which is the honest answer and not a problem. What follows is the shape of the opportunity in '+ind.name.toLowerCase()+' \u2014 read it as a starting position, not a verdict.'),
+    hasIdea
+      ? pdfP('That is the thing to build. Everything below is what it takes to make it real in '+ind.name.toLowerCase()+' \u2014 not business advice in general, but the specifics of this field.')
+      : {text:'', margin:[0,0,0,0]},
+
+    {text:'Who actually pays in this field', style:'h3', margin:[0,6,0,5]},
+    pdfP(ind.customer, [0,0,0,8]),
+
+    {text:'Where you find them', style:'h3', margin:[0,4,0,5]},
+    pdfP(ind.where, [0,0,0,8]),
+
+    {table:{widths:['*'],body:[[{stack:[
+      {text:'YOUR FIRST WEEK, CONCRETELY', color:VOLTINK, fontSize:8, bold:true, characterSpacing:1.6, margin:[0,0,0,7]},
+      {text:ind.first, fontSize:11.5, color:INK, lineHeight:1.45}
+    ], margin:[16,13,16,13]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,6,0,14]},
+
+    {text:'What proof looks like here', style:'h3', margin:[0,0,0,5]},
+    pdfP(ind.proof, [0,0,0,8]),
+
+    {text:'The trap specific to this field', style:'h3', margin:[0,4,0,5]},
+    pdfP(ind.trap, [0,0,0,8]),
+
+    {text:'Before you take money \u2014 check this', style:'h3', margin:[0,4,0,5]},
+    pdfP(ind.reg + ' Realistic cost to start here: ' + ind.cost, [0,0,0,0])
+  );
+
+  /* ---------- 04 WHAT YOUR WORK HISTORY GIVES YOU ---------- */
+  content.push({text:'', pageBreak:'before'},
+    pdfKicker('SECTION 04'), pdfH2(a.career==='none' ? 'Starting with a clean sheet' : 'What your work already gave you'),
+    a.career==='none'
+      ? pdfP('You said you have not worked yet. Worth stating plainly rather than treating as a gap, because it comes with two real advantages and one real cost, and knowing which is which changes what you do first.')
+      : pdfP('You spent '+YEARS_LABEL[a.years]+' in '+LABEL.career[a.career]+'. Almost everyone discounts this completely when they start something \u2014 they treat their work history as the thing they are escaping rather than the thing they are building on. That is a mistake, and here is the specific reason why.'),
+
+    {text:'What you already have', style:'h3', margin:[0,10,0,6]},
+    pdfBullets(car.assets),
+
+    {text:'How it converts', style:'h3', margin:[0,6,0,6]},
+    pdfP(car.transfer),
+
+    {table:{widths:['*'],body:[[{stack:[
+      {text:'YOUR UNFAIR ADVANTAGE', color:VOLTINK, fontSize:8, bold:true, characterSpacing:1.6, margin:[0,0,0,7]},
+      {text:car.edge, fontSize:15, bold:true, color:INK, lineHeight:1.35}
+    ], margin:[16,16,16,16]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,10,0,16]},
+
+    pdfP(a.career==='none'
+      ? 'Write that sentence down somewhere you will see it. When you are three weeks in and it feels like everyone else knows something you do not, the honest answer is that most of them are carrying assumptions you get to skip.'
+      : 'Use that sentence in your outreach. Not as a boast \u2014 as a reason to trust you. "I spent '+YEARS_LABEL[a.years]+' in '+LABEL.career[a.career]+', so I know exactly what goes wrong here" is a stronger opening than anything a beginner can claim.')
+  );
+
+  /* ---------- 05 OFFER ---------- */
+  content.push({text:'', pageBreak:'before'}, pdfKicker('SECTION 05'), pdfH2('Your offer'),
     pdfP('Hormozi\'s Value Equation is the most practically useful formula in modern business, and it is the whole of offer design:'),
     {table:{widths:['*'],body:[[{text:'Value  =  ( Dream Outcome  ×  Perceived Likelihood of Achievement )  ÷  ( Time Delay  ×  Effort and Sacrifice )', alignment:'center', fontSize:10.5, bold:true, color:INK, margin:[10,12,10,12]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,4,0,16]},
     pdfP('You raise value by increasing the top two and decreasing the bottom two. That is the entire game, and it is why "lower my price" is almost never the right lever — price is not even in the equation.'),
@@ -147,7 +216,7 @@ function buildPdf(a, ranked){
   );
 
   /* ---------- 04 PRICING ---------- */
-  content.push(pdfKicker('SECTION 04'), pdfH2('What to charge on day one'),
+  content.push(pdfKicker('SECTION 06'), pdfH2('What to charge on day one'),
     pdfP('Law 7: price is a strategic decision, not an arithmetic one. It signals quality, filters your customers, and funds your acquisition. A 1% price increase produces a bigger profit change than a 1% volume increase or a 1% cost cut, because it flows straight to the bottom line.'),
     pdfP(m.pricing.model, [0,0,0,14]),
     {table:{widths:['22%','48%','30%'], headerRows:1, body:[
@@ -155,30 +224,35 @@ function buildPdf(a, ranked){
       ...m.pricing.tiers.map(t=>[{text:t[0], style:'td', bold:true},{text:t[1], style:'td'},{text:t[2], style:'td', bold:true, color:VOLTINK}])
     ]}, layout:'lightHorizontalLines', margin:[0,0,0,14]},
     pdfP(m.pricing.note),
+    {text:'What this field specifically supports', style:'h3', margin:[0,6,0,6]},
+    pdfP(ind.price),
     pdfP('Why three tiers and not one: price discrimination. Different customers have different willingness to pay, and a single price captures only one slice of the demand curve. The top tier does most of its work by making the middle tier look reasonable — most people buy the middle, which is the point.'),
     {text:'', pageBreak:'after'}
   );
 
   /* ---------- 05 CHANNEL ---------- */
-  content.push(pdfKicker('SECTION 05'), pdfH2('How you get customers'),
+  content.push(pdfKicker('SECTION 07'), pdfH2('How you get customers'),
     pdfP('Every lead on earth comes from one of four places: warm outreach (people who know you), cold outreach (people who don\'t), warm content (an audience you built), or cold content (paid advertising). Everything else is a variation. Choosing more than one at the start is the most common way beginners get nowhere on all of them.'),
     {table:{widths:['*'],body:[[{stack:[
       {text:'YOUR CHANNEL', color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,6]},
       {text:m.channel.core, fontSize:17, bold:true, color:INK, margin:[0,0,0,8]},
       {text:m.channel.why, fontSize:10, color:INK2, lineHeight:1.4}
     ], margin:[16,14,16,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,4,0,16]},
-    {text:'Your required volume', style:'h3', margin:[0,0,0,6]},
+    {text:'Where your people are, in this field', style:'h3', margin:[0,0,0,6]},
+    pdfP(ind.where),
+    {text:'Your required volume', style:'h3', margin:[0,6,0,6]},
     pdfP(m.channel.volume),
-    pdfP('Law 5: volume negates luck. One attempt tells you nothing; a hundred tells you everything. The single biggest difference between people who succeed at this and people who do not is number of attempts, not quality of thinking. Track every attempt in a spreadsheet from day one — contacts, replies, calls, closes. Without those four numbers you are guessing.', [0,0,0,14]),
+    pdfP('Law 5: volume negates luck. One attempt tells you nothing; a hundred tells you everything. Track every attempt in a spreadsheet from day one — contacts, replies, calls, closes. Without those four numbers you are guessing.', [0,0,0,12]),
     {text:'Use this, word for word, until you have your own data', style:'h3', margin:[0,0,0,8]},
     {table:{widths:['*'],body:[[{text:m.channel.script, fontSize:10, color:INK, lineHeight:1.5, margin:[14,14,14,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,0,0,12]},
-    pdfP('Do not "improve" this before you have sent it fifty times. You cannot tell what needs changing from a sample size of three, and rewriting the script is the most popular way to avoid sending it.'),
+    pdfP('Do not "improve" this before you have sent it fifty times. Rewriting the script is the most popular way to avoid sending it.'),
     {text:'', pageBreak:'after'}
   );
 
   /* ---------- 06 TIMELINE ---------- */
-  content.push(pdfKicker('SECTION 06'), pdfH2('Your 90-day plan'),
-    pdfP('Scaled to the '+timeLabel(a.time)+' you said you can protect. It ends with money in your account, not with a finished logo. If you fall behind, do not restart — carry on from where you are.', [0,0,0,14]),
+  content.push(pdfKicker('SECTION 08'), pdfH2('Your 90-day plan'),
+    pdfP('Scaled to the '+timeLabel(a.time)+' you said you can protect. It ends with money in your account, not with a finished logo. If you fall behind, do not restart — carry on from where you are.', [0,0,0,12]),
+    pdfP('Week one is the box in Section 03 — do that first, before anything below it.', [0,0,0,12]),
     ...m.weeks.map(w=>({
       stack:[
         {columns:[
@@ -194,7 +268,7 @@ function buildPdf(a, ranked){
   );
 
   /* ---------- 07 NUMBERS ---------- */
-  content.push(pdfKicker('SECTION 07'), pdfH2('The numbers you must know cold'),
+  content.push(pdfKicker('SECTION 09'), pdfH2('The numbers you must know cold'),
     pdfP('Law 2: businesses die from lack of cash, not lack of profit. Law 8: if unit economics are broken, growing just makes you fail faster. Compute this before you spend a dollar on growth.'),
     {text:'For your model specifically', style:'h3', margin:[0,10,0,8]},
     pdfBullets(m.econ.lines),
@@ -219,19 +293,21 @@ function buildPdf(a, ranked){
   );
 
   /* ---------- 08 FIRST TEN + TRAPS ---------- */
-  content.push(pdfKicker('SECTION 08'), pdfH2('Your first ten customers'),
+  content.push(pdfKicker('SECTION 10'), pdfH2('Your first ten customers'),
     pdfP('Not a strategy. A list of physical actions in order. Do them in this sequence.', [0,0,0,12]),
     {ol:m.firstTen, style:'p', margin:[0,0,0,18]},
     {text:'The three traps that kill this model', style:'h3', margin:[0,4,0,8]},
     pdfP('These are not hypothetical. They are the specific, documented ways people fail at this exact business, and you will feel the pull of at least one of them.', [0,0,0,10]),
     pdfBullets(m.traps),
-    {text:'Invert, always invert', style:'h3', margin:[0,10,0,6]},
+    {text:'And the trap specific to '+ind.name.toLowerCase(), style:'h3', margin:[0,6,0,6]},
+    pdfP(ind.trap),
+    {text:'Invert, always invert', style:'h3', margin:[0,8,0,6]},
     pdfP('Munger\'s tool, and the most reliable one in this document. When you are stuck, do not ask "how do I succeed at this?" Ask "what would guarantee that this fails?" — then refuse to do those things. The answer is almost always: stop sending messages, change the plan every week, and never ask anyone for money.'),
     {text:'', pageBreak:'after'}
   );
 
   /* ---------- 09 BLOCKER ---------- */
-  content.push(pdfKicker('SECTION 09'), pdfH2('The thing that stopped you'),
+  content.push(pdfKicker('SECTION 11'), pdfH2('The thing that stopped you'),
     {text:bl.t, fontSize:19, bold:true, color:INK, margin:[0,0,0,14]},
     ...bl.p.map(x=>pdfP(x)),
     {table:{widths:['*'],body:[[{stack:[
@@ -242,7 +318,7 @@ function buildPdf(a, ranked){
   );
 
   /* ---------- 10 RESOURCES ---------- */
-  content.push(pdfKicker('SECTION 10'), pdfH2('What to read, what to use'),
+  content.push(pdfKicker('SECTION 12'), pdfH2('What to read, what to use'),
     {text:'Your reading path — in this order', style:'h3', margin:[0,0,0,6]},
     pdfP('Not a library. '+NUM[m.books.length]+' books, sequenced for your model. Read one at a time, and after each one write a single page: three concepts, one application to a real business you can observe, one thing you disagree with. If you cannot write the page, you did not read the book.', [0,0,0,10]),
     pdfBullets(m.books),
@@ -262,7 +338,7 @@ function buildPdf(a, ranked){
   );
 
   /* ---------- 11 TRACKER ---------- */
-  content.push(pdfKicker('SECTION 11'), pdfH2('The only number that predicts anything'),
+  content.push(pdfKicker('SECTION 13'), pdfH2('The only number that predicts anything'),
     pdfP('Not books read. Not notes taken. Not plans made — including this one.'),
     {table:{widths:['*'],body:[[{stack:[
       {text:'TRACK THIS', color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,8]},

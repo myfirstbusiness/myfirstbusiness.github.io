@@ -1,73 +1,85 @@
 # myfirstbusiness.com
 
-A free diagnostic that turns 12 honest answers into a personalised 12-page PDF business playbook. No account, no email, no cost, no server.
+A free diagnostic that turns 15 honest answers into a personalised 15-page PDF business playbook, written for your field and your work history. No account, no email, no cost, no server.
+
+**Live:** https://myfirstbusiness.github.io
 
 ---
 
-## What's in this folder
+## What's in here
 
 ```
-index.html                    the entire website — landing page, questionnaire, engine, PDF builder
-vendor/pdfmake.min.js         PDF library (vendored, loaded lazily)
-vendor/vfs_fonts.js           PDF fonts
-fonts/*.woff2                 self-hosted web fonts (latin subsets)
-
-BRAND-AND-STRATEGY.md         design rationale, colour research, engine validation
-ZERO-BUDGET-LAUNCH-PLAN.md    how to run and grow this for $0, with the honest limits
-sample-playbook.pdf           an example of what a user downloads
+index.html                     the whole website — built automatically, do not edit by hand
+myfirstbusiness-preview.html   standalone single-file copy (fonts inlined, works offline)
+parts/                         the real source files — edit these
+vendor/                        PDF library, loaded lazily
+fonts/                         self-hosted web fonts (latin subsets)
+docs/                          strategy, research and a sample output
+.github/workflows/build.yml    rebuilds index.html whenever parts/ changes
 ```
 
-## Deploy it
+## How to change the site
 
-Drop the whole folder into a GitHub repo, point Cloudflare Pages or GitHub Pages at it, done. There is **no build step** — framework preset `None`, build command empty, output directory `/`. Full steps are in `ZERO-BUDGET-LAUNCH-PLAN.md`.
+**Edit files in `parts/`. Never edit `index.html` directly.**
 
-To preview locally:
+`index.html` is assembled from the six files in `parts/`, in numeric order, by the GitHub Action in `.github/workflows/build.yml`. Commit a change to any part and the Action rebuilds and commits `index.html` within a minute or two, which redeploys the site automatically.
 
-```bash
-python3 -m http.server 8000
-# open http://localhost:8000
-```
-
-(It needs to be served over HTTP rather than opened as a `file://` — the fonts and the lazy-loaded PDF library won't resolve otherwise.)
-
-## How it's built
-
-Everything runs in the visitor's browser. No backend, no database, no analytics, no third-party requests at all. Answers live in a JavaScript object and are gone when the tab closes — which is why the site can honestly say nothing leaves your device.
-
-`index.html` is assembled from six source parts in `parts/`, in order:
-
-| Part | What it holds |
+| To change | Edit |
 |---|---|
-| `01-head.html` | Design tokens, full CSS, font loading |
-| `02-body.html` | Landing page markup and quiz shell |
-| `03-data.js` | The 12 questions and all 10 business models with their playbook content |
-| `04-scoring.js` | Weight tables, scoring, normalisation, personalised reasoning |
-| `05-pdf.js` | Blocker responses and the pdfmake document builder |
-| `06-app.js` | Quiz UI, lazy PDF loading, results screen |
+| Questions, business models, prices, outreach scripts, 90-day plans | `parts/03-data.js` |
+| Industry specifics (who pays, where they are, price anchors, regulation) and career advantages | `parts/03b-context.js` |
+| Which model gets recommended to whom | `parts/04-scoring.js` |
+| The contents and layout of the PDF | `parts/05-pdf.js` |
+| Landing page copy and structure | `parts/02-body.html` |
+| Colours, fonts, spacing, all CSS | `parts/01-head.html` |
+| Quiz behaviour and results screen | `parts/06-app.js` |
 
-Rebuild after editing a part:
+Press `.` on any page of this repo to open a full VS Code editor in the browser — much better than GitHub's plain file editor for the JS files.
+
+If you ever need to rebuild by hand:
 
 ```bash
-cat parts/01-head.html parts/02-body.html parts/03-data.js \
+cat parts/01-head.html parts/02-body.html parts/03-data.js parts/03b-context.js \
     parts/04-scoring.js parts/05-pdf.js parts/06-app.js > index.html
 ```
 
-You can also just edit `index.html` directly — it's a normal file, the parts are only there to keep things navigable.
+### One rule about the scoring engine
 
-## Changing the content
+`parts/04-scoring.js` holds a `NORM` table — the mean and standard deviation of each model's raw score, precomputed by Monte Carlo over 150,000 simulated profiles. It exists so that models with larger weight values don't win on magnitude instead of on fit.
 
-Almost everything you'd want to change lives in `03-data.js`:
+**If you meaningfully change the `W` weight tables, that `NORM` table becomes stale and the recommendations will skew.** The method for recomputing it is in `docs/BRAND-AND-STRATEGY.md` §5.
 
-- **Questions** — the `QUESTIONS` array. Add or remove one and the progress bar, keyboard shortcuts and counter all adapt automatically.
-- **Business models** — the `MODELS` array. Each entry carries its own pricing tiers, outreach script, 90-day timeline, unit economics, traps, books and tools. That content flows straight into the PDF.
+## Deploying
 
-Tuning which model wins is done in `04-scoring.js` via the `W` weight tables. **If you change weights meaningfully, recompute the `NORM` table** — it holds the per-model mean and standard deviation used to standardise scores, and stale values will skew the recommendations. The method is described in `BRAND-AND-STRATEGY.md` §5.
+Already deployed via GitHub Pages from `main` / root. Nothing to build, no dependencies to install.
+
+To preview locally, serve the folder over HTTP rather than opening the file directly — the fonts and lazily-loaded PDF library won't resolve from a `file://` URL:
+
+```bash
+python3 -m http.server 8000
+# then open http://localhost:8000
+```
+
+Or just double-click `myfirstbusiness-preview.html`, which is self-contained and works offline.
+
+## How it works
+
+Everything runs in the visitor's browser. No backend, no database, no analytics, no third-party requests. Answers live in a JavaScript object and are gone when the tab closes — which is why the site can honestly claim that nothing leaves your device.
+
+Fifteen answers are scored against ten business models, each carrying its own pricing tiers, acquisition channel, 90-day timeline, unit economics and reading path. The winning model's content is assembled into a PDF client-side with pdfmake. Same answers in, same document out, every time — no randomness and no model call.
+
+## Docs
+
+- `docs/BRAND-AND-STRATEGY.md` — positioning, the colour and conversion research behind every design decision, and how the recommendation engine was validated
+- `docs/ZERO-BUDGET-LAUNCH-PLAN.md` — running and growing this for $0, the 90-day distribution plan, and where $0 stops being true
+- `docs/sample-playbook.pdf` — an example of what a user downloads
 
 ## Verified
 
 - End-to-end run in Chromium: questionnaire → scoring → results → PDF download, zero console errors
-- PDFs generated for all 10 models: 12 pages each, no sparse or orphan pages
-- Scoring balance checked over 20,000 random profiles — no model wins less than 7.5% or more than 15%
+- PDFs generated across all 14 industries: 15 pages each, no sparse or orphan pages
+- Scoring balance checked over 20,000 random profiles — no model wins less than 6.8% or more than 16.7%
+- Industry sensitivity verified: holding every other answer fixed and changing only the industry changes the recommendation
 - Eight hand-built archetype profiles each return the obviously correct model
 - Every colour pair audited against WCAG — all pass AA, body text passes AAA
 - Mobile (390×844) and desktop (1440×1000) layouts checked
@@ -75,4 +87,4 @@ Tuning which model wins is done in `04-scoring.js` via the `W` weight tables. **
 
 ## Licence & disclaimer
 
-Educational content. Not financial, legal or tax advice. Business registration, tax and contract law vary by country, and age restrictions apply to minors in most jurisdictions.
+MIT. Educational content only — not financial, legal or tax advice. Business registration, tax and contract law vary by country, and age restrictions apply to minors in most jurisdictions.

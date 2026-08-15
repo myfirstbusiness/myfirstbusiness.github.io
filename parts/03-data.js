@@ -6,7 +6,8 @@
 
 /* ---------------------------------------------------------------------------
    1. THE QUESTIONNAIRE
-   12 questions, one per screen. Research basis for the format:
+   15 questions, one per screen. Kinds: single-select (default), multi:true,
+   text:true. showIf lets a question be skipped based on an earlier answer. Research basis for the format:
    - Lead-capture completion falls ~28% going from 3 to 10 questions, so every
      question here has to earn its place by changing the output.
    - One-question-per-screen + auto-advance keeps perceived effort low
@@ -21,6 +22,58 @@ const QUESTIONS = [
       {v:'vague',   t:'I have a vague idea',        d:'Nothing concrete, nothing tested'},
       {v:'specific',t:'I have a specific idea',     d:'I believe in it, I just haven\'t moved'},
       {v:'started', t:'I already started',          d:'It isn\'t working yet'}
+    ]},
+
+  { id:'idea', kicker:'YOUR IDEA', title:'What business do you have in mind?',
+    help:'One line, in your own words. Be as specific as you can — "cakes for kids\' birthdays near me" beats "baking". Your exact words get quoted back throughout your playbook.',
+    text:true, placeholder:'e.g. detailing cars at people\'s houses on weekends',
+    skip:'I don\'t have anything in mind yet', maxlen:120 },
+
+  { id:'industry', kicker:'THE FIELD', title:'Which world does it live in?',
+    help:'Pick the closest. This decides who your customer is, what you can charge, and where you find people — the parts most advice leaves generic.',
+    two:true,
+    opts:[
+      {v:'food',     t:'Food & drink',            d:'Cooking, baking, catering, coffee'},
+      {v:'fitness',  t:'Fitness & health',        d:'Training, nutrition, wellbeing'},
+      {v:'beauty',   t:'Beauty & personal care',  d:'Hair, nails, skincare, barbering'},
+      {v:'fashion',  t:'Clothing & fashion',      d:'Apparel, resale, styling, accessories'},
+      {v:'tech',     t:'Tech, software & AI',     d:'Apps, automation, IT, websites'},
+      {v:'creative', t:'Design, media & content', d:'Video, photo, design, music, writing'},
+      {v:'edu',      t:'Education & tutoring',    d:'Subjects, exams, languages, skills'},
+      {v:'home',     t:'Home & property',         d:'Cleaning, repairs, garden, moving'},
+      {v:'auto',     t:'Cars & vehicles',         d:'Detailing, repair, resale, transport'},
+      {v:'pets',     t:'Pets & animals',          d:'Walking, sitting, grooming, training'},
+      {v:'events',   t:'Events & entertainment',  d:'Parties, weddings, DJing, gaming'},
+      {v:'prof',     t:'Business services',       d:'Admin, marketing, bookkeeping, support'},
+      {v:'retail',   t:'Products & retail',       d:'Making or reselling physical things'},
+      {v:'notsure',  t:'I genuinely don\'t know', d:'Help me work it out'}
+    ]},
+
+  { id:'career', kicker:'WHAT YOU HAVE DONE', title:'What have you done for work so far?',
+    help:'Pick the closest, even if it was a while ago or only part-time. Whatever you did is an asset — your playbook will show you how to convert it.',
+    two:true,
+    opts:[
+      {v:'none',        t:'Nothing yet',               d:'No job so far, or still at school'},
+      {v:'retail',      t:'Retail & customer service', d:'Shops, tills, front of house'},
+      {v:'hospitality', t:'Hospitality & food',        d:'Kitchens, bars, cafés, hotels'},
+      {v:'trades',      t:'Trades & manual work',      d:'Building, fixing, installing, cleaning'},
+      {v:'logistics',   t:'Driving & delivery',        d:'Couriers, warehouse, transport'},
+      {v:'office',      t:'Office & admin',            d:'Coordination, data, paperwork'},
+      {v:'sales',       t:'Sales & accounts',          d:'Selling, negotiating, hitting targets'},
+      {v:'care',        t:'Healthcare & caring',       d:'Nursing, support work, childcare'},
+      {v:'tech',        t:'Tech & engineering',        d:'Development, IT, technical work'},
+      {v:'edu',         t:'Teaching & training',       d:'Schools, tutoring, coaching'},
+      {v:'creative',    t:'Creative & media',          d:'Design, video, writing, music'}
+    ]},
+
+  { id:'years', kicker:'HOW LONG', title:'Roughly how long did you do that?',
+    help:'Time in a field is real transferable knowledge, even if it never felt like it at the time.',
+    showIf: a => a.career && a.career !== 'none',
+    opts:[
+      {v:1,  t:'Under a year',        d:'A first job, a summer, a placement'},
+      {v:2,  t:'1 – 3 years',         d:'Long enough to be genuinely competent'},
+      {v:5,  t:'3 – 7 years',         d:'You know how the whole thing works'},
+      {v:10, t:'More than 7 years',   d:'You could train someone else'}
     ]},
 
   { id:'capital', kicker:'MONEY', title:'How much can you put in and genuinely afford to lose?',
@@ -65,24 +118,6 @@ const QUESTIONS = [
       {v:'organize',t:'Organising',        d:'Systems, logistics, admin, making order'},
       {v:'numbers', t:'Numbers',           d:'Spreadsheets, analysis, money math'},
       {v:'none',    t:'Nothing yet',       d:'Genuinely starting from zero'}
-    ]},
-
-  { id:'interests', kicker:'WHAT YOU CARE ABOUT', title:'What subjects do you actually care about?',
-    help:'Pick up to four. Passion isn\'t a business model, but it is fuel — and fuel matters over 90 days.',
-    multi:true, two:true, max:4,
-    opts:[
-      {v:'tech',    t:'Tech & AI',            d:'Software, gadgets, automation'},
-      {v:'health',  t:'Health & fitness',     d:'Training, food, mental health'},
-      {v:'style',   t:'Fashion & beauty',     d:'Clothing, skincare, self-presentation'},
-      {v:'food',    t:'Food & drink',         d:'Cooking, baking, cafés, nutrition'},
-      {v:'gaming',  t:'Gaming & esports',     d:'Games, streaming, communities'},
-      {v:'creative',t:'Music, art & design',  d:'Making things people look at or hear'},
-      {v:'edu',     t:'Education',            d:'Courses, tutoring, exams, languages'},
-      {v:'home',    t:'Homes & local life',   d:'Property, cars, repairs, neighbourhoods'},
-      {v:'pets',    t:'Animals & pets',       d:'Dogs, cats, care, training'},
-      {v:'money',   t:'Money & business',     d:'Investing, finance, entrepreneurship'},
-      {v:'sport',   t:'Sport & outdoors',     d:'Teams, travel, adventure'},
-      {v:'people',  t:'People & relationships',d:'Events, community, coaching, dating'}
     ]},
 
   { id:'reach', kicker:'YOUR MARKET', title:'Where do you want your customers to be?',

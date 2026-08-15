@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MyFirstBusiness — Get the exact plan for your first business. Free.</title>
-<meta name="description" content="Answer 12 questions. Get a personalized PDF playbook telling you exactly which business to start, how to build it, and how to get your first 10 paying customers. Free. No email required.">
+<meta name="description" content="Answer 15 questions. Get a personalized PDF playbook telling you exactly which business to start, how to build it, and how to get your first 10 paying customers. Free. No email required.">
 <meta name="theme-color" content="#05070C">
 <meta property="og:title" content="MyFirstBusiness — Get the exact plan for your first business. Free.">
-<meta property="og:description" content="12 questions. One personalized PDF playbook. No email, no upsell, no cost.">
+<meta property="og:description" content="15 questions. One personalized PDF playbook. No email, no upsell, no cost.">
 <meta property="og:type" content="website">
 <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
@@ -260,6 +260,19 @@ footer{border-top:1px solid var(--line);padding-block:44px;font-size:.88rem;colo
 .opt.sel .opt-key{background:var(--volt);border-color:var(--volt);color:var(--volt-ink)}
 .opt-txt strong{display:block;font-weight:600;font-size:1rem;line-height:1.35;margin-bottom:3px}
 .opt-txt span{font-size:.88rem;color:var(--text-2);line-height:1.45}
+/* free-text question */
+.q-input{
+  width:100%;font-family:var(--f-body);font-size:1.15rem;color:var(--text);
+  background:var(--ink-2);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px 22px;transition:border-color .18s,background .18s;line-height:1.5;
+}
+.q-input::placeholder{color:var(--text-3)}
+.q-input:focus{outline:none;border-color:var(--volt);background:var(--ink-3)}
+.q-meta{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap}
+.q-count-chars{font-family:var(--f-mono);font-size:.7rem;color:var(--text-3);letter-spacing:.1em}
+.q-skip{font-size:.92rem;color:var(--text-3);text-decoration:underline;text-underline-offset:3px;transition:color .18s}
+.q-skip:hover{color:var(--ember)}
+
 .q-foot{flex:none;border-top:1px solid var(--line);background:var(--ink)}
 .q-foot-in{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:16px;min-height:78px}
 .q-hint{font-size:.82rem;color:var(--text-3)}
@@ -359,10 +372,10 @@ footer{border-top:1px solid var(--line);padding-block:44px;font-size:.88rem;colo
   <div class="wrap hero-in">
     <div class="badge"><span class="dot"></span> <b>FREE FOREVER</b> <span>· No account · No email · No upsell</span></div>
     <h1 class="h-xl">You don't need another course.<br>You need <em>the next step.</em></h1>
-    <p class="lede">Answer 12 questions about your money, your time and what you're actually good at. Get back a personalized PDF playbook that names the business you should start, the price you should charge, the exact channel that will get you customers, and a 90-day plan to your first paying human.</p>
+    <p class="lede">Answer 15 questions about your money, your time, what you've done for work and what you actually have in mind. Get back a personalized PDF playbook that names the business you should start, who pays for it in your field, the price you should charge, the exact channel that will get you customers, and a 90-day plan to your first paying human.</p>
     <div class="cta-row">
       <button class="btn btn-primary btn-lg" data-start>Build my playbook <span class="btn-arrow">→</span></button>
-      <span class="cta-note">Takes about four minutes.</span>
+      <span class="cta-note">Takes about 4 minutes.</span>
     </div>
     <div class="trust-row">
       <span class="trust-item"><svg class="tick" viewBox="0 0 20 20" fill="currentColor"><path d="M8 14.5 3.5 10l1.4-1.4L8 11.7l7.1-7.1L16.5 6z"/></svg> Nothing to pay, ever</span>
@@ -405,7 +418,7 @@ footer{border-top:1px solid var(--line);padding-block:44px;font-size:.88rem;colo
       <div class="doc-mock">
         <div class="doc-tag">PERSONALIZED PLAYBOOK · PDF</div>
         <div class="doc-title">Your First<br>Business Plan</div>
-        <div class="doc-sub">Generated from 12 answers · ~20 pages · yours to keep</div>
+        <div class="doc-sub">Generated from 15 answers · ~16 pages · yours to keep</div>
         <div class="doc-line"><span>Recommended model</span><span>MATCHED</span></div>
         <div class="doc-line"><span>Starting capital required</span><span>$0</span></div>
         <div class="doc-line"><span>Weekly hours planned</span><span>YOURS</span></div>
@@ -414,9 +427,11 @@ footer{border-top:1px solid var(--line);padding-block:44px;font-size:.88rem;colo
         <div class="doc-line"><span>Price to charge</span><span>CALCULATED</span></div>
       </div>
       <div class="chapter-list">
-        <div class="chapter"><b>01</b><div><strong>Your situation, stated honestly</strong><span>Your capital, time, skills and pressure written back to you as constraints — because a plan that ignores your constraints is fiction.</span></div></div>
+        <div class="chapter"><b>01</b><div><strong>Your situation, stated honestly</strong><span>Your capital, time, skills, work history and pressure written back to you as constraints — because a plan that ignores your constraints is fiction.</span></div></div>
         <div class="chapter"><b>02</b><div><strong>The business you should start, and why</strong><span>One primary recommendation scored against your profile, plus two backups, plus what would have to change for the others to win.</span></div></div>
-        <div class="chapter"><b>03</b><div><strong>Your offer, built with the Value Equation</strong><span>Dream outcome, perceived likelihood, time delay, effort — the four levers, filled in for your specific model.</span></div></div>
+        <div class="chapter"><b>03</b><div><strong>Your idea, made specific</strong><span>Who actually pays in your field, where to find them, what that field will bear on price, and the regulation you need to check before taking money.</span></div></div>
+        <div class="chapter"><b>04</b><div><strong>What your work history gives you</strong><span>Whatever you did for a living converted into a stated advantage — and the exact sentence to use in your outreach.</span></div></div>
+        <div class="chapter"><b>05</b><div><strong>Your offer, built with the Value Equation</strong><span>Dream outcome, perceived likelihood, time delay, effort — the four levers, filled in for your specific model.</span></div></div>
         <div class="chapter"><b>04</b><div><strong>What to charge on day one</strong><span>Value-based pricing with a Good / Better / Best ladder, and the one guarantee that removes the buyer's risk.</span></div></div>
         <div class="chapter"><b>05</b><div><strong>Your single acquisition channel</strong><span>One of the Core Four, chosen for your margin and your comfort — with the actual outreach script, not "be authentic."</span></div></div>
         <div class="chapter"><b>06</b><div><strong>A 90-day build timeline</strong><span>Week by week, scaled to the hours you said you have. Ends with money in your account, not with a finished logo.</span></div></div>
@@ -433,7 +448,7 @@ footer{border-top:1px solid var(--line);padding-block:44px;font-size:.88rem;colo
     <span class="eyebrow mono">How it works</span>
     <h2 class="h-lg">Three steps. No account anywhere.</h2>
     <div class="steps">
-      <div class="step"><h3>Answer 12 questions</h3><p>Money, time, skills, interests, pressure, fear. One question per screen, no typing required, roughly four minutes. Everything runs in your browser — nothing is uploaded.</p></div>
+      <div class="step"><h3>Answer 15 questions</h3><p>Your idea, your field, your work history, money, time, skills, pressure, fear. One question per screen, roughly five minutes. Everything runs in your browser — nothing is uploaded.</p></div>
       <div class="step"><h3>We score you against 10 models</h3><p>Ten proven zero-capital business models are scored against your constraints. The one that wins isn't the trendiest — it's the one you can actually finish.</p></div>
       <div class="step"><h3>Download the PDF and start</h3><p>A ~20-page playbook lands in your downloads. Print it, mark it up, work the 90-day plan. Come back and redo it any time your situation changes.</p></div>
     </div>
@@ -517,7 +532,7 @@ footer{border-top:1px solid var(--line);padding-block:44px;font-size:.88rem;colo
     <h2 class="h-lg">Everything is downstream<br>of one specific person.</h2>
     <p class="lede">Not a market. Not a niche. One person with a name who has the problem you can solve. The playbook exists to get you to that person in ninety days or less. Four minutes to find out who they are.</p>
     <button class="btn btn-primary btn-lg" data-start>Build my playbook <span class="btn-arrow">→</span></button>
-    <p class="cta-note" style="margin-top:18px">Free · no email · no account · ~4 minutes</p>
+    <p class="cta-note" style="margin-top:18px">Free · no email · no account · ~5 minutes</p>
   </div>
 </section>
 
@@ -539,7 +554,7 @@ footer{border-top:1px solid var(--line);padding-block:44px;font-size:.88rem;colo
   <div class="quiz-top">
     <div class="wrap quiz-top-in">
       <span class="logo"><span class="logo-mark">M</span> myfirstbusiness<span class="dim3">.com</span></span>
-      <span class="q-count" id="qCount">01 / 12</span>
+      <span class="q-count" id="qCount">01 / 15</span>
       <button class="q-close" id="qClose" aria-label="Close">✕</button>
     </div>
     <div class="prog"><div class="prog-bar" id="progBar"></div></div>
@@ -566,7 +581,8 @@ footer{border-top:1px solid var(--line);padding-block:44px;font-size:.88rem;colo
 
 /* ---------------------------------------------------------------------------
    1. THE QUESTIONNAIRE
-   12 questions, one per screen. Research basis for the format:
+   15 questions, one per screen. Kinds: single-select (default), multi:true,
+   text:true. showIf lets a question be skipped based on an earlier answer. Research basis for the format:
    - Lead-capture completion falls ~28% going from 3 to 10 questions, so every
      question here has to earn its place by changing the output.
    - One-question-per-screen + auto-advance keeps perceived effort low
@@ -581,6 +597,58 @@ const QUESTIONS = [
       {v:'vague',   t:'I have a vague idea',        d:'Nothing concrete, nothing tested'},
       {v:'specific',t:'I have a specific idea',     d:'I believe in it, I just haven\'t moved'},
       {v:'started', t:'I already started',          d:'It isn\'t working yet'}
+    ]},
+
+  { id:'idea', kicker:'YOUR IDEA', title:'What business do you have in mind?',
+    help:'One line, in your own words. Be as specific as you can — "cakes for kids\' birthdays near me" beats "baking". Your exact words get quoted back throughout your playbook.',
+    text:true, placeholder:'e.g. detailing cars at people\'s houses on weekends',
+    skip:'I don\'t have anything in mind yet', maxlen:120 },
+
+  { id:'industry', kicker:'THE FIELD', title:'Which world does it live in?',
+    help:'Pick the closest. This decides who your customer is, what you can charge, and where you find people — the parts most advice leaves generic.',
+    two:true,
+    opts:[
+      {v:'food',     t:'Food & drink',            d:'Cooking, baking, catering, coffee'},
+      {v:'fitness',  t:'Fitness & health',        d:'Training, nutrition, wellbeing'},
+      {v:'beauty',   t:'Beauty & personal care',  d:'Hair, nails, skincare, barbering'},
+      {v:'fashion',  t:'Clothing & fashion',      d:'Apparel, resale, styling, accessories'},
+      {v:'tech',     t:'Tech, software & AI',     d:'Apps, automation, IT, websites'},
+      {v:'creative', t:'Design, media & content', d:'Video, photo, design, music, writing'},
+      {v:'edu',      t:'Education & tutoring',    d:'Subjects, exams, languages, skills'},
+      {v:'home',     t:'Home & property',         d:'Cleaning, repairs, garden, moving'},
+      {v:'auto',     t:'Cars & vehicles',         d:'Detailing, repair, resale, transport'},
+      {v:'pets',     t:'Pets & animals',          d:'Walking, sitting, grooming, training'},
+      {v:'events',   t:'Events & entertainment',  d:'Parties, weddings, DJing, gaming'},
+      {v:'prof',     t:'Business services',       d:'Admin, marketing, bookkeeping, support'},
+      {v:'retail',   t:'Products & retail',       d:'Making or reselling physical things'},
+      {v:'notsure',  t:'I genuinely don\'t know', d:'Help me work it out'}
+    ]},
+
+  { id:'career', kicker:'WHAT YOU HAVE DONE', title:'What have you done for work so far?',
+    help:'Pick the closest, even if it was a while ago or only part-time. Whatever you did is an asset — your playbook will show you how to convert it.',
+    two:true,
+    opts:[
+      {v:'none',        t:'Nothing yet',               d:'No job so far, or still at school'},
+      {v:'retail',      t:'Retail & customer service', d:'Shops, tills, front of house'},
+      {v:'hospitality', t:'Hospitality & food',        d:'Kitchens, bars, cafés, hotels'},
+      {v:'trades',      t:'Trades & manual work',      d:'Building, fixing, installing, cleaning'},
+      {v:'logistics',   t:'Driving & delivery',        d:'Couriers, warehouse, transport'},
+      {v:'office',      t:'Office & admin',            d:'Coordination, data, paperwork'},
+      {v:'sales',       t:'Sales & accounts',          d:'Selling, negotiating, hitting targets'},
+      {v:'care',        t:'Healthcare & caring',       d:'Nursing, support work, childcare'},
+      {v:'tech',        t:'Tech & engineering',        d:'Development, IT, technical work'},
+      {v:'edu',         t:'Teaching & training',       d:'Schools, tutoring, coaching'},
+      {v:'creative',    t:'Creative & media',          d:'Design, video, writing, music'}
+    ]},
+
+  { id:'years', kicker:'HOW LONG', title:'Roughly how long did you do that?',
+    help:'Time in a field is real transferable knowledge, even if it never felt like it at the time.',
+    showIf: a => a.career && a.career !== 'none',
+    opts:[
+      {v:1,  t:'Under a year',        d:'A first job, a summer, a placement'},
+      {v:2,  t:'1 – 3 years',         d:'Long enough to be genuinely competent'},
+      {v:5,  t:'3 – 7 years',         d:'You know how the whole thing works'},
+      {v:10, t:'More than 7 years',   d:'You could train someone else'}
     ]},
 
   { id:'capital', kicker:'MONEY', title:'How much can you put in and genuinely afford to lose?',
@@ -625,24 +693,6 @@ const QUESTIONS = [
       {v:'organize',t:'Organising',        d:'Systems, logistics, admin, making order'},
       {v:'numbers', t:'Numbers',           d:'Spreadsheets, analysis, money math'},
       {v:'none',    t:'Nothing yet',       d:'Genuinely starting from zero'}
-    ]},
-
-  { id:'interests', kicker:'WHAT YOU CARE ABOUT', title:'What subjects do you actually care about?',
-    help:'Pick up to four. Passion isn\'t a business model, but it is fuel — and fuel matters over 90 days.',
-    multi:true, two:true, max:4,
-    opts:[
-      {v:'tech',    t:'Tech & AI',            d:'Software, gadgets, automation'},
-      {v:'health',  t:'Health & fitness',     d:'Training, food, mental health'},
-      {v:'style',   t:'Fashion & beauty',     d:'Clothing, skincare, self-presentation'},
-      {v:'food',    t:'Food & drink',         d:'Cooking, baking, cafés, nutrition'},
-      {v:'gaming',  t:'Gaming & esports',     d:'Games, streaming, communities'},
-      {v:'creative',t:'Music, art & design',  d:'Making things people look at or hear'},
-      {v:'edu',     t:'Education',            d:'Courses, tutoring, exams, languages'},
-      {v:'home',    t:'Homes & local life',   d:'Property, cars, repairs, neighbourhoods'},
-      {v:'pets',    t:'Animals & pets',       d:'Dogs, cats, care, training'},
-      {v:'money',   t:'Money & business',     d:'Investing, finance, entrepreneurship'},
-      {v:'sport',   t:'Sport & outdoors',     d:'Teams, travel, adventure'},
-      {v:'people',  t:'People & relationships',d:'Events, community, coaching, dating'}
     ]},
 
   { id:'reach', kicker:'YOUR MARKET', title:'Where do you want your customers to be?',
@@ -1047,6 +1097,235 @@ const MODELS = [
 ];
 
 /* ---------------------------------------------------------------------------
+   1b. THE INDUSTRY LAYER
+   The business model says HOW you make money. The industry says WHO buys,
+   WHERE they are, and WHAT they'll pay. Without this layer two people with
+   identical constraints get an identical document even though one wants to
+   run a bakery and the other wants to detail cars. This is the layer that
+   makes the playbook feel written for one person.
+   ------------------------------------------------------------------------ */
+const INDUSTRIES = {
+  food:{ name:'Food & drink', noun:'food business', adj:'food',
+    customer:'Busy people who want something better than they can make themselves, and small businesses that need feeding on a schedule — office lunches, event catering, market stalls, weekly meal drops.',
+    where:'Local Facebook groups and neighbourhood apps first, then a market stall or a pop-up outside somewhere with existing footfall. Offices within a mile of you are the most underrated buyer in this industry: they order repeatedly and pay on invoice.',
+    price:'Aim for food cost under 30% of your price. A $12 lunch box should cost you under $4 in ingredients. Catering is priced per head — $15–$40 is normal depending on the format. Cakes and bakes price at roughly 3–4× ingredient cost, minimum $35 for anything custom.',
+    first:'Cook one thing, extremely well, for ten people this week. Photograph it properly in daylight. One dish done outstandingly beats a menu of eight done adequately, and a menu is the most common way beginners in this industry stall for months.',
+    proof:'Photos of real food you actually made, plus names of real people who ate it and said something specific.',
+    trap:'Building a menu before you have a customer. Every hour spent designing a menu is an hour not spent finding the ten people who will buy the one dish you already make best.',
+    reg:'Food is the most regulated industry on this list. Before you sell anything, look up your local food hygiene registration and home-kitchen rules — in most countries registration is free or near-free but legally required, and allergen labelling is not optional. This is the one place where "just start" is bad advice.',
+    cost:'$0–$60 for ingredients for a first batch. You do not need equipment yet.' },
+
+  fitness:{ name:'Fitness & health', noun:'fitness business', adj:'fitness',
+    customer:'People with a specific, dated goal — a wedding, a first 10k, coming back after an injury, getting through a desk job without back pain. Generic "get fit" customers churn fastest; specific-goal customers pay more and stay.',
+    where:'The gym you already train at, local running and sports clubs, and short-form video where you demonstrate one fix for one problem. Physiotherapists and sports shops will refer to you if you make it easy for them.',
+    price:'1-to-1 sessions $30–$70 depending on your market. Never sell single sessions — sell a six- or eight-week block with a named outcome, $250–$500. Small group of 4–6 at $15–$25 each is the same hour of your time at triple the revenue.',
+    first:'Take one person through a six-week block for free, in exchange for before/after photos and a written sentence about what changed. That single case study is worth more than any certificate.',
+    proof:'A named person with a measurable change over a stated timeframe. Numbers and dates, not vibes.',
+    trap:'Waiting for a certification before you take anyone. Get one, eventually, because it matters for insurance and credibility — but a documented result on one real person will win you clients that a certificate never will.',
+    reg:'Check whether personal training insurance is required or expected in your country, and be careful about giving nutrition or medical advice you are not qualified to give. Refer anything clinical to a professional and say so plainly.',
+    cost:'$0. Bodyweight programming and a phone is a complete starting toolkit.' },
+
+  beauty:{ name:'Beauty & personal care', noun:'beauty business', adj:'beauty',
+    customer:'People with a recurring appointment need — nails every three weeks, a cut every four, lashes every two. The whole economics of this industry is rebooking, not first bookings.',
+    where:'Instagram and TikTok are where this industry lives, and the content is straightforward: before/after, close-up, good lighting. Beyond that, mobile service to people\'s homes removes the biggest barrier your competitors have.',
+    price:'Price at or slightly above the middle of your three nearest competitors. Cheapest in beauty attracts customers who cancel, haggle and never rebook. Mobile service justifies a 15–25% premium because you are selling their time back to them.',
+    first:'Do five heads or five sets free this week, on people who will actually be seen in public, in exchange for photos and permission to tag them. Your portfolio is the entire product in this industry.',
+    proof:'A grid of consistent before/after photos in the same lighting. Consistency reads as professionalism more than any single spectacular result.',
+    trap:'Not rebooking on the spot. Book the next appointment before they leave the chair, every single time. That one habit is the difference between a hobby and an income here.',
+    reg:'Many beauty services are licensed — lashes, needling, chemical treatments and sometimes barbering. Check your local licensing and insurance requirements before you take money. Skin-patch testing is a legal requirement for several treatments.',
+    cost:'$40–$200 for a starter kit in most sub-niches. This is one of the few here that genuinely needs a little capital.' },
+
+  fashion:{ name:'Clothing & fashion', noun:'clothing business', adj:'clothing',
+    customer:'People buying identity, not fabric. They are paying to signal something to a group they belong to — a sport, a scene, a profession, an in-joke. If an outsider understands your design instantly, it is probably too generic to sell.',
+    where:'Short-form video showing the item worn by a real person in a real place, and the online communities of whatever group you are designing for. Resale apps if you are flipping rather than making.',
+    price:'Gross margin must clear 60%. A $35 shirt costing $14 leaves $21 for ads, returns and profit. If your acquisition cost is $25, you are paying people to take your product — that is the arithmetic that kills most stores in this industry.',
+    first:'Post the design as content before you build any store. If nobody comments asking where to buy it, the design is wrong and you have just saved yourself a month and the cost of inventory.',
+    proof:'Real people wearing it in real photographs. Mockup generators are visible from space and read as dropshipping.',
+    trap:'Designing for everyone. In-group language and specificity are the entire product; without them you are selling a commodity t-shirt against companies with better supply chains than you.',
+    reg:'Straightforward, but check that you are not using trademarked names, logos, club crests or lyrics. This is the single most common way small clothing brands get shut down.',
+    cost:'$0 with print-on-demand, $50–$300 to order samples worth photographing.' },
+
+  tech:{ name:'Tech, software & AI', noun:'tech business', adj:'tech',
+    customer:'Small businesses doing something manual and repetitive every week that they hate — re-typing orders, chasing invoices, sorting an inbox, moving data between two systems that do not talk.',
+    where:'Direct outreach to a single industry. Pick one — dentists, gyms, letting agents, plumbers — and learn its workflow properly. Ten customers in one industry beats a hundred scattered, because your language and your samples compound.',
+    price:'Monthly subscription: $19 solo, $79 small team, $249 business. First-time founders chronically underprice here. Businesses buy on outcome and reliability, not price, and charging too little actively signals you are not serious.',
+    first:'Interview fifteen people in one industry before you write a single line of code. Ask what they do manually every week and hate. Do not describe an idea — listen for the same complaint three times.',
+    proof:'A working thing doing a real job on their real data, set up by you personally.',
+    trap:'Building for six months in silence. Do the job manually for your first three customers — you get paid while learning exactly what to build, and you will build a quarter of what you imagined.',
+    reg:'If you touch customer data you inherit data-protection obligations. Do not store anything you do not need, and be straight about what you keep.',
+    cost:'$0. Free tiers on hosting, databases and AI tooling cover far more than you need at this stage.' },
+
+  creative:{ name:'Design, media & content', noun:'creative business', adj:'creative',
+    customer:'People who already publish and are constrained by production, not ideas — coaches posting daily, local businesses with terrible photos, small brands with no in-house designer. They have money and no time.',
+    where:'Do the work uninvited. Find someone whose output is worse than it should be, fix one piece of it for free, and send it to them. This converts several times better than any pitch in any creative field.',
+    price:'Per outcome, never per hour — hourly punishes you for getting faster, which you will. $75–$200 per edited video, $300–$800 for a brand identity, $150–$400 for a photo session. Convert to monthly retainers as fast as you can.',
+    first:'Pick one target, produce one finished piece of work for them for free this week, and send it with no strings. Do it to a standard that slightly embarrasses you with how much effort you put in.',
+    proof:'One finished artefact, sent directly. Not a portfolio site — a single real thing in the message.',
+    trap:'Offering "anything creative". A video editor for fitness coaches beats a general video editor at three times the rate, because specificity is what lets you charge.',
+    reg:'Get music, font and stock-image licensing right. Using unlicensed audio in client work is the fastest way to lose a client and a reputation simultaneously.',
+    cost:'$0. Free editing and design tools are genuinely professional-grade now.' },
+
+  edu:{ name:'Education & tutoring', noun:'teaching business', adj:'teaching',
+    customer:'Parents with a dated deadline — an exam, an entrance test, a failing report card — and adults who need one specific skill for one specific reason. Deadlines are what make people pay properly.',
+    where:'School-gate parent groups, local community boards, and the parents of students you already have. Referral is overwhelmingly the dominant channel in this industry and it costs nothing.',
+    price:'Sell outcomes in blocks, never loose hours. Six sessions with a named result, $250–$450. Group of six at $150 each is the same hour at six times the revenue and the peer accountability makes results better, not worse.',
+    first:'Define one measurable outcome you can actually deliver — "from a C to an A in one term", not "maths help". Then teach three people free this month and get one written sentence about the result from each.',
+    proof:'A grade that moved, a test that was passed, a named student and a date.',
+    trap:'Charging hourly. It caps your income and attracts people who count minutes. Outcomes justify prices that hours never can.',
+    reg:'Working with minors usually requires a background check and, in many places, safeguarding rules about being alone with a child. Look this up before your first session — it protects you as much as them.',
+    cost:'$0. A video call and a shared document is the whole infrastructure.' },
+
+  home:{ name:'Home & property', noun:'home services business', adj:'home services',
+    customer:'Homeowners and landlords who have the money to fix something and no desire to do it themselves. Landlords and letting agents are the best customers in this industry because they own many properties and buy repeatedly.',
+    where:'Doors on the streets you can walk to, local Facebook groups, and a sign on your car. Density beats reach here — two jobs on one street is worth more than three across the city once you count travel.',
+    price:'Fixed price per job, quoted before you start, never hourly to a homeowner. $60–$90 basic, $140–$180 for the job plus the two adjacent things they were going to nag about. Monthly recurring at roughly 15% off per visit.',
+    first:'Do five jobs at half price this week, on your own street, purely for before-and-after photos. Shoot every one from the same angle. Those ten photos are your entire marketing for the next year.',
+    proof:'Before-and-after pairs, same angle, same lighting. Nothing in this industry sells harder.',
+    trap:'Driving across the city for single jobs. Cluster geographically or travel time quietly eats your entire margin.',
+    reg:'Anything involving gas, electrics or structural work is licensed almost everywhere and dangerous to fake. Public liability insurance is inexpensive and worth having before you set foot in someone\'s house.',
+    cost:'$0–$150. Borrow or rent equipment for the first jobs; buy only once a customer has paid for it.' },
+
+  auto:{ name:'Cars & vehicles', noun:'vehicle business', adj:'vehicle',
+    customer:'People who care about their car more than average — enthusiasts, people selling one soon, and anyone with a company or lease vehicle they have to hand back in good condition. Small fleets and dealers buy in volume.',
+    where:'Car enthusiast groups locally and online, dealer forecourts, and office car parks where you can work on several vehicles in one visit. Turning up to them is the whole differentiator.',
+    price:'Fixed per vehicle. $60–$100 basic detail, $180–$350 full, $400+ for correction work. Mobile service is worth a real premium because you are selling their Saturday back to them.',
+    first:'Detail five cars this week at half price, purely for photos. Shoot before and after in the same spot in the same light — the transformation shot is the entire sales pitch in this industry.',
+    proof:'Before-and-after in identical framing. Paint correction and interior shots convert best.',
+    trap:'Buying $600 of equipment before the first customer. Start with the cheap version, take the money, upgrade from revenue.',
+    reg:'Check local rules on water runoff and chemical disposal if you work on driveways or streets — some areas restrict it, and a complaint from one neighbour can end a round.',
+    cost:'$50–$150 for a genuinely adequate starter kit.' },
+
+  pets:{ name:'Pets & animals', noun:'pet business', adj:'pet',
+    customer:'Owners who work full-time and feel guilty about it. This is a trust purchase above all others — people hand you a key to their home and a member of their family, and they pay for reliability, not skill.',
+    where:'Local dog-walking routes, parks at the same time every day, vet noticeboards, groomers, and neighbourhood apps. Vets and groomers will refer if you introduce yourself in person once.',
+    price:'$15–$25 per walk, $30–$50 per day of sitting, $25–$60 for grooming depending on size. The money is in a fixed weekly route of regulars, not one-off bookings.',
+    first:'Walk three dogs free this week for neighbours, take photos, and ask each owner for one sentence and one neighbour\'s name. Build a route on one set of streets rather than scattered bookings.',
+    proof:'Happy animals, photographed, plus owners saying you turned up when you said you would.',
+    trap:'Taking bookings scattered across the city. Route density is the entire economics of this industry.',
+    reg:'Pet-sitting and boarding are licensed in many countries and insurance is expected. Check the rules for your area, and be clear in writing about vet costs if something goes wrong.',
+    cost:'$0–$50. Leads, poo bags, and turning up on time.' },
+
+  events:{ name:'Events & entertainment', noun:'events business', adj:'events',
+    customer:'People planning something with a fixed date they cannot move — a wedding, a birthday, a corporate event. The immovable date is why they pay properly and why reliability matters more than talent.',
+    where:'Other suppliers are your best channel: venues, photographers, caterers and planners all refer work to people they trust. One good relationship with a venue can fill a calendar.',
+    price:'Package pricing, never hourly. $150–$400 for a small party, $600–$1,500 for a wedding-scale booking. Deposits are non-negotiable — take 30–50% up front, always.',
+    first:'Work one event free for a friend, shoot it properly, and use that footage to approach two local venues. Venues are the door into this whole industry.',
+    proof:'Footage and photos of a real event with real people enjoying themselves.',
+    trap:'Working without a deposit and a written scope. Cancellations and scope creep are the two things that make this industry unprofitable for beginners.',
+    reg:'Public liability insurance is usually required by venues before they let you work. Music licensing applies at public events in most countries. Both are cheap and both are checked.',
+    cost:'$0–$200 depending on what you already own.' },
+
+  prof:{ name:'Business services', noun:'business services company', adj:'business services',
+    customer:'Small business owners drowning in admin they never wanted to do — invoicing, inbox, bookkeeping, scheduling, social posting. They know exactly what it costs them in hours and they are relieved to hand it over.',
+    where:'Cold outreach to one industry at a time, and local business networking, which is unfashionable and still works. Accountants and bookkeepers are an excellent referral source because they see the mess first.',
+    price:'Flat monthly retainer, not hourly. $495 solo, $995 growth, $1,995 scale. B2B buyers spend company money and care about outcome and reliability far more than price.',
+    first:'Write one page: exact scope, exact price, exact turnaround. If a prospect can ask "how much would it be for…", you have not productized it yet and you are about to become a freelancer instead.',
+    proof:'A named business, the specific thing you took off their plate, and how many hours a week it gave them back.',
+    trap:'Saying yes to custom work. One exception and you are back to trading hours, which is the thing this model exists to escape.',
+    reg:'If you handle books or payroll, understand where your responsibility ends and a qualified accountant\'s begins — and say so in writing.',
+    cost:'$0. Free tiers cover documents, scheduling and invoicing entirely.' },
+
+  retail:{ name:'Products & retail', noun:'product business', adj:'product',
+    customer:'People buying for a specific occasion or a specific identity — a gift, a hobby, a collection, a room they are decorating. Occasion-driven buying is more reliable than taste-driven buying.',
+    where:'Marketplaces already contain all the buyers, so your constraint is supply and listing quality, not marketing. Local markets and fairs are the fastest way to test whether people will actually pay.',
+    price:'Never buy anything you cannot sell for at least 3× what you paid. That multiple is what absorbs the items that do not sell — and some will not. Price from completed sales, never from what others are asking.',
+    first:'Spend a week studying sold prices in one category before you buy anything. Then buy five items with a strict $100 budget and list all five within 24 hours.',
+    proof:'A tracked spreadsheet: cost, sale price, days to sell, profit per item. In this industry the data is the skill.',
+    trap:'Buying things you personally like instead of things that demonstrably sell. Also: not counting your own time. Profit per hour is the only honest metric here.',
+    reg:'Check what you are not allowed to resell — branded goods, electricals without safety marks, and anything counterfeit will get an account permanently closed.',
+    cost:'$30–$300 for first stock. This is one of the few here with a genuine floor.' },
+
+  notsure:{ name:'Not decided yet', noun:'business', adj:'',
+    customer:'You do not know yet, and that is the correct answer right now rather than a problem to be embarrassed about.',
+    where:'The fastest route to knowing is contact, not thought. Twenty conversations will generate more usable ideas than two hundred hours of watching videos.',
+    price:'Do not set prices for a business you have not defined. Price is a decision that comes after you know who the customer is.',
+    first:'Have five conversations this week with people in any group you already belong to. Ask one question: "what part of this eats the most time and you hate the most?" Write down every answer word for word. Your idea is in there.',
+    proof:'A written list of real complaints from real people, in their words.',
+    trap:'Believing that more research will produce the idea. Ideas are downstream of contact with reality, not upstream of it.',
+    reg:'Nothing yet. Once you pick a field, check its licensing before you take money.',
+    cost:'$0.' }
+};
+
+/* ---------------------------------------------------------------------------
+   1c. THE CAREER LAYER
+   Whatever they did for work is an asset they almost certainly discount.
+   This converts it into a stated advantage in their own document.
+   ------------------------------------------------------------------------ */
+const CAREERS = {
+  none:{ name:'No work history yet', short:'no job yet',
+    assets:['Time, which is the one input most people trying to start a business genuinely do not have','No expensive habits to protect and no salary to risk','No ingrained assumptions about how an industry "has to" work'],
+    transfer:'You are starting without the two things that actually stop most people: sunk costs and a mortgage. The trade is that you have no credibility yet, so your entire early strategy is to manufacture proof fast — do the first jobs free, over-deliver visibly, and collect evidence. Three documented results and nobody will ask you about experience again.',
+    edge:'Nothing to unlearn, and nothing to lose.' },
+  retail:{ name:'Retail & customer service', short:'retail',
+    assets:['You have talked to hundreds of strangers without freezing — the single hardest skill for most beginners','You can read whether someone is actually going to buy','You have handled complaints without taking them personally'],
+    transfer:'Retail is quietly the best sales training there is, because you did it live, at volume, with no script. The outreach numbers in this plan will feel far less frightening to you than they do to most people, and objection handling is something you have already done a thousand times.',
+    edge:'You already know how to ask for money out loud.' },
+  hospitality:{ name:'Hospitality & food service', short:'hospitality',
+    assets:['You work fast under pressure with a queue building','You understand service standards and what "good" actually looks like','You have coordinated with a team mid-rush without instructions'],
+    transfer:'Hospitality builds two things almost nobody else has: genuine speed under pressure, and an instinct for service quality. Delivery is where most first businesses quietly fail, and you already know how to deliver consistently when it is hard. Use that as the promise — reliability is a real differentiator.',
+    edge:'You deliver on time when it is chaotic. Most people cannot.' },
+  trades:{ name:'Trades & manual work', short:'trades',
+    assets:['A skill people will pay for immediately, today, without you needing to learn anything new','You can quote a job and estimate time accurately','You know what "finished properly" means'],
+    transfer:'You are the closest of anyone here to money, because your skill converts to income the moment someone knows you exist. Your gap is not capability — it is that nobody knows about you. Almost all your effort should go into being findable and being reliable, not into getting better at the work.',
+    edge:'You can charge from week one. Most people need months to get there.' },
+  logistics:{ name:'Driving & delivery', short:'driving and logistics',
+    assets:['You know your area better than almost anyone','You understand routing and how much time travel really eats','You have worked unsupervised to a schedule'],
+    transfer:'Route knowledge is worth more than it sounds. Local service businesses live or die on job density, and you already think in terms of travel time and clustering — the exact thing that quietly destroys other people\'s margins. You also know which neighbourhoods have money.',
+    edge:'You know the map and you show up on time.' },
+  office:{ name:'Office & admin', short:'office and admin',
+    assets:['You can make a process repeatable and write it down','You are comfortable with spreadsheets, invoices and systems','You know how businesses actually run day to day'],
+    transfer:'Most first-time founders fail at the boring half — tracking, invoicing, following up, keeping records. That is exactly your strength, and it means you can skip straight to systematising while others are still losing track of who they contacted. Build the tracker in week one; you already know how.',
+    edge:'You will not lose track of your own funnel.' },
+  sales:{ name:'Sales & accounts', short:'sales',
+    assets:['You can ask for money without flinching','You know how to follow up without being annoying','You understand that most revenue lives in follow-up 3 through 12'],
+    transfer:'You have the rarest and most valuable skill on this entire list. Almost every other person taking this questionnaire is bottlenecked by an unwillingness to make offers — you are not. That means your plan should be front-loaded with volume: more conversations, faster, earlier, because that is where your unfair advantage compounds.',
+    edge:'The part that stops everyone else does not stop you.' },
+  care:{ name:'Healthcare & caring', short:'care work',
+    assets:['People trust you quickly, which is the hardest thing to manufacture','You are reliable in situations where reliability genuinely matters','You have handled difficult conversations with distressed people'],
+    transfer:'Trust is the scarcest commodity in early business and you accumulate it faster than almost anyone. That points you toward work where the customer has to trust you personally — in their home, with their family, with their body, with their money. Lead with reliability, because you can actually deliver it.',
+    edge:'People believe you, and that is not a small thing.' },
+  tech:{ name:'Tech & engineering', short:'tech',
+    assets:['You can build or automate things that would cost other people money','You debug systematically instead of guessing','You are comfortable learning tools quickly'],
+    transfer:'You can build what others have to buy, which lowers your costs to near zero and raises your ceiling considerably. The risk specific to your background is the opposite of everyone else\'s: you will over-build and under-sell. Force yourself to talk to fifteen people before you write anything, and to sell before you build.',
+    edge:'Your costs are near zero and your ceiling is high — if you talk to people.' },
+  edu:{ name:'Teaching & training', short:'teaching',
+    assets:['You can make a hard thing click for someone who is stuck','You can structure a curriculum and sequence a syllabus','You are used to holding attention'],
+    transfer:'Explaining clearly is the underlying skill in content, in sales and in delivery — you are effectively pre-trained for all three. Content should come easily to you, and if you build an audience the path to a digital product is short, because you already know how to sequence learning.',
+    edge:'You can teach, which means you can market and sell.' },
+  creative:{ name:'Creative & media', short:'creative work',
+    assets:['You can make something that looks and sounds professional','You have taste, and taste is not quick to acquire','You have taken feedback on your own work without collapsing'],
+    transfer:'Your work looks credible from day one, which shortens the trust gap most beginners spend months closing. The trap specific to you is polishing instead of selling. Cap the time you spend on any asset and spend the surplus on outreach — your worst-looking outreach will still look better than most.',
+    edge:'You look established before you are.' }
+};
+
+const YEARS_LABEL = {1:'under a year', 2:'one to three years', 5:'three to seven years', 10:'more than seven years'};
+
+/* Two-stage handling of the free-text idea.
+
+   cleanIdea() strips only angle brackets and control characters and caps the
+   length. It deliberately KEEPS apostrophes and quotes, because "people's
+   houses" and "kids' parties" are exactly how people describe their idea and
+   mangling them makes the document read like a machine wrote it.
+
+   esc() is the safety net: anything going into innerHTML gets escaped at the
+   point of insertion. The PDF takes the raw string, since pdfmake renders
+   text as text and there is no markup to inject into. */
+function cleanIdea(t){
+  if(!t) return '';
+  return String(t)
+    .replace(/[<>]/g,'')
+    .replace(/[\u0000-\u001F\u007F]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim()
+    .slice(0,120);
+}
+function esc(t){
+  return String(t == null ? '' : t)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ---------------------------------------------------------------------------
    3. SCORING
    Every model carries a weight table. Each answer moves that model's raw fit
    up or down; the raw fit is then standardised against the model's own
@@ -1060,79 +1339,95 @@ const W = {
     urgency:{now:12,soon:9,patient:0}, risk:{none:9,small:5,ok:1},
     reach:{local:1,online:9,both:8}, goal:{side:8,replace:11,big:3,learn:6},
     skills:{write:6,design:6,video:6,code:5,talk:5,organize:4,numbers:4,teach:3,hands:1,none:-10},
-    interests:{tech:2,money:2,creative:2,edu:2,style:2,health:2}, capMin:0, timeMin:5
+    industry:{food:2,fitness:3,beauty:1,fashion:3,tech:6,creative:15,edu:4,home:2,auto:1,pets:1,events:5,prof:9,retail:1,notsure:4},
+    career:{none:-6,retail:6,hospitality:2,trades:0,logistics:0,office:7,sales:10,care:2,tech:8,edu:5,creative:12}, capMin:0, timeMin:5
   },
   local:{
     style:{screen:-10,people:8,hands:15,create:-4}, sales:{hate:-2,nervous:6,fine:9},
     urgency:{now:14,soon:8,patient:-2}, risk:{none:11,small:6,ok:2},
     reach:{local:16,online:-22,both:7}, goal:{side:11,replace:9,big:2,learn:6},
     skills:{hands:13,talk:6,organize:5,none:4,code:-3,write:-2},
-    interests:{home:8,pets:7,health:3,food:3,sport:2}, capMin:0, timeMin:5
+    industry:{food:14,fitness:5,beauty:12,fashion:-4,tech:-8,creative:-4,edu:2,home:16,auto:14,pets:14,events:6,prof:0,retail:0,notsure:5},
+    career:{none:8,retail:5,hospitality:8,trades:16,logistics:10,office:-2,sales:5,care:7,tech:-6,edu:0,creative:-4}, capMin:0, timeMin:5
   },
   productized:{
     style:{screen:11,people:9,hands:-6,create:4}, sales:{hate:-10,nervous:5,fine:14},
     urgency:{now:-2,soon:14,patient:9}, risk:{none:6,small:8,ok:6},
     reach:{local:0,online:13,both:8}, goal:{side:-2,replace:14,big:22,learn:2},
     skills:{organize:10,write:8,design:8,video:7,code:8,talk:7,numbers:7,none:-12},
-    interests:{money:7,tech:6,edu:3}, capMin:0, timeMin:10
+    industry:{food:0,fitness:1,beauty:0,fashion:1,tech:10,creative:9,edu:2,home:4,auto:1,pets:0,events:2,prof:19,retail:0,notsure:2},
+    career:{none:-10,retail:3,hospitality:1,trades:-2,logistics:0,office:14,sales:14,care:1,tech:11,edu:4,creative:9}, capMin:0, timeMin:10
   },
   creator:{
     style:{screen:4,people:2,hands:-5,create:20}, sales:{hate:9,nervous:6,fine:2},
     urgency:{now:-22,soon:-5,patient:19}, risk:{none:9,small:7,ok:4},
     reach:{local:-10,online:15,both:6}, goal:{side:0,replace:7,big:17,learn:9},
     skills:{video:12,write:9,design:7,teach:7,talk:5,none:0},
-    interests:{gaming:7,creative:7,health:6,style:6,tech:5,food:5,money:5,sport:4,pets:4,people:4,edu:4,home:3}, capMin:0, timeMin:10
+    industry:{food:6,fitness:11,beauty:8,fashion:9,tech:7,creative:16,edu:8,home:3,auto:6,pets:6,events:6,prof:3,retail:4,notsure:3},
+    career:{none:6,retail:3,hospitality:3,trades:2,logistics:2,office:0,sales:2,care:3,tech:5,edu:9,creative:16}, capMin:0, timeMin:10
   },
   digital:{
     style:{screen:12,people:-5,hands:-7,create:11}, sales:{hate:7,nervous:5,fine:3},
     urgency:{now:-15,soon:6,patient:12}, risk:{none:10,small:6,ok:3},
     reach:{local:-12,online:13,both:5}, goal:{side:10,replace:8,big:9,learn:6},
     skills:{write:11,design:9,organize:9,numbers:8,teach:10,code:7,video:6,none:-10},
-    interests:{edu:8,money:7,tech:7,creative:6,style:5,health:5}, capMin:0, timeMin:5
+    industry:{food:3,fitness:8,beauty:2,fashion:2,tech:9,creative:8,edu:14,home:2,auto:2,pets:3,events:2,prof:10,retail:1,notsure:2},
+    career:{none:-2,retail:2,hospitality:0,trades:0,logistics:0,office:11,sales:4,care:3,tech:9,edu:15,creative:9}, capMin:0, timeMin:5
   },
   ecom:{
     style:{screen:6,people:-4,hands:3,create:15}, sales:{hate:9,nervous:5,fine:2},
     urgency:{now:-12,soon:4,patient:12}, risk:{none:-12,small:4,ok:13},
     reach:{local:-8,online:15,both:6}, goal:{side:7,replace:7,big:12,learn:2},
     skills:{design:15,video:10,numbers:6,organize:5,none:-4},
-    interests:{style:11,gaming:9,creative:9,sport:7,pets:7,health:6,home:3}, capMin:100, timeMin:10
+    industry:{food:5,fitness:4,beauty:6,fashion:18,tech:2,creative:8,edu:0,home:3,auto:4,pets:7,events:2,prof:-2,retail:14,notsure:1},
+    career:{none:2,retail:9,hospitality:0,trades:2,logistics:5,office:3,sales:4,care:0,tech:3,edu:0,creative:12}, capMin:100, timeMin:10
   },
   flip:{
     style:{screen:2,people:6,hands:12,create:-3}, sales:{hate:1,nervous:8,fine:8},
     urgency:{now:13,soon:7,patient:-4}, risk:{none:-10,small:8,ok:10},
     reach:{local:12,online:8,both:12}, goal:{side:11,replace:3,big:-8,learn:11},
     skills:{hands:6,numbers:7,organize:7,talk:5,design:3,none:5},
-    interests:{style:7,home:6,gaming:5,tech:4,sport:3}, capMin:30, timeMin:5
+    industry:{food:0,fitness:2,beauty:1,fashion:12,tech:5,creative:3,edu:0,home:6,auto:11,pets:2,events:2,prof:0,retail:18,notsure:5},
+    career:{none:10,retail:10,hospitality:2,trades:6,logistics:9,office:5,sales:6,care:1,tech:3,edu:0,creative:3}, capMin:30, timeMin:5
   },
   software:{
     style:{screen:19,people:4,hands:-10,create:0}, sales:{hate:-5,nervous:6,fine:11},
     urgency:{now:-18,soon:0,patient:18}, risk:{none:7,small:8,ok:7},
     reach:{local:-6,online:15,both:7}, goal:{side:-6,replace:9,big:22,learn:5},
     skills:{code:24,numbers:9,organize:7,write:5,talk:5,none:-18},
-    interests:{tech:15,money:7,edu:4}, capMin:0, timeMin:15
+    industry:{food:-2,fitness:2,beauty:-2,fashion:0,tech:23,creative:3,edu:6,home:2,auto:1,pets:0,events:2,prof:12,retail:1,notsure:0},
+    career:{none:-12,retail:-2,hospitality:-3,trades:-2,logistics:-2,office:6,sales:5,care:-1,tech:22,edu:4,creative:3}, capMin:0, timeMin:15
   },
   coach:{
     style:{screen:5,people:15,hands:0,create:5}, sales:{hate:-7,nervous:8,fine:12},
     urgency:{now:12,soon:12,patient:4}, risk:{none:12,small:7,ok:2},
     reach:{local:11,online:11,both:12}, goal:{side:11,replace:11,big:2,learn:10},
     skills:{teach:17,talk:10,write:5,organize:5,numbers:5,none:-8},
-    interests:{edu:12,health:9,money:7,creative:6,people:6,sport:6,gaming:4,tech:4}, capMin:0, timeMin:5
+    industry:{food:2,fitness:16,beauty:3,fashion:3,tech:5,creative:6,edu:18,home:1,auto:2,pets:6,events:2,prof:8,retail:0,notsure:3},
+    career:{none:0,retail:6,hospitality:4,trades:5,logistics:1,office:4,sales:9,care:12,tech:5,edu:18,creative:5}, capMin:0, timeMin:5
   },
   community:{
     style:{screen:-6,people:18,hands:3,create:7}, sales:{hate:3,nervous:7,fine:9},
     urgency:{now:-16,soon:4,patient:17}, risk:{none:7,small:7,ok:7},
     reach:{local:15,online:3,both:11}, goal:{side:3,replace:3,big:12,learn:15},
     skills:{talk:12,organize:14,teach:7,design:4,none:2},
-    interests:{people:14,sport:7,gaming:7,health:6,creative:6,food:6,money:5,tech:5}, capMin:0, timeMin:8
+    industry:{food:7,fitness:9,beauty:3,fashion:5,tech:6,creative:8,edu:7,home:2,auto:7,pets:8,events:19,prof:6,retail:2,notsure:4},
+    career:{none:5,retail:7,hospitality:11,trades:3,logistics:3,office:6,sales:8,care:9,tech:3,edu:9,creative:8}, capMin:0, timeMin:8
   }
 };
 
-const SKILL_CAP = 18, INT_CAP = 14, NUDGE_CAP = 10, CAP_PEN = 30, TIME_PEN = 18;
+const SKILL_CAP = 18, NUDGE_CAP = 10, CAP_PEN = 30, TIME_PEN = 18;
 const DIMS = ['style','sales','urgency','risk','reach','goal'];
 
+/* Longer in a field means the career signal is more real. Someone with seven
+   years in trades has a genuinely different starting position from someone
+   who did three months of it, and the recommendation should reflect that. */
+const YEAR_FACTOR = {1:0.65, 2:1.0, 5:1.25, 10:1.45};
+const INDUSTRY_GAIN = 1.6;
+
 /* Raw fit for one model: the sum of every weight this person's answers
-   triggered, with caps so that selecting many skills or many interests
-   cannot swamp the constraint dimensions. */
+   triggered, with a cap on skills so that a maximalist selector cannot swamp
+   the constraint dimensions. */
 function rawFit(a, id){
   const w = W[id]; let s = 0, n = 0; const notes = [];
 
@@ -1141,8 +1436,14 @@ function rawFit(a, id){
   let sk = 0; (a.skills||[]).forEach(k=>{ sk += (w.skills[k]||0); });
   s += Math.max(-SKILL_CAP, Math.min(SKILL_CAP, sk));
 
-  let iv = 0; (a.interests||[]).forEach(k=>{ iv += (w.interests[k]||0); });
-  s += Math.max(0, Math.min(INT_CAP, iv));
+  // Industry: single choice, and the strongest single signal in the model —
+  // it drives the entire content layer, so it earns a gain over the other
+  // dimensions rather than being one vote among many.
+  s += (w.industry[a.industry] || 0) * INDUSTRY_GAIN;
+
+  // Career, scaled by how long they did it
+  const cw = w.career[a.career] || 0;
+  s += cw * (a.career === 'none' ? 1 : (YEAR_FACTOR[a.years] || 1));
 
   // Hard constraints — you cannot start what you cannot fund or staff
   if(a.capital < w.capMin){ s -= CAP_PEN; notes.push('needs roughly $'+w.capMin+' to start, which is more than you said you can risk'); }
@@ -1153,6 +1454,8 @@ function rawFit(a, id){
   if(a.stage==='noidea' && (id==='service'||id==='local'||id==='flip'||id==='coach')) n += 6;
   if(a.stage==='started' && (id==='service'||id==='productized')) n += 4;
   if(a.stage==='specific' && (id==='digital'||id==='software'||id==='ecom')) n += 4;
+  // Someone who typed a concrete idea is ready to execute, not to explore
+  if(a.idea && (id==='service'||id==='local'||id==='productized'||id==='coach')) n += 3;
 
   // Blocker nudges — the recommended plan should attack the stated blocker
   if(a.blocker==='nomoney' && id==='ecom') n -= 8;
@@ -1171,15 +1474,15 @@ function rawFit(a, id){
 /* Raw sums are not comparable across models: a model with big weights would
    always win on magnitude rather than on fit. So each model's raw score is
    standardised against its own distribution over the whole answer space
-   (mean and standard deviation precomputed by Monte Carlo — see
+   (mean and standard deviation precomputed by Monte Carlo over 150,000 simulated profiles — see
    BRAND-AND-STRATEGY.md). The result answers the right question: "how
    unusually well does this person fit this model, compared to everyone else?"
    That is what makes the recommendation responsive to distinctive answers
    instead of to arbitrary weight magnitudes. */
 const NORM = {
-  service:[44.49,14.20], local:[39.79,22.70], productized:[44.19,21.13], creator:[37.70,25.34],
-  digital:[41.61,20.83], ecom:[22.43,26.76], flip:[41.90,20.72], software:[26.11,27.96],
-  coach:[63.39,15.28], community:[49.06,21.04]
+  service:[55.22,16.34], local:[49.99,26.40], productized:[53.75,23.80], creator:[44.43,26.03],
+  digital:[48.52,22.09], ecom:[27.06,27.95], flip:[50.62,22.33], software:[29.64,30.53],
+  coach:[72.43,17.79], community:[58.61,21.76]
 };
 
 function scoreModels(a){
@@ -1207,7 +1510,8 @@ const LABEL = {
   goal:{side:'$500–$1,000 a month on the side',replace:'replace a full income',big:'build something big',learn:'prove capability'},
   blocker:{noidea:'not knowing what to do',nomoney:'having no money',noskill:'not feeling good enough',fear:'fear of failing publicly',notime:'having no time',nostart:'not knowing what step one is'},
   skills:{write:'writing',design:'design',video:'video and photo',code:'code and tech',talk:'talking to people',hands:'practical work',teach:'teaching',organize:'organising',numbers:'numbers',none:'no defined skill yet'},
-  interests:{tech:'tech and AI',health:'health and fitness',style:'fashion and beauty',food:'food and drink',gaming:'gaming',creative:'music, art and design',edu:'education',home:'homes and local life',pets:'animals and pets',money:'money and business',sport:'sport and outdoors',people:'people and relationships'}
+  industry:{food:'food and drink',fitness:'fitness and health',beauty:'beauty and personal care',fashion:'clothing and fashion',tech:'tech, software and AI',creative:'design, media and content',edu:'education and tutoring',home:'home and property',auto:'cars and vehicles',pets:'pets and animals',events:'events and entertainment',prof:'business services',retail:'products and retail',notsure:'not decided yet'},
+  career:{none:'no work history yet',retail:'retail and customer service',hospitality:'hospitality and food service',trades:'trades and manual work',logistics:'driving and delivery',office:'office and admin',sales:'sales and accounts',care:'healthcare and caring',tech:'tech and engineering',edu:'teaching and training',creative:'creative and media'}
 };
 const capLabel = c => c===0?'$0':c===50?'under $100':c===300?'$100–$500':c===1000?'$500–$2,000':'over $2,000';
 const timeLabel = t => t===5?'under 5 hours a week':t===10?'5–10 hours a week':t===20?'10–20 hours a week':t===35?'20–40 hours a week':'40+ hours a week';
@@ -1217,6 +1521,10 @@ function whyThis(a, m){
   const bits = [];
   if(a.capital===0) bits.push('you have no capital, and this model needs none');
   else bits.push('it fits inside the '+capLabel(a.capital)+' you said you could risk');
+  if(a.industry && a.industry!=='notsure')
+    bits.push('it is the shape that works in '+LABEL.industry[a.industry]+', where the money comes from '+(INDUSTRIES[a.industry]?INDUSTRIES[a.industry].noun:'this field')+' customers who buy repeatedly');
+  if(a.career && a.career!=='none')
+    bits.push('your '+YEARS_LABEL[a.years]+' in '+LABEL.career[a.career]+' transfers directly into it, and that is an advantage most beginners do not have');
   if(a.urgency==='now') bits.push('you need money inside 30 days, and this is one of the few models that can produce a paying customer that fast');
   else if(a.urgency==='patient') bits.push('you have no immediate financial pressure, which is what makes a slower-compounding model rational for you');
   else bits.push('your 3–6 month window is enough time for this to reach real revenue');
@@ -1225,6 +1533,15 @@ function whyThis(a, m){
   else if(a.sales==='fine') bits.push('and it rewards the fact that you are already comfortable asking for money');
   if(a.time<=10) bits.push('it can be run inside '+timeLabel(a.time));
   return bits;
+}
+
+/* One line that fuses their own words, their industry and the chosen model.
+   This is the sentence people screenshot, so it has to be concrete. */
+function sharpen(a, m){
+  const ind = INDUSTRIES[a.industry] || INDUSTRIES.notsure;
+  if(a.idea) return '"' + a.idea + '" — run as ' + m.name.replace(/^The /,'a ').toLowerCase() + ' in ' + ind.name.toLowerCase() + '.';
+  if(a.industry && a.industry !== 'notsure') return m.name.replace(/^The /,'A ') + ' in ' + ind.name.toLowerCase() + ', aimed at the one customer described below.';
+  return m.name.replace(/^The /,'A ') + ', pointed at the first specific person you can find who has the problem.';
 }
 
 function altWhyNot(a, r, topScore){
@@ -1239,7 +1556,7 @@ function altWhyNot(a, r, topScore){
 /* ---------------------------------------------------------------------------
    5. THE BLOCKER RESPONSES
    Whatever the user said is stopping them gets answered directly, by name,
-   inside their own document. Section 8 of every playbook.
+   inside their own document. Section 11 of every playbook.
    ------------------------------------------------------------------------ */
 const BLOCKERS = {
   noidea:{ t:'"I don\'t know what to do."',
@@ -1295,6 +1612,9 @@ function buildPdf(a, ranked){
   const top = ranked[0], m = top.m;
   const alts = ranked.slice(1,3);
   const bl = BLOCKERS[a.blocker];
+  const ind = INDUSTRIES[a.industry] || INDUSTRIES.notsure;
+  const car = CAREERS[a.career] || CAREERS.none;
+  const hasIdea = !!a.idea;
   const today = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
 
   const content = [];
@@ -1306,7 +1626,10 @@ function buildPdf(a, ranked){
     {canvas:[{type:'rect',x:0,y:0,w:70,h:5,color:VOLT}], margin:[0,26,0,26]},
     {text:m.name.toUpperCase(), color:VOLT, fontSize:13, bold:true, characterSpacing:1.5},
     {text:m.line, color:'#98A4B8', fontSize:11.5, margin:[0,10,0,0], lineHeight:1.4, width:400},
-    {text:'Generated '+today+'  ·  from 12 answers  ·  free, and yours to keep', color:'#616D80', fontSize:9, margin:[0,120,0,0]},
+    hasIdea
+      ? {text:'\u201C'+a.idea+'\u201D', color:'#FFFFFF', fontSize:13, italics:true, margin:[0,22,0,0], lineHeight:1.35}
+      : {text:'', margin:[0,0,0,0]},
+    {text:'Generated '+today+'  ·  built for '+ind.name.toLowerCase()+'  ·  free, and yours to keep', color:'#616D80', fontSize:9, margin:[0,120,0,0]},
     {text:'Educational content only. Not financial, legal or tax advice.', color:'#6B7688', fontSize:8, margin:[0,6,0,0], pageBreak:'after'}
   );
 
@@ -1315,11 +1638,13 @@ function buildPdf(a, ranked){
     pdfP('A plan that ignores your constraints is fiction. Here is what you told us, written back to you as the boundary conditions everything else in this document had to fit inside.'),
     {table:{widths:[150,'*'], body:[
       ['Where you are', LABEL.stage[a.stage]],
+      ['What you have in mind', hasIdea ? '\u201C'+a.idea+'\u201D' : 'nothing specific yet'],
+      ['The field', LABEL.industry[a.industry]],
+      ['What you have done for work', a.career==='none' ? 'nothing yet' : LABEL.career[a.career]+' \u2014 '+YEARS_LABEL[a.years]],
       ['Capital you can risk', capLabel(a.capital)],
       ['Time you can protect', timeLabel(a.time)],
       ['Financial pressure', LABEL.urgency[a.urgency]],
       ['Skills you already have', list(a.skills, LABEL.skills)],
-      ['Subjects you care about', list(a.interests, LABEL.interests)],
       ['Where your customers are', LABEL.reach[a.reach]],
       ['How you want to work', LABEL.style[a.style]],
       ['Asking for money', LABEL.sales[a.sales]],
@@ -1341,6 +1666,10 @@ function buildPdf(a, ranked){
       ], margin:[14,14,14,14]
     }]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,0,0,14]},
     pdfP(m.what),
+    {table:{widths:['*'],body:[[{stack:[
+      {text:'IN ONE LINE', color:VOLTINK, fontSize:8, bold:true, characterSpacing:1.6, margin:[0,0,0,6]},
+      {text:sharpen(a, m), fontSize:12.5, bold:true, color:INK, lineHeight:1.35}
+    ], margin:[14,12,14,12]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,4,0,14]},
     {columns:[
       {width:'*', stack:[{text:'STARTING CAPITAL', style:'micro'},{text:m.capital, style:'stat'}]},
       {width:'*', stack:[{text:'FIRST DOLLAR IN', style:'micro'},{text:m.firstDollar, style:'stat'}]},
@@ -1362,11 +1691,68 @@ function buildPdf(a, ranked){
     ])}, layout:'lightHorizontalLines', margin:[0,0,0,26]}
   );
 
-  /* ---------- 03 OFFER ----------
-     Deliberately no page break before this one: section 02 runs a little long
-     for some models, and an orphan page with three lines on it looks broken.
-     Letting 02 and 03 share a spread keeps every page full. */
-  content.push(pdfKicker('SECTION 03'), pdfH2('Your offer'),
+  /* ---------- 03 THE SPECIFIC BUSINESS ----------
+     The industry layer. Without this, two people with identical constraints
+     get an identical document even though one wants a bakery and the other
+     wants to detail cars. */
+  content.push({text:'', pageBreak:'before'},
+    pdfKicker('SECTION 03'), pdfH2(hasIdea ? 'Your idea, made specific' : 'Where your customers actually are'),
+    hasIdea
+      ? {table:{widths:['*'],body:[[{stack:[
+          {text:'WHAT YOU TOLD US', color:VOLTINK, fontSize:8, bold:true, characterSpacing:1.6, margin:[0,0,0,7]},
+          {text:'\u201C'+a.idea+'\u201D', fontSize:15, italics:true, color:INK, lineHeight:1.35}
+        ], margin:[16,14,16,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,0,0,16]}
+      : pdfP('You said you have nothing specific in mind yet, which is the honest answer and not a problem. What follows is the shape of the opportunity in '+ind.name.toLowerCase()+' \u2014 read it as a starting position, not a verdict.'),
+    hasIdea
+      ? pdfP('That is the thing to build. Everything below is what it takes to make it real in '+ind.name.toLowerCase()+' \u2014 not business advice in general, but the specifics of this field.')
+      : {text:'', margin:[0,0,0,0]},
+
+    {text:'Who actually pays in this field', style:'h3', margin:[0,6,0,5]},
+    pdfP(ind.customer, [0,0,0,8]),
+
+    {text:'Where you find them', style:'h3', margin:[0,4,0,5]},
+    pdfP(ind.where, [0,0,0,8]),
+
+    {table:{widths:['*'],body:[[{stack:[
+      {text:'YOUR FIRST WEEK, CONCRETELY', color:VOLTINK, fontSize:8, bold:true, characterSpacing:1.6, margin:[0,0,0,7]},
+      {text:ind.first, fontSize:11.5, color:INK, lineHeight:1.45}
+    ], margin:[16,13,16,13]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,6,0,14]},
+
+    {text:'What proof looks like here', style:'h3', margin:[0,0,0,5]},
+    pdfP(ind.proof, [0,0,0,8]),
+
+    {text:'The trap specific to this field', style:'h3', margin:[0,4,0,5]},
+    pdfP(ind.trap, [0,0,0,8]),
+
+    {text:'Before you take money \u2014 check this', style:'h3', margin:[0,4,0,5]},
+    pdfP(ind.reg + ' Realistic cost to start here: ' + ind.cost, [0,0,0,0])
+  );
+
+  /* ---------- 04 WHAT YOUR WORK HISTORY GIVES YOU ---------- */
+  content.push({text:'', pageBreak:'before'},
+    pdfKicker('SECTION 04'), pdfH2(a.career==='none' ? 'Starting with a clean sheet' : 'What your work already gave you'),
+    a.career==='none'
+      ? pdfP('You said you have not worked yet. Worth stating plainly rather than treating as a gap, because it comes with two real advantages and one real cost, and knowing which is which changes what you do first.')
+      : pdfP('You spent '+YEARS_LABEL[a.years]+' in '+LABEL.career[a.career]+'. Almost everyone discounts this completely when they start something \u2014 they treat their work history as the thing they are escaping rather than the thing they are building on. That is a mistake, and here is the specific reason why.'),
+
+    {text:'What you already have', style:'h3', margin:[0,10,0,6]},
+    pdfBullets(car.assets),
+
+    {text:'How it converts', style:'h3', margin:[0,6,0,6]},
+    pdfP(car.transfer),
+
+    {table:{widths:['*'],body:[[{stack:[
+      {text:'YOUR UNFAIR ADVANTAGE', color:VOLTINK, fontSize:8, bold:true, characterSpacing:1.6, margin:[0,0,0,7]},
+      {text:car.edge, fontSize:15, bold:true, color:INK, lineHeight:1.35}
+    ], margin:[16,16,16,16]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,10,0,16]},
+
+    pdfP(a.career==='none'
+      ? 'Write that sentence down somewhere you will see it. When you are three weeks in and it feels like everyone else knows something you do not, the honest answer is that most of them are carrying assumptions you get to skip.'
+      : 'Use that sentence in your outreach. Not as a boast \u2014 as a reason to trust you. "I spent '+YEARS_LABEL[a.years]+' in '+LABEL.career[a.career]+', so I know exactly what goes wrong here" is a stronger opening than anything a beginner can claim.')
+  );
+
+  /* ---------- 05 OFFER ---------- */
+  content.push({text:'', pageBreak:'before'}, pdfKicker('SECTION 05'), pdfH2('Your offer'),
     pdfP('Hormozi\'s Value Equation is the most practically useful formula in modern business, and it is the whole of offer design:'),
     {table:{widths:['*'],body:[[{text:'Value  =  ( Dream Outcome  ×  Perceived Likelihood of Achievement )  ÷  ( Time Delay  ×  Effort and Sacrifice )', alignment:'center', fontSize:10.5, bold:true, color:INK, margin:[10,12,10,12]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,4,0,16]},
     pdfP('You raise value by increasing the top two and decreasing the bottom two. That is the entire game, and it is why "lower my price" is almost never the right lever — price is not even in the equation.'),
@@ -1384,7 +1770,7 @@ function buildPdf(a, ranked){
   );
 
   /* ---------- 04 PRICING ---------- */
-  content.push(pdfKicker('SECTION 04'), pdfH2('What to charge on day one'),
+  content.push(pdfKicker('SECTION 06'), pdfH2('What to charge on day one'),
     pdfP('Law 7: price is a strategic decision, not an arithmetic one. It signals quality, filters your customers, and funds your acquisition. A 1% price increase produces a bigger profit change than a 1% volume increase or a 1% cost cut, because it flows straight to the bottom line.'),
     pdfP(m.pricing.model, [0,0,0,14]),
     {table:{widths:['22%','48%','30%'], headerRows:1, body:[
@@ -1392,30 +1778,35 @@ function buildPdf(a, ranked){
       ...m.pricing.tiers.map(t=>[{text:t[0], style:'td', bold:true},{text:t[1], style:'td'},{text:t[2], style:'td', bold:true, color:VOLTINK}])
     ]}, layout:'lightHorizontalLines', margin:[0,0,0,14]},
     pdfP(m.pricing.note),
+    {text:'What this field specifically supports', style:'h3', margin:[0,6,0,6]},
+    pdfP(ind.price),
     pdfP('Why three tiers and not one: price discrimination. Different customers have different willingness to pay, and a single price captures only one slice of the demand curve. The top tier does most of its work by making the middle tier look reasonable — most people buy the middle, which is the point.'),
     {text:'', pageBreak:'after'}
   );
 
   /* ---------- 05 CHANNEL ---------- */
-  content.push(pdfKicker('SECTION 05'), pdfH2('How you get customers'),
+  content.push(pdfKicker('SECTION 07'), pdfH2('How you get customers'),
     pdfP('Every lead on earth comes from one of four places: warm outreach (people who know you), cold outreach (people who don\'t), warm content (an audience you built), or cold content (paid advertising). Everything else is a variation. Choosing more than one at the start is the most common way beginners get nowhere on all of them.'),
     {table:{widths:['*'],body:[[{stack:[
       {text:'YOUR CHANNEL', color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,6]},
       {text:m.channel.core, fontSize:17, bold:true, color:INK, margin:[0,0,0,8]},
       {text:m.channel.why, fontSize:10, color:INK2, lineHeight:1.4}
     ], margin:[16,14,16,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,4,0,16]},
-    {text:'Your required volume', style:'h3', margin:[0,0,0,6]},
+    {text:'Where your people are, in this field', style:'h3', margin:[0,0,0,6]},
+    pdfP(ind.where),
+    {text:'Your required volume', style:'h3', margin:[0,6,0,6]},
     pdfP(m.channel.volume),
-    pdfP('Law 5: volume negates luck. One attempt tells you nothing; a hundred tells you everything. The single biggest difference between people who succeed at this and people who do not is number of attempts, not quality of thinking. Track every attempt in a spreadsheet from day one — contacts, replies, calls, closes. Without those four numbers you are guessing.', [0,0,0,14]),
+    pdfP('Law 5: volume negates luck. One attempt tells you nothing; a hundred tells you everything. Track every attempt in a spreadsheet from day one — contacts, replies, calls, closes. Without those four numbers you are guessing.', [0,0,0,12]),
     {text:'Use this, word for word, until you have your own data', style:'h3', margin:[0,0,0,8]},
     {table:{widths:['*'],body:[[{text:m.channel.script, fontSize:10, color:INK, lineHeight:1.5, margin:[14,14,14,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,0,0,12]},
-    pdfP('Do not "improve" this before you have sent it fifty times. You cannot tell what needs changing from a sample size of three, and rewriting the script is the most popular way to avoid sending it.'),
+    pdfP('Do not "improve" this before you have sent it fifty times. Rewriting the script is the most popular way to avoid sending it.'),
     {text:'', pageBreak:'after'}
   );
 
   /* ---------- 06 TIMELINE ---------- */
-  content.push(pdfKicker('SECTION 06'), pdfH2('Your 90-day plan'),
-    pdfP('Scaled to the '+timeLabel(a.time)+' you said you can protect. It ends with money in your account, not with a finished logo. If you fall behind, do not restart — carry on from where you are.', [0,0,0,14]),
+  content.push(pdfKicker('SECTION 08'), pdfH2('Your 90-day plan'),
+    pdfP('Scaled to the '+timeLabel(a.time)+' you said you can protect. It ends with money in your account, not with a finished logo. If you fall behind, do not restart — carry on from where you are.', [0,0,0,12]),
+    pdfP('Week one is the box in Section 03 — do that first, before anything below it.', [0,0,0,12]),
     ...m.weeks.map(w=>({
       stack:[
         {columns:[
@@ -1431,7 +1822,7 @@ function buildPdf(a, ranked){
   );
 
   /* ---------- 07 NUMBERS ---------- */
-  content.push(pdfKicker('SECTION 07'), pdfH2('The numbers you must know cold'),
+  content.push(pdfKicker('SECTION 09'), pdfH2('The numbers you must know cold'),
     pdfP('Law 2: businesses die from lack of cash, not lack of profit. Law 8: if unit economics are broken, growing just makes you fail faster. Compute this before you spend a dollar on growth.'),
     {text:'For your model specifically', style:'h3', margin:[0,10,0,8]},
     pdfBullets(m.econ.lines),
@@ -1456,19 +1847,21 @@ function buildPdf(a, ranked){
   );
 
   /* ---------- 08 FIRST TEN + TRAPS ---------- */
-  content.push(pdfKicker('SECTION 08'), pdfH2('Your first ten customers'),
+  content.push(pdfKicker('SECTION 10'), pdfH2('Your first ten customers'),
     pdfP('Not a strategy. A list of physical actions in order. Do them in this sequence.', [0,0,0,12]),
     {ol:m.firstTen, style:'p', margin:[0,0,0,18]},
     {text:'The three traps that kill this model', style:'h3', margin:[0,4,0,8]},
     pdfP('These are not hypothetical. They are the specific, documented ways people fail at this exact business, and you will feel the pull of at least one of them.', [0,0,0,10]),
     pdfBullets(m.traps),
-    {text:'Invert, always invert', style:'h3', margin:[0,10,0,6]},
+    {text:'And the trap specific to '+ind.name.toLowerCase(), style:'h3', margin:[0,6,0,6]},
+    pdfP(ind.trap),
+    {text:'Invert, always invert', style:'h3', margin:[0,8,0,6]},
     pdfP('Munger\'s tool, and the most reliable one in this document. When you are stuck, do not ask "how do I succeed at this?" Ask "what would guarantee that this fails?" — then refuse to do those things. The answer is almost always: stop sending messages, change the plan every week, and never ask anyone for money.'),
     {text:'', pageBreak:'after'}
   );
 
   /* ---------- 09 BLOCKER ---------- */
-  content.push(pdfKicker('SECTION 09'), pdfH2('The thing that stopped you'),
+  content.push(pdfKicker('SECTION 11'), pdfH2('The thing that stopped you'),
     {text:bl.t, fontSize:19, bold:true, color:INK, margin:[0,0,0,14]},
     ...bl.p.map(x=>pdfP(x)),
     {table:{widths:['*'],body:[[{stack:[
@@ -1479,7 +1872,7 @@ function buildPdf(a, ranked){
   );
 
   /* ---------- 10 RESOURCES ---------- */
-  content.push(pdfKicker('SECTION 10'), pdfH2('What to read, what to use'),
+  content.push(pdfKicker('SECTION 12'), pdfH2('What to read, what to use'),
     {text:'Your reading path — in this order', style:'h3', margin:[0,0,0,6]},
     pdfP('Not a library. '+NUM[m.books.length]+' books, sequenced for your model. Read one at a time, and after each one write a single page: three concepts, one application to a real business you can observe, one thing you disagree with. If you cannot write the page, you did not read the book.', [0,0,0,10]),
     pdfBullets(m.books),
@@ -1499,7 +1892,7 @@ function buildPdf(a, ranked){
   );
 
   /* ---------- 11 TRACKER ---------- */
-  content.push(pdfKicker('SECTION 11'), pdfH2('The only number that predicts anything'),
+  content.push(pdfKicker('SECTION 13'), pdfH2('The only number that predicts anything'),
     pdfP('Not books read. Not notes taken. Not plans made — including this one.'),
     {table:{widths:['*'],body:[[{stack:[
       {text:'TRACK THIS', color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,8]},
@@ -1560,7 +1953,7 @@ function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('sh
 
 /* ---------- lazy PDF engine ----------
    Loaded when the questionnaire opens, so it is ready long before anyone
-   finishes 12 questions, but never downloaded by someone who just reads the
+   finishes the questionnaire, but never downloaded by someone who just reads the
    landing page. Falls back to a CDN only if the local copy is missing. */
 let pdfReady = null;
 function loadScript(src){
@@ -1593,39 +1986,85 @@ $('#qClose').addEventListener('click',()=>{
   if(ranked || !Object.keys(answers).length || confirm('Leave now and your answers are gone. Close anyway?')) closeQuiz();
 });
 
+/* ---------- visibility ----------
+   Some questions only apply conditionally (years-in-career is pointless if
+   they have never worked). Navigation steps over anything hidden, and the
+   counter reports position among the questions this person will actually
+   see, so the progress bar never lies. */
+const shown = q => !q.showIf || q.showIf(answers);
+const visibleList = () => QUESTIONS.filter(shown);
+function step(from, dir){
+  let i = from + dir;
+  while(i >= 0 && i < QUESTIONS.length && !shown(QUESTIONS[i])) i += dir;
+  return i;
+}
+const answered = q =>
+  q.multi ? (answers[q.id]||[]).length > 0 : answers[q.id] !== undefined;
+
 /* ---------- render a question ---------- */
 function render(){
   const q = QUESTIONS[idx];
-  const pct = (idx/QUESTIONS.length)*100;
-  bar.style.width = pct+'%';
-  count.textContent = String(idx+1).padStart(2,'0')+' / '+QUESTIONS.length;
-  back.style.visibility = idx===0 ? 'hidden' : 'visible';
+  const list = visibleList();
+  const pos = list.indexOf(q);              // 0-based among visible
+  const total = list.length;
+  const last = step(idx, +1) >= QUESTIONS.length;
+
+  bar.style.width = (pos/total)*100+'%';
+  count.textContent = String(pos+1).padStart(2,'0')+' / '+total;
+  back.style.visibility = step(idx,-1) < 0 ? 'hidden' : 'visible';
 
   const cur = answers[q.id];
   const isSel = v => q.multi ? (cur||[]).includes(v) : cur===v;
+
+  let inner;
+  if(q.text){
+    const val = cur === undefined ? '' : cur;
+    inner = '<input class="q-input" id="qText" type="text" maxlength="'+(q.maxlen||120)+'"'
+          + ' placeholder="'+esc(q.placeholder)+'" autocomplete="off" spellcheck="false" value="'+esc(val)+'">'
+          + '<div class="q-meta">'
+          + '<button class="q-skip" id="qSkip" type="button">'+q.skip+'</button>'
+          + '<span class="q-count-chars" id="qChars">'+val.length+' / '+(q.maxlen||120)+'</span>'
+          + '</div>';
+  } else {
+    inner = '<div class="opts'+(q.two?' two':'')+'" role="group">'
+      + q.opts.map((o,i)=>'<button class="opt'+(isSel(o.v)?' sel':'')+'" data-v="'+o.v+'" type="button">'
+          + '<span class="opt-key">'+(i<9?(i+1):'·')+'</span>'
+          + '<span class="opt-txt"><strong>'+o.t+'</strong><span>'+o.d+'</span></span></button>').join('')
+      + '</div>';
+  }
 
   stage.innerHTML = '<div class="q-card">'
     + '<div class="q-kicker">'+q.kicker+'</div>'
     + '<h2 class="q-title">'+q.title+'</h2>'
     + '<p class="q-help">'+q.help+(q.multi?'<br><span class="dim3">Select all that apply'+(q.max?', up to '+q.max:'')+'.</span>':'')+'</p>'
-    + '<div class="opts'+(q.two?' two':'')+'" role="group">'
-    + q.opts.map((o,i)=>'<button class="opt'+(isSel(o.v)?' sel':'')+'" data-v="'+o.v+'" type="button">'
-        + '<span class="opt-key">'+(i<9?(i+1):'·')+'</span>'
-        + '<span class="opt-txt"><strong>'+o.t+'</strong><span>'+o.d+'</span></span></button>').join('')
-    + '</div></div>';
+    + inner + '</div>';
 
-  stage.querySelectorAll('.opt').forEach(btn=>btn.addEventListener('click',()=>pick(q, btn.dataset.v)));
+  if(q.text){
+    const inp = $('#qText'), chars = $('#qChars');
+    inp.addEventListener('input', ()=>{
+      chars.textContent = inp.value.length+' / '+(q.maxlen||120);
+      next.disabled = inp.value.trim().length < 3;
+    });
+    $('#qSkip').addEventListener('click', ()=>{ answers[q.id] = ''; advance(); });
+    setTimeout(()=>inp.focus(), 60);
+  } else {
+    stage.querySelectorAll('.opt').forEach(btn=>btn.addEventListener('click',()=>pick(q, btn.dataset.v)));
+  }
+
   // On single-select the answer auto-advances, so a permanently greyed-out
   // Continue button is just visual noise. Show it only where it does work.
-  const last = idx===QUESTIONS.length-1;
-  next.style.display = q.multi ? '' : 'none';
-  next.disabled = q.multi ? !(cur && cur.length) : false;
+  next.style.display = (q.multi || q.text) ? '' : 'none';
+  next.disabled = q.multi ? !(cur && cur.length)
+                : q.text ? (cur === undefined ? true : String(cur).trim().length < 3)
+                : false;
   next.childNodes[0].nodeValue = last ? 'Build my playbook ' : 'Continue ';
   next.querySelector('span').textContent = last ? '↑' : '→';
-  $('#qStep').textContent = (idx+1)+' of '+QUESTIONS.length;
-  $('#qHint').innerHTML = q.multi
-    ? 'Press <kbd>1</kbd>–<kbd>9</kbd> to toggle · <kbd>Enter</kbd> to continue'
-    : 'Press <kbd>1</kbd>–<kbd>9</kbd> to choose, or just click';
+  $('#qStep').textContent = (pos+1)+' of '+total;
+  $('#qHint').innerHTML = q.text
+    ? 'Type a line, or skip it · <kbd>Enter</kbd> to continue'
+    : q.multi
+      ? 'Press <kbd>1</kbd>–<kbd>9</kbd> to toggle · <kbd>Enter</kbd> to continue'
+      : 'Press <kbd>1</kbd>–<kbd>9</kbd> to choose, or just click';
   body.scrollTop = 0;
 }
 
@@ -1643,6 +2082,9 @@ function pick(q, raw){
     answers[q.id]=a; render();
   } else {
     answers[q.id]=v;
+    // Changing career can hide or reveal the years question, so anything
+    // downstream of a conditional has to be revalidated before moving on.
+    if(q.id==='career' && v==='none') delete answers.years;
     render();
     setTimeout(advance, 190);   // auto-advance keeps perceived effort low
   }
@@ -1650,27 +2092,41 @@ function pick(q, raw){
 
 function advance(){
   const q = QUESTIONS[idx];
-  if(q.multi ? !(answers[q.id]||[]).length : answers[q.id]===undefined) return;
-  if(idx < QUESTIONS.length-1){ idx++; render(); }
+  if(q.text){
+    const inp = $('#qText');
+    if(inp) answers[q.id] = cleanIdea(inp.value);
+    if(answers[q.id] === undefined) return;
+  } else if(!answered(q)) return;
+
+  const nxt = step(idx, +1);
+  if(nxt < QUESTIONS.length){ idx = nxt; render(); }
   else finish();
 }
 next.addEventListener('click', advance);
-back.addEventListener('click', ()=>{ if(idx>0){ idx--; render(); } });
+back.addEventListener('click', ()=>{
+  const q = QUESTIONS[idx];
+  if(q.text){ const inp=$('#qText'); if(inp && inp.value.trim()) answers[q.id]=cleanIdea(inp.value); }
+  const prev = step(idx, -1);
+  if(prev >= 0){ idx = prev; render(); }
+});
 
 document.addEventListener('keydown', e=>{
   if(!quiz.classList.contains('open') || ranked) return;
-  if(e.key==='Escape'){ closeQuiz(); return; }
+  const typing = e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName);
+  if(e.key==='Escape'){ if(!typing) closeQuiz(); return; }
   if(e.key==='Enter'){ e.preventDefault(); advance(); return; }
+  if(typing) return;                 // never hijack digits while someone types
   const n = parseInt(e.key,10);
   if(n>=1 && n<=9){
     const q=QUESTIONS[idx];
-    if(q.opts[n-1]){ e.preventDefault(); pick(q, q.opts[n-1].v); }
+    if(q.opts && q.opts[n-1]){ e.preventDefault(); pick(q, q.opts[n-1].v); }
   }
 });
 
 /* ---------- build ---------- */
 const BUILD_STEPS = [
   'Reading your constraints',
+  'Matching your industry and your work history',
   'Scoring 10 business models against your profile',
   'Selecting your acquisition channel',
   'Calculating your pricing ladder',
@@ -1686,7 +2142,7 @@ function finish(){
   ranked = scoreModels(answers);
   stage.innerHTML = '<div class="building"><div class="build-ring"></div>'
     + '<h2 class="h-md">Building your playbook</h2>'
-    + '<p class="dim" style="margin-top:10px">Twelve answers, ten models, one document.</p>'
+    + '<p class="dim" style="margin-top:10px">Your answers, ten models, one document.</p>'
     + '<div class="build-log">'+BUILD_STEPS.map(s=>'<div>'+s+'</div>').join('')+'</div></div>';
   const logs = stage.querySelectorAll('.build-log div');
   logs.forEach((el,i)=>setTimeout(()=>el.classList.add('on'), 260 + i*330));
@@ -1701,7 +2157,7 @@ function showResults(){
   + '<div class="res-hero">'
     + '<div class="res-label">YOUR RECOMMENDED MODEL</div>'
     + '<div class="res-name">'+m.name+'</div>'
-    + '<p class="res-why">'+m.line+'</p>'
+    + '<p class="res-why">'+esc(sharpen(answers, m))+'</p>'
     + '<div class="res-fit"><span class="dim">Match score</span> <b>'+top.score+'/100</b> <span class="dim3">·</span> <span class="dim">'+m.capital+' to start</span> <span class="dim3">·</span> <span class="dim">first dollar in '+m.firstDollar+'</span></div>'
   + '</div>'
   + '<div class="res-grid">'
@@ -1712,11 +2168,12 @@ function showResults(){
       + m.examples.map(s=>'<li>'+s+'</li>').join('')
     + '</ul></div>'
     + '<div class="res-box"><span class="mono">YOUR CHANNEL</span><ul><li>'+m.channel.core+'</li><li>'+m.channel.volume+'</li></ul></div>'
-    + '<div class="res-box"><span class="mono">YOUR FIRST WEEK</span><ul><li>'+m.weeks[0][0]+' — '+m.weeks[0][1]+'</li><li>'+m.firstTen[0]+'</li></ul></div>'
+    + '<div class="res-box"><span class="mono">YOUR FIRST WEEK</span><ul><li>'+(INDUSTRIES[answers.industry]||INDUSTRIES.notsure).first+'</li></ul></div>'
+    + '<div class="res-box"><span class="mono">YOUR UNFAIR ADVANTAGE</span><ul><li>'+(CAREERS[answers.career]||CAREERS.none).edge+'</li><li>'+(INDUSTRIES[answers.industry]||INDUSTRIES.notsure).customer.split('.')[0]+'.</li></ul></div>'
   + '</div>'
   + '<div class="res-dl">'
     + '<h3>Your playbook is ready</h3>'
-    + '<p>Around 20 pages: your offer, your prices, your outreach script, a 90-day plan scaled to your hours, your unit economics, and a direct answer to the thing that has been stopping you.</p>'
+    + '<p>Around 16 pages, written for your field and your work history: who actually pays in '+(INDUSTRIES[answers.industry]||INDUSTRIES.notsure).name.toLowerCase()+', what to charge, the outreach script, a 90-day plan scaled to your hours, your unit economics, and a direct answer to the thing that has been stopping you.</p>'
     + '<button class="btn btn-primary btn-lg" id="dl">Download the PDF <span class="btn-arrow">↓</span></button>'
     + '<p style="margin-top:16px;font-size:.85rem;color:var(--text-3)">No email. Nothing was uploaded. Download it now — it isn\'t saved anywhere.</p>'
   + '</div>'

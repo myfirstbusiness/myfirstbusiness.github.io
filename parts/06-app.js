@@ -15,7 +15,7 @@ function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('sh
 
 /* ---------- lazy PDF engine ----------
    Loaded when the questionnaire opens, so it is ready long before anyone
-   finishes 12 questions, but never downloaded by someone who just reads the
+   finishes the questionnaire, but never downloaded by someone who just reads the
    landing page. Falls back to a CDN only if the local copy is missing. */
 let pdfReady = null;
 function loadScript(src){
@@ -48,39 +48,85 @@ $('#qClose').addEventListener('click',()=>{
   if(ranked || !Object.keys(answers).length || confirm('Leave now and your answers are gone. Close anyway?')) closeQuiz();
 });
 
+/* ---------- visibility ----------
+   Some questions only apply conditionally (years-in-career is pointless if
+   they have never worked). Navigation steps over anything hidden, and the
+   counter reports position among the questions this person will actually
+   see, so the progress bar never lies. */
+const shown = q => !q.showIf || q.showIf(answers);
+const visibleList = () => QUESTIONS.filter(shown);
+function step(from, dir){
+  let i = from + dir;
+  while(i >= 0 && i < QUESTIONS.length && !shown(QUESTIONS[i])) i += dir;
+  return i;
+}
+const answered = q =>
+  q.multi ? (answers[q.id]||[]).length > 0 : answers[q.id] !== undefined;
+
 /* ---------- render a question ---------- */
 function render(){
   const q = QUESTIONS[idx];
-  const pct = (idx/QUESTIONS.length)*100;
-  bar.style.width = pct+'%';
-  count.textContent = String(idx+1).padStart(2,'0')+' / '+QUESTIONS.length;
-  back.style.visibility = idx===0 ? 'hidden' : 'visible';
+  const list = visibleList();
+  const pos = list.indexOf(q);              // 0-based among visible
+  const total = list.length;
+  const last = step(idx, +1) >= QUESTIONS.length;
+
+  bar.style.width = (pos/total)*100+'%';
+  count.textContent = String(pos+1).padStart(2,'0')+' / '+total;
+  back.style.visibility = step(idx,-1) < 0 ? 'hidden' : 'visible';
 
   const cur = answers[q.id];
   const isSel = v => q.multi ? (cur||[]).includes(v) : cur===v;
+
+  let inner;
+  if(q.text){
+    const val = cur === undefined ? '' : cur;
+    inner = '<input class="q-input" id="qText" type="text" maxlength="'+(q.maxlen||120)+'"'
+          + ' placeholder="'+esc(q.placeholder)+'" autocomplete="off" spellcheck="false" value="'+esc(val)+'">'
+          + '<div class="q-meta">'
+          + '<button class="q-skip" id="qSkip" type="button">'+q.skip+'</button>'
+          + '<span class="q-count-chars" id="qChars">'+val.length+' / '+(q.maxlen||120)+'</span>'
+          + '</div>';
+  } else {
+    inner = '<div class="opts'+(q.two?' two':'')+'" role="group">'
+      + q.opts.map((o,i)=>'<button class="opt'+(isSel(o.v)?' sel':'')+'" data-v="'+o.v+'" type="button">'
+          + '<span class="opt-key">'+(i<9?(i+1):'·')+'</span>'
+          + '<span class="opt-txt"><strong>'+o.t+'</strong><span>'+o.d+'</span></span></button>').join('')
+      + '</div>';
+  }
 
   stage.innerHTML = '<div class="q-card">'
     + '<div class="q-kicker">'+q.kicker+'</div>'
     + '<h2 class="q-title">'+q.title+'</h2>'
     + '<p class="q-help">'+q.help+(q.multi?'<br><span class="dim3">Select all that apply'+(q.max?', up to '+q.max:'')+'.</span>':'')+'</p>'
-    + '<div class="opts'+(q.two?' two':'')+'" role="group">'
-    + q.opts.map((o,i)=>'<button class="opt'+(isSel(o.v)?' sel':'')+'" data-v="'+o.v+'" type="button">'
-        + '<span class="opt-key">'+(i<9?(i+1):'·')+'</span>'
-        + '<span class="opt-txt"><strong>'+o.t+'</strong><span>'+o.d+'</span></span></button>').join('')
-    + '</div></div>';
+    + inner + '</div>';
 
-  stage.querySelectorAll('.opt').forEach(btn=>btn.addEventListener('click',()=>pick(q, btn.dataset.v)));
+  if(q.text){
+    const inp = $('#qText'), chars = $('#qChars');
+    inp.addEventListener('input', ()=>{
+      chars.textContent = inp.value.length+' / '+(q.maxlen||120);
+      next.disabled = inp.value.trim().length < 3;
+    });
+    $('#qSkip').addEventListener('click', ()=>{ answers[q.id] = ''; advance(); });
+    setTimeout(()=>inp.focus(), 60);
+  } else {
+    stage.querySelectorAll('.opt').forEach(btn=>btn.addEventListener('click',()=>pick(q, btn.dataset.v)));
+  }
+
   // On single-select the answer auto-advances, so a permanently greyed-out
   // Continue button is just visual noise. Show it only where it does work.
-  const last = idx===QUESTIONS.length-1;
-  next.style.display = q.multi ? '' : 'none';
-  next.disabled = q.multi ? !(cur && cur.length) : false;
+  next.style.display = (q.multi || q.text) ? '' : 'none';
+  next.disabled = q.multi ? !(cur && cur.length)
+                : q.text ? (cur === undefined ? true : String(cur).trim().length < 3)
+                : false;
   next.childNodes[0].nodeValue = last ? 'Build my playbook ' : 'Continue ';
   next.querySelector('span').textContent = last ? '↑' : '→';
-  $('#qStep').textContent = (idx+1)+' of '+QUESTIONS.length;
-  $('#qHint').innerHTML = q.multi
-    ? 'Press <kbd>1</kbd>–<kbd>9</kbd> to toggle · <kbd>Enter</kbd> to continue'
-    : 'Press <kbd>1</kbd>–<kbd>9</kbd> to choose, or just click';
+  $('#qStep').textContent = (pos+1)+' of '+total;
+  $('#qHint').innerHTML = q.text
+    ? 'Type a line, or skip it · <kbd>Enter</kbd> to continue'
+    : q.multi
+      ? 'Press <kbd>1</kbd>–<kbd>9</kbd> to toggle · <kbd>Enter</kbd> to continue'
+      : 'Press <kbd>1</kbd>–<kbd>9</kbd> to choose, or just click';
   body.scrollTop = 0;
 }
 
@@ -98,6 +144,9 @@ function pick(q, raw){
     answers[q.id]=a; render();
   } else {
     answers[q.id]=v;
+    // Changing career can hide or reveal the years question, so anything
+    // downstream of a conditional has to be revalidated before moving on.
+    if(q.id==='career' && v==='none') delete answers.years;
     render();
     setTimeout(advance, 190);   // auto-advance keeps perceived effort low
   }
@@ -105,27 +154,41 @@ function pick(q, raw){
 
 function advance(){
   const q = QUESTIONS[idx];
-  if(q.multi ? !(answers[q.id]||[]).length : answers[q.id]===undefined) return;
-  if(idx < QUESTIONS.length-1){ idx++; render(); }
+  if(q.text){
+    const inp = $('#qText');
+    if(inp) answers[q.id] = cleanIdea(inp.value);
+    if(answers[q.id] === undefined) return;
+  } else if(!answered(q)) return;
+
+  const nxt = step(idx, +1);
+  if(nxt < QUESTIONS.length){ idx = nxt; render(); }
   else finish();
 }
 next.addEventListener('click', advance);
-back.addEventListener('click', ()=>{ if(idx>0){ idx--; render(); } });
+back.addEventListener('click', ()=>{
+  const q = QUESTIONS[idx];
+  if(q.text){ const inp=$('#qText'); if(inp && inp.value.trim()) answers[q.id]=cleanIdea(inp.value); }
+  const prev = step(idx, -1);
+  if(prev >= 0){ idx = prev; render(); }
+});
 
 document.addEventListener('keydown', e=>{
   if(!quiz.classList.contains('open') || ranked) return;
-  if(e.key==='Escape'){ closeQuiz(); return; }
+  const typing = e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName);
+  if(e.key==='Escape'){ if(!typing) closeQuiz(); return; }
   if(e.key==='Enter'){ e.preventDefault(); advance(); return; }
+  if(typing) return;                 // never hijack digits while someone types
   const n = parseInt(e.key,10);
   if(n>=1 && n<=9){
     const q=QUESTIONS[idx];
-    if(q.opts[n-1]){ e.preventDefault(); pick(q, q.opts[n-1].v); }
+    if(q.opts && q.opts[n-1]){ e.preventDefault(); pick(q, q.opts[n-1].v); }
   }
 });
 
 /* ---------- build ---------- */
 const BUILD_STEPS = [
   'Reading your constraints',
+  'Matching your industry and your work history',
   'Scoring 10 business models against your profile',
   'Selecting your acquisition channel',
   'Calculating your pricing ladder',
@@ -141,7 +204,7 @@ function finish(){
   ranked = scoreModels(answers);
   stage.innerHTML = '<div class="building"><div class="build-ring"></div>'
     + '<h2 class="h-md">Building your playbook</h2>'
-    + '<p class="dim" style="margin-top:10px">Twelve answers, ten models, one document.</p>'
+    + '<p class="dim" style="margin-top:10px">Your answers, ten models, one document.</p>'
     + '<div class="build-log">'+BUILD_STEPS.map(s=>'<div>'+s+'</div>').join('')+'</div></div>';
   const logs = stage.querySelectorAll('.build-log div');
   logs.forEach((el,i)=>setTimeout(()=>el.classList.add('on'), 260 + i*330));
@@ -156,7 +219,7 @@ function showResults(){
   + '<div class="res-hero">'
     + '<div class="res-label">YOUR RECOMMENDED MODEL</div>'
     + '<div class="res-name">'+m.name+'</div>'
-    + '<p class="res-why">'+m.line+'</p>'
+    + '<p class="res-why">'+esc(sharpen(answers, m))+'</p>'
     + '<div class="res-fit"><span class="dim">Match score</span> <b>'+top.score+'/100</b> <span class="dim3">·</span> <span class="dim">'+m.capital+' to start</span> <span class="dim3">·</span> <span class="dim">first dollar in '+m.firstDollar+'</span></div>'
   + '</div>'
   + '<div class="res-grid">'
@@ -167,11 +230,12 @@ function showResults(){
       + m.examples.map(s=>'<li>'+s+'</li>').join('')
     + '</ul></div>'
     + '<div class="res-box"><span class="mono">YOUR CHANNEL</span><ul><li>'+m.channel.core+'</li><li>'+m.channel.volume+'</li></ul></div>'
-    + '<div class="res-box"><span class="mono">YOUR FIRST WEEK</span><ul><li>'+m.weeks[0][0]+' — '+m.weeks[0][1]+'</li><li>'+m.firstTen[0]+'</li></ul></div>'
+    + '<div class="res-box"><span class="mono">YOUR FIRST WEEK</span><ul><li>'+(INDUSTRIES[answers.industry]||INDUSTRIES.notsure).first+'</li></ul></div>'
+    + '<div class="res-box"><span class="mono">YOUR UNFAIR ADVANTAGE</span><ul><li>'+(CAREERS[answers.career]||CAREERS.none).edge+'</li><li>'+(INDUSTRIES[answers.industry]||INDUSTRIES.notsure).customer.split('.')[0]+'.</li></ul></div>'
   + '</div>'
   + '<div class="res-dl">'
     + '<h3>Your playbook is ready</h3>'
-    + '<p>Around 20 pages: your offer, your prices, your outreach script, a 90-day plan scaled to your hours, your unit economics, and a direct answer to the thing that has been stopping you.</p>'
+    + '<p>Around 16 pages, written for your field and your work history: who actually pays in '+(INDUSTRIES[answers.industry]||INDUSTRIES.notsure).name.toLowerCase()+', what to charge, the outreach script, a 90-day plan scaled to your hours, your unit economics, and a direct answer to the thing that has been stopping you.</p>'
     + '<button class="btn btn-primary btn-lg" id="dl">Download the PDF <span class="btn-arrow">↓</span></button>'
     + '<p style="margin-top:16px;font-size:.85rem;color:var(--text-3)">No email. Nothing was uploaded. Download it now — it isn\'t saved anywhere.</p>'
   + '</div>'
