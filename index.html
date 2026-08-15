@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MyFirstBusiness — Get the exact plan for your first business. Free.</title>
+<meta name="description" content="Answer 12 questions. Get a personalized PDF playbook telling you exactly which business to start, how to build it, and how to get your first 10 paying customers. Free. No email required.">
+<meta name="theme-color" content="#05070C">
+<meta property="og:title" content="MyFirstBusiness — Get the exact plan for your first business. Free.">
+<meta property="og:description" content="12 questions. One personalized PDF playbook. No email, no upsell, no cost.">
+<meta property="og:type" content="website">
+<link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2305070C'/%3E%3Cpath d='M22 74V26h13l15 26 15-26h13v48H65V50L52 72h-4L35 50v24z' fill='%23C8FF3C'/%3E%3C/svg%3E">
+<!-- pdfmake (~2.1MB) is vendored locally so the site works offline and makes
+     no third-party request while generating a document. It is loaded lazily
+     the moment the questionnaire opens, not on page load — first paint stays
+     around 200KB, which matters on a phone on mobile data. -->
+<style>
+/* Fonts are self-hosted (latin subsets, ~105KB total). No Google Fonts
+   request, no third-party call anywhere on this page — which is what lets
+   the site honestly claim nothing leaves the visitor's device. */
+@font-face{font-family:'Archivo';src:url('fonts/archivo.woff2') format('woff2-variations');font-weight:100 900;font-display:swap}
+@font-face{font-family:'Inter';src:url('fonts/inter.woff2') format('woff2-variations');font-weight:100 900;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('fonts/mono.woff2') format('woff2');font-weight:400 700;font-display:swap}
+
+/* ============================================================
+   MYFIRSTBUSINESS — DESIGN SYSTEM
+   Palette rationale (see BRAND-AND-STRATEGY.md):
+   - Near-black base: maximum contrast headroom, lets ONE accent
+     own attention (Von Restorff / isolation effect).
+   - Volt (#C8FF3C) is reserved EXCLUSIVELY for primary actions.
+     It appears nowhere else. That is the whole point.
+   - Ember (#FF6B2C) for emphasis/urgency, used sparingly.
+   - Credibility comes from data, typography and whitespace,
+     not from "trust blue".
+   ============================================================ */
+:root{
+  --ink:#05070C; --ink-2:#0A0E16; --ink-3:#111828; --ink-4:#182033;
+  --line:#1E2839; --line-2:#2B3548;
+  --text:#EAEEF5; --text-2:#98A4B8; --text-3:#616D80;
+  --volt:#C8FF3C; --volt-2:#A8E01E; --volt-ink:#08120A;
+  --ember:#FF6B2C; --sky:#63A8FF; --good:#3DDC97;
+  --r-sm:8px; --r:14px; --r-lg:22px; --r-xl:32px;
+  --maxw:1140px;
+  --f-display:'Archivo','Helvetica Neue',Helvetica,Arial,system-ui,sans-serif;
+  --f-body:'Inter','Helvetica Neue',Helvetica,Arial,system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--ink);color:var(--text);font-family:var(--f-body);
+  font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body.locked{overflow:hidden}
+img,svg{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--volt);color:var(--volt-ink)}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:800;line-height:1.04;letter-spacing:-.03em}
+.h-xl{font-size:clamp(2.9rem,7.2vw,5.4rem);font-weight:900;letter-spacing:-.045em}
+.h-lg{font-size:clamp(2.1rem,4.6vw,3.5rem);font-weight:900;letter-spacing:-.04em}
+.h-md{font-size:clamp(1.5rem,2.8vw,2.15rem)}
+.h-sm{font-size:1.2rem;letter-spacing:-.02em}
+.lede{font-size:clamp(1.08rem,1.9vw,1.32rem);color:var(--text-2);line-height:1.6;max-width:60ch}
+.mono{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700}
+.dim{color:var(--text-2)}
+.dim3{color:var(--text-3)}
+.vlt{color:var(--volt)}
+.emb{color:var(--ember)}
+
+/* ---------- layout ---------- */
+.wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:24px}
+section{padding-block:clamp(72px,10vw,132px);position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--text-3);margin-bottom:20px}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--line)}
+.grid{display:grid;gap:22px}
+.hr{height:1px;background:var(--line);border:0}
+
+/* ---------- nav ---------- */
+header.nav{
+  position:sticky;top:0;z-index:60;
+  background:color-mix(in srgb,var(--ink) 82%,transparent);
+  backdrop-filter:blur(18px) saturate(140%);
+  border-bottom:1px solid transparent;transition:border-color .3s
+}
+header.nav.stuck{border-bottom-color:var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{display:flex;align-items:center;gap:11px;font-family:var(--f-display);font-weight:900;font-size:1.03rem;letter-spacing:-.035em}
+.logo-mark{width:30px;height:30px;border-radius:9px;background:var(--volt);color:var(--volt-ink);display:grid;place-items:center;font-size:1rem;font-weight:900;flex:none}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-size:.93rem;color:var(--text-2);transition:color .18s}
+.nav-links a:hover{color:var(--text)}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:16px 26px;border-radius:999px;font-weight:700;font-size:1rem;
+  letter-spacing:-.01em;transition:transform .16s var(--ease),box-shadow .2s,background .2s;
+  min-height:52px;white-space:nowrap;
+}
+.btn-primary{background:var(--volt);color:var(--volt-ink);box-shadow:0 0 0 0 rgba(200,255,60,.4)}
+@media(hover:hover){.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px -12px rgba(200,255,60,.55)}}
+.btn-primary:active{transform:translateY(0)}
+.btn-lg{padding:20px 34px;font-size:1.08rem;min-height:62px}
+.btn-ghost{border:1px solid var(--line);color:var(--text-2)}
+@media(hover:hover){.btn-ghost:hover{border-color:var(--text-3);color:var(--text)}}
+.btn:disabled{opacity:.32;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.btn-arrow{font-family:var(--f-mono);font-size:1.05em}
+
+/* ---------- hero ---------- */
+.hero{padding-top:clamp(56px,8vw,92px);padding-bottom:clamp(56px,7vw,96px);overflow:hidden}
+.hero::before{
+  content:"";position:absolute;inset:-30% -10% auto -10%;height:80vh;pointer-events:none;
+  background:radial-gradient(52% 46% at 50% 30%,rgba(200,255,60,.10),transparent 68%);
+}
+.hero-in{position:relative;z-index:1;max-width:920px}
+.badge{
+  display:inline-flex;align-items:center;gap:10px;padding:7px 15px 7px 9px;border-radius:999px;
+  border:1px solid var(--line);background:var(--ink-2);font-size:.8rem;color:var(--text-2);margin-bottom:26px
+}
+.badge b{color:var(--volt);font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--volt);box-shadow:0 0 0 4px rgba(200,255,60,.16);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{margin-bottom:24px}
+.hero h1 em{font-style:normal;color:var(--volt)}
+.hero .lede{margin-bottom:34px;font-size:clamp(1.12rem,2vw,1.4rem)}
+.cta-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:26px}
+.cta-note{font-size:.9rem;color:var(--text-3)}
+.trust-row{display:flex;flex-wrap:wrap;gap:10px 22px;padding-top:26px;border-top:1px solid var(--line)}
+.trust-item{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--text-2)}
+.tick{width:16px;height:16px;flex:none;color:var(--volt)}
+
+/* ---------- stat strip ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-block:1px solid var(--line)}
+.stat{background:var(--ink);padding:30px 22px}
+.stat b{display:block;font-family:var(--f-display);font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:900;letter-spacing:-.04em;line-height:1;margin-bottom:8px}
+.stat span{font-size:.85rem;color:var(--text-2);line-height:1.45;display:block}
+.stat small{display:block;margin-top:7px;font-size:.7rem;color:var(--text-3)}
+
+/* ---------- cards ---------- */
+.card{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--r-lg);padding:30px}
+.card-num{font-family:var(--f-mono);font-size:.72rem;color:var(--volt);letter-spacing:.16em;margin-bottom:16px;display:block}
+.card h3{margin-bottom:10px;font-size:1.18rem}
+.card p{font-size:.96rem;color:var(--text-2);line-height:1.6}
+.cols-3{grid-template-columns:repeat(3,1fr)}
+.cols-2{grid-template-columns:repeat(2,1fr)}
+.cols-4{grid-template-columns:repeat(4,1fr)}
+
+/* ---------- problem list ---------- */
+.pain{display:grid;gap:14px;margin-top:34px}
+.pain-item{display:flex;gap:16px;align-items:flex-start;padding:20px 22px;background:var(--ink-2);border:1px solid var(--line);border-radius:var(--r);border-left:2px solid var(--ember)}
+.pain-item span:first-child{font-family:var(--f-mono);color:var(--ember);font-size:.78rem;padding-top:3px;flex:none}
+.pain-item p{color:var(--text-2);font-size:.98rem}
+.pain-item p b{color:var(--text);font-weight:600}
+
+/* ---------- pdf anatomy ---------- */
+.anatomy{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}
+.doc-mock{
+  background:linear-gradient(160deg,var(--ink-3),var(--ink-2));border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:34px 30px;position:relative;overflow:hidden;
+  box-shadow:0 40px 80px -40px rgba(0,0,0,.9)
+}
+.doc-mock::after{content:"";position:absolute;inset:auto -20% -60% -20%;height:60%;background:radial-gradient(50% 100% at 50% 100%,rgba(200,255,60,.14),transparent 70%)}
+.doc-tag{font-family:var(--f-mono);font-size:.64rem;color:var(--volt);letter-spacing:.2em;margin-bottom:18px}
+.doc-title{font-family:var(--f-display);font-weight:900;font-size:1.9rem;letter-spacing:-.04em;line-height:1.05;margin-bottom:14px}
+.doc-sub{font-size:.85rem;color:var(--text-2);margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.doc-line{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px dashed var(--line);font-size:.84rem}
+.doc-line:last-child{border:0}
+.doc-line span:first-child{color:var(--text-2)}
+.doc-line span:last-child{font-family:var(--f-mono);font-size:.7rem;color:var(--text-3)}
+.chapter-list{display:grid;gap:2px}
+.chapter{display:flex;gap:18px;padding:15px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.chapter:last-child{border:0}
+.chapter b{font-family:var(--f-mono);font-size:.7rem;color:var(--volt);flex:none;width:26px}
+.chapter div strong{display:block;font-weight:600;font-size:1rem;margin-bottom:3px}
+.chapter div span{font-size:.9rem;color:var(--text-2);line-height:1.5}
+
+/* ---------- steps ---------- */
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:44px}
+.step{position:relative;padding-top:30px;border-top:2px solid var(--line)}
+.step::before{
+  counter-increment:s;content:"0" counter(s);position:absolute;top:-1px;left:0;
+  transform:translateY(-50%);background:var(--ink);padding-right:14px;
+  font-family:var(--f-mono);font-weight:700;font-size:.78rem;color:var(--volt)
+}
+.step h3{font-size:1.24rem;margin-bottom:9px}
+.step p{color:var(--text-2);font-size:.96rem}
+
+/* ---------- method ---------- */
+.method{background:var(--ink-2);border-block:1px solid var(--line)}
+.laws{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-top:40px}
+.law{background:var(--ink-2);padding:24px 22px;transition:background .2s}
+@media(hover:hover){.law:hover{background:var(--ink-3)}}
+.law b{font-family:var(--f-mono);font-size:.66rem;color:var(--volt);letter-spacing:.14em;display:block;margin-bottom:10px}
+.law p{font-size:.94rem;line-height:1.5;font-weight:500}
+.source-note{margin-top:26px;font-size:.85rem;color:var(--text-3);max-width:66ch}
+
+/* ---------- faq ---------- */
+.faq{display:grid;gap:0;margin-top:36px;border-top:1px solid var(--line)}
+details{border-bottom:1px solid var(--line)}
+summary{padding:24px 0;font-weight:600;font-size:1.05rem;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:20px;align-items:center;transition:color .18s}
+summary:hover{color:var(--volt)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--f-mono);color:var(--volt);font-size:1.3rem;flex:none;transition:transform .25s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding-bottom:24px;color:var(--text-2);font-size:.98rem;max-width:72ch}
+
+/* ---------- final cta ---------- */
+.final{text-align:center}
+.final .wrap{max-width:760px}
+.final h2{margin-bottom:20px}
+.final .lede{margin:0 auto 32px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding-block:44px;font-size:.88rem;color:var(--text-3)}
+.foot-in{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
+.foot-links{display:flex;gap:22px;flex-wrap:wrap}
+.foot-links a:hover{color:var(--text)}
+
+/* ============================================================
+   QUIZ
+   ============================================================ */
+.quiz{position:fixed;inset:0;z-index:200;background:var(--ink);display:none;flex-direction:column}
+.quiz.open{display:flex}
+.quiz-top{border-bottom:1px solid var(--line);flex:none}
+.quiz-top-in{display:flex;align-items:center;justify-content:space-between;height:64px;gap:18px}
+.q-count{font-family:var(--f-mono);font-size:.72rem;color:var(--text-3);letter-spacing:.14em;white-space:nowrap}
+.q-step{display:none;font-size:.84rem;color:var(--text-3)}
+.q-close{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--text-2);transition:.18s;flex:none}
+.q-close:hover{border-color:var(--ember);color:var(--ember)}
+.prog{height:2px;background:var(--line);position:relative}
+.prog-bar{position:absolute;inset:0 auto 0 0;width:0;background:var(--volt);transition:width .45s var(--ease)}
+.quiz-body{flex:1;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column}
+.quiz-stage{flex:1;display:flex;align-items:center;padding-block:clamp(30px,6vw,64px)}
+.q-card{width:100%;max-width:820px;margin-inline:auto;padding-inline:24px;animation:qin .42s var(--ease)}
+@keyframes qin{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.q-kicker{font-family:var(--f-mono);font-size:.68rem;color:var(--volt);letter-spacing:.18em;margin-bottom:16px}
+.q-title{font-family:var(--f-display);font-weight:900;font-size:clamp(1.7rem,4.2vw,2.7rem);letter-spacing:-.04em;line-height:1.08;margin-bottom:12px}
+.q-help{color:var(--text-2);font-size:1rem;margin-bottom:32px}
+.opts{display:grid;gap:11px}
+.opts.two{grid-template-columns:repeat(2,1fr)}
+.opt{
+  display:flex;align-items:flex-start;gap:15px;text-align:left;width:100%;
+  padding:16px 20px;border:1px solid var(--line);border-radius:var(--r);
+  background:var(--ink-2);transition:border-color .16s,background .16s,transform .16s var(--ease)
+}
+@media(hover:hover){.opt:hover{border-color:var(--text-3);background:var(--ink-3);transform:translateX(3px)}}
+.opt.sel{border-color:var(--volt);background:rgba(200,255,60,.07)}
+.opt-key{
+  width:26px;height:26px;border-radius:7px;border:1px solid var(--line);flex:none;
+  display:grid;place-items:center;font-family:var(--f-mono);font-size:.7rem;color:var(--text-3);
+  margin-top:1px;transition:.16s
+}
+.opt.sel .opt-key{background:var(--volt);border-color:var(--volt);color:var(--volt-ink)}
+.opt-txt strong{display:block;font-weight:600;font-size:1rem;line-height:1.35;margin-bottom:3px}
+.opt-txt span{font-size:.88rem;color:var(--text-2);line-height:1.45}
+.q-foot{flex:none;border-top:1px solid var(--line);background:var(--ink)}
+.q-foot-in{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:16px;min-height:78px}
+.q-hint{font-size:.82rem;color:var(--text-3)}
+.q-hint kbd{font-family:var(--f-mono);font-size:.72rem;background:var(--ink-3);border:1px solid var(--line);border-radius:5px;padding:2px 6px;color:var(--text-2)}
+.q-back{font-size:.92rem;color:var(--text-3);transition:color .18s}
+.q-back:hover{color:var(--text)}
+
+/* ---------- building screen ---------- */
+.building{max-width:620px;margin:auto;padding:60px 24px;text-align:center}
+.build-ring{width:76px;height:76px;margin:0 auto 30px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--volt);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.build-log{margin-top:30px;text-align:left;display:grid;gap:9px;font-family:var(--f-mono);font-size:.78rem}
+.build-log div{color:var(--text-3);opacity:.3;transition:.4s}
+.build-log div.on{opacity:1;color:var(--text-2)}
+.build-log div.on::before{content:"✓ ";color:var(--volt)}
+
+/* ---------- results ---------- */
+.results{max-width:900px;margin-inline:auto;padding:clamp(34px,6vw,64px) 24px 90px;animation:qin .5s var(--ease)}
+.res-hero{text-align:center;margin-bottom:44px}
+.res-label{font-family:var(--f-mono);font-size:.7rem;color:var(--text-3);letter-spacing:.2em;margin-bottom:18px}
+.res-name{font-family:var(--f-display);font-weight:900;font-size:clamp(2.2rem,6vw,3.8rem);letter-spacing:-.045em;line-height:1.02;color:var(--volt);margin-bottom:18px}
+.res-why{color:var(--text-2);font-size:1.08rem;max-width:62ch;margin-inline:auto}
+.res-fit{display:inline-flex;align-items:center;gap:12px;margin-top:24px;padding:9px 18px;border:1px solid var(--line);border-radius:999px;font-size:.86rem}
+.res-fit b{font-family:var(--f-mono);color:var(--volt)}
+.res-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:36px}
+.res-box{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.res-box .mono{color:var(--text-3);margin-bottom:12px;display:block}
+.res-box ul{list-style:none;display:grid;gap:9px}
+.res-box li{font-size:.94rem;color:var(--text-2);padding-left:18px;position:relative;line-height:1.5}
+.res-box li::before{content:"→";position:absolute;left:0;color:var(--volt);font-family:var(--f-mono);font-size:.8rem}
+.res-dl{background:linear-gradient(150deg,var(--ink-3),var(--ink-2));border:1px solid var(--line);border-radius:var(--r-lg);padding:clamp(28px,5vw,42px);text-align:center;position:relative;overflow:hidden}
+.res-dl::before{content:"";position:absolute;inset:-50% -10% auto -10%;height:120%;background:radial-gradient(50% 50% at 50% 40%,rgba(200,255,60,.12),transparent 70%);pointer-events:none}
+.res-dl > *{position:relative}
+.res-dl h3{font-size:clamp(1.4rem,3vw,2rem);margin-bottom:12px}
+.res-dl p{color:var(--text-2);margin-bottom:26px;max-width:52ch;margin-inline:auto;font-size:.98rem}
+.res-alt{margin-top:34px}
+.alt-item{display:flex;gap:16px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line)}
+.alt-item b{font-family:var(--f-mono);font-size:.7rem;color:var(--text-3);flex:none;width:34px}
+.alt-item div strong{display:block;font-size:1rem;font-weight:600;margin-bottom:3px}
+.alt-item div span{font-size:.9rem;color:var(--text-2)}
+.res-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:34px}
+
+/* ---------- toast ---------- */
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,180%);opacity:0;pointer-events:none;background:var(--ink-3);border:1px solid var(--line);border-radius:999px;padding:13px 24px;font-size:.9rem;z-index:300;transition:transform .4s var(--ease),opacity .3s;box-shadow:0 20px 50px -20px #000}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media(max-width:980px){
+  .anatomy{grid-template-columns:1fr;gap:36px}
+  .laws{grid-template-columns:repeat(2,1fr)}
+  .cols-4{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:760px){
+  body{font-size:16px}
+  .nav-links{display:none}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .cols-3,.cols-2,.steps,.res-grid,.opts.two{grid-template-columns:1fr}
+  .laws{grid-template-columns:1fr}
+  .q-hint{display:none}
+  .q-step{display:block}
+  .quiz-top-in .logo{font-size:.92rem}
+  .quiz-top-in .logo .dim3{display:none}
+  .btn{width:100%}
+  .cta-row .btn{width:100%}
+  .res-actions .btn{width:100%}
+  .q-foot-in .btn{width:auto}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="#top" class="logo"><span class="logo-mark">M</span> myfirstbusiness<span class="dim3">.com</span></a>
+    <nav class="nav-links">
+      <a href="#problem">The problem</a>
+      <a href="#guide">What you get</a>
+      <a href="#method">The method</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <button class="btn btn-primary" data-start>Start free <span class="btn-arrow">→</span></button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap hero-in">
+    <div class="badge"><span class="dot"></span> <b>FREE FOREVER</b> <span>· No account · No email · No upsell</span></div>
+    <h1 class="h-xl">You don't need another course.<br>You need <em>the next step.</em></h1>
+    <p class="lede">Answer 12 questions about your money, your time and what you're actually good at. Get back a personalized PDF playbook that names the business you should start, the price you should charge, the exact channel that will get you customers, and a 90-day plan to your first paying human.</p>
+    <div class="cta-row">
+      <button class="btn btn-primary btn-lg" data-start>Build my playbook <span class="btn-arrow">→</span></button>
+      <span class="cta-note">Takes about 4 minutes.</span>
+    </div>
+    <div class="trust-row">
+      <span class="trust-item"><svg class="tick" viewBox="0 0 20 20" fill="currentColor"><path d="M8 14.5 3.5 10l1.4-1.4L8 11.7l7.1-7.1L16.5 6z"/></svg> Nothing to pay, ever</span>
+      <span class="trust-item"><svg class="tick" viewBox="0 0 20 20" fill="currentColor"><path d="M8 14.5 3.5 10l1.4-1.4L8 11.7l7.1-7.1L16.5 6z"/></svg> No email required to download</span>
+      <span class="trust-item"><svg class="tick" viewBox="0 0 20 20" fill="currentColor"><path d="M8 14.5 3.5 10l1.4-1.4L8 11.7l7.1-7.1L16.5 6z"/></svg> Your answers never leave your device</span>
+      <span class="trust-item"><svg class="tick" viewBox="0 0 20 20" fill="currentColor"><path d="M8 14.5 3.5 10l1.4-1.4L8 11.7l7.1-7.1L16.5 6z"/></svg> Built on documented business science</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STATS ================= -->
+<div class="stats rv">
+  <div class="stat"><b class="vlt">12</b><span>Universal laws that hold for every business on earth</span><small>Not tactics. Physics.</small></div>
+  <div class="stat"><b>9</b><span>Domains of business knowledge mapped and sequenced</span><small>Strategy → offer → sales → cash → systems</small></div>
+  <div class="stat"><b>35</b><span>Books distilled so you don't have to read them first</span><small>~250 hours, compressed</small></div>
+  <div class="stat"><b>$0</b><span>What this costs you, and what it costs to start</span><small>Every model we recommend starts at zero</small></div>
+</div>
+
+<!-- ================= PROBLEM ================= -->
+<section id="problem">
+  <div class="wrap">
+    <span class="eyebrow mono">The real problem</span>
+    <h2 class="h-lg">The information isn't the bottleneck.<br><span class="dim">Knowing which part applies to you is.</span></h2>
+    <p class="lede" style="margin-top:22px">There are ten million videos about starting a business. You've probably watched forty of them. You still haven't started. That isn't a discipline problem — it's a <b class="vlt">targeting</b> problem. Generic advice is generic because it has to work for everyone, which means it's optimized for nobody.</p>
+    <div class="pain">
+      <div class="pain-item"><span>01</span><p><b>Everything contradicts everything.</b> One guru says start with content. The next says content is a trap and you should cold call. Both are right — for different businesses, with different margins, at different stages. Neither tells you which one you are.</p></div>
+      <div class="pain-item"><span>02</span><p><b>Advice is written for people who already have something.</b> "Improve your conversion rate." You have no traffic. "Raise your prices." You have no customers. The whole internet skipped step zero.</p></div>
+      <div class="pain-item"><span>03</span><p><b>You're told to "find your passion" and then sell it.</b> Passion is an input, not a business model. Plenty of people love things nobody will pay for. Nobody teaches you how to check first.</p></div>
+      <div class="pain-item"><span>04</span><p><b>Every free resource is bait for a paid one.</b> The guide is a hook, the webinar is a pitch, the community is a funnel. So you learn to distrust free things — which is exactly why this one takes no email, no account, and sells nothing.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHAT YOU GET ================= -->
+<section id="guide" class="rv">
+  <div class="wrap">
+    <span class="eyebrow mono">What you actually get</span>
+    <h2 class="h-lg">A document written for exactly one person.</h2>
+    <div class="anatomy" style="margin-top:52px">
+      <div class="doc-mock">
+        <div class="doc-tag">PERSONALIZED PLAYBOOK · PDF</div>
+        <div class="doc-title">Your First<br>Business Plan</div>
+        <div class="doc-sub">Generated from 12 answers · ~20 pages · yours to keep</div>
+        <div class="doc-line"><span>Recommended model</span><span>MATCHED</span></div>
+        <div class="doc-line"><span>Starting capital required</span><span>$0</span></div>
+        <div class="doc-line"><span>Weekly hours planned</span><span>YOURS</span></div>
+        <div class="doc-line"><span>Target: first paying customer</span><span>DAY 30</span></div>
+        <div class="doc-line"><span>Acquisition channel</span><span>1 OF 4</span></div>
+        <div class="doc-line"><span>Price to charge</span><span>CALCULATED</span></div>
+      </div>
+      <div class="chapter-list">
+        <div class="chapter"><b>01</b><div><strong>Your situation, stated honestly</strong><span>Your capital, time, skills and pressure written back to you as constraints — because a plan that ignores your constraints is fiction.</span></div></div>
+        <div class="chapter"><b>02</b><div><strong>The business you should start, and why</strong><span>One primary recommendation scored against your profile, plus two backups, plus what would have to change for the others to win.</span></div></div>
+        <div class="chapter"><b>03</b><div><strong>Your offer, built with the Value Equation</strong><span>Dream outcome, perceived likelihood, time delay, effort — the four levers, filled in for your specific model.</span></div></div>
+        <div class="chapter"><b>04</b><div><strong>What to charge on day one</strong><span>Value-based pricing with a Good / Better / Best ladder, and the one guarantee that removes the buyer's risk.</span></div></div>
+        <div class="chapter"><b>05</b><div><strong>Your single acquisition channel</strong><span>One of the Core Four, chosen for your margin and your comfort — with the actual outreach script, not "be authentic."</span></div></div>
+        <div class="chapter"><b>06</b><div><strong>A 90-day build timeline</strong><span>Week by week, scaled to the hours you said you have. Ends with money in your account, not with a finished logo.</span></div></div>
+        <div class="chapter"><b>07</b><div><strong>The numbers you must be able to compute</strong><span>Your break-even, your unit economics, and the one metric that predicts whether any of this works.</span></div></div>
+        <div class="chapter"><b>08</b><div><strong>Your specific blocker, pre-handled</strong><span>Whatever you told us is stopping you, answered directly — before it stops you again in week three.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="rv">
+  <div class="wrap">
+    <span class="eyebrow mono">How it works</span>
+    <h2 class="h-lg">Three steps. No account anywhere.</h2>
+    <div class="steps">
+      <div class="step"><h3>Answer 12 questions</h3><p>Money, time, skills, interests, pressure, fear. One question per screen, no typing required, roughly four minutes. Everything runs in your browser — nothing is uploaded.</p></div>
+      <div class="step"><h3>We score you against 10 models</h3><p>Ten proven zero-capital business models are scored against your constraints. The one that wins isn't the trendiest — it's the one you can actually finish.</p></div>
+      <div class="step"><h3>Download the PDF and start</h3><p>A ~20-page playbook lands in your downloads. Print it, mark it up, work the 90-day plan. Come back and redo it any time your situation changes.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= METHOD ================= -->
+<section id="method" class="method rv">
+  <div class="wrap">
+    <span class="eyebrow mono">The method</span>
+    <h2 class="h-lg">Built on the part of business<br><span class="dim">that is actually universal.</span></h2>
+    <p class="lede" style="margin-top:22px">Almost nothing in business is universal at the tactic level. Cold email works for B2B services and fails for retail. Paid ads work for high-margin products and kill low-margin ones. Anyone selling you a tactic that "works for every business" is selling you something. But there <b class="vlt">is</b> a layer underneath that genuinely holds everywhere — and it's smaller than you think. Every playbook this site generates is built from it.</p>
+    <div class="laws">
+      <div class="law"><b>LAW 01</b><p>A business exists only where value created exceeds cost to create it.</p></div>
+      <div class="law"><b>LAW 02</b><p>Businesses die from lack of cash, not lack of profit.</p></div>
+      <div class="law"><b>LAW 03</b><p>You are always solving for exactly one constraint.</p></div>
+      <div class="law"><b>LAW 04</b><p>Distribution beats product more often than founders admit.</p></div>
+      <div class="law"><b>LAW 05</b><p>Volume negates luck. Reps beat thinking.</p></div>
+      <div class="law"><b>LAW 06</b><p>The market is the biggest single variable — and you choose it.</p></div>
+      <div class="law"><b>LAW 07</b><p>Price is a strategic decision, not an arithmetic one.</p></div>
+      <div class="law"><b>LAW 08</b><p>Unit economics decide everything at scale.</p></div>
+      <div class="law"><b>LAW 09</b><p>Retention compounds. Acquisition does not.</p></div>
+      <div class="law"><b>LAW 10</b><p>Systems outperform heroics.</p></div>
+      <div class="law"><b>LAW 11</b><p>People are the ceiling on everything above.</p></div>
+      <div class="law"><b>LAW 12</b><p>Speed of iteration beats quality of plan.</p></div>
+    </div>
+    <p class="source-note">Frameworks drawn from Hormozi's value equation and Core Four, Goldratt's Theory of Constraints, Porter's Five Forces, Helmer's 7 Powers, Christensen's Jobs To Be Done, Cialdini's principles of influence, Sharp's <em>How Brands Grow</em>, Abraham's three ways to grow, and standard unit-economics accounting. Your playbook cites which one it's using and why, so you can go read the source yourself.</p>
+  </div>
+</section>
+
+<!-- ================= HONESTY ================= -->
+<section class="rv">
+  <div class="wrap">
+    <span class="eyebrow mono">Where this fits</span>
+    <h2 class="h-lg">What this is — and what it isn't.</h2>
+    <div class="grid cols-2" style="margin-top:44px">
+      <div class="card">
+        <span class="card-num">IT IS</span>
+        <h3>A targeting device</h3>
+        <p>It removes the ninety-five percent of business advice that doesn't apply to you and hands you the five percent that does, sequenced, with a date attached to each step. That single act of filtering is worth more than another forty hours of watching.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">IT ISN'T</span>
+        <h3>A guarantee</h3>
+        <p>No document makes you money. Reps make you money. The playbook tells you what to do in week one; you still have to do week one. The honest number to track is how many times you have asked a real human being for money. Nothing else predicts anything.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">IT IS</span>
+        <h3>Free because it should be</h3>
+        <p>The gap between people who start businesses and people who don't is mostly access to a competent adult who will tell them the truth in order. That shouldn't cost $997. There is no paid tier, no course at the end, no call to book.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">IT ISN'T</span>
+        <h3>Financial, legal or tax advice</h3>
+        <p>It's an educational framework. Registering a business, paying tax, signing contracts and taking on debt are decisions with real legal consequences that vary by country. Check those with someone qualified in your jurisdiction.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq" class="rv">
+  <div class="wrap" style="max-width:900px">
+    <span class="eyebrow mono">Questions</span>
+    <h2 class="h-lg">Fair things to be suspicious about.</h2>
+    <div class="faq">
+      <details><summary>What's the catch? Everything free online is bait.</summary><p>Reasonable instinct, and usually correct. Here the catch is: there is no email capture, no account, no paid tier, and no product behind the free product. It runs as a static page on free hosting, which costs the operator nothing to keep online. The whole thing is one HTML file. If that ever changes, it'll say so on this page.</p></details>
+      <details><summary>Do you store my answers?</summary><p>No. The questionnaire runs entirely in your browser's memory. Nothing is sent to a server, because there is no server — just a file being served to you. Close the tab and the answers are gone. That's also why you have to download the PDF now rather than "check your email."</p></details>
+      <details><summary>I'm 16 and I have literally zero dollars. Is this for me?</summary><p>Yes — that's the design centre. Every model recommended can be started with no capital, and the questionnaire specifically asks about money and time so the plan matches reality rather than assuming a budget. Note that in most countries there are age rules around registering a business and signing contracts; the playbook flags where you'd want a parent or guardian involved.</p></details>
+      <details><summary>How is this different from asking an AI chatbot?</summary><p>A chatbot answers the question you asked. This asks you twelve questions first, scores your answers against ten defined models, and returns the same structured document every time for the same inputs — so it can't wander, flatter you, or invent a plan that sounds good and skips the cash math. It's a scoring engine with a document attached, not a conversation.</p></details>
+      <details><summary>What if I get a recommendation I don't like?</summary><p>Then take one of the two alternates, or redo the quiz answering more honestly about what you'd actually enjoy — question 9 and 11 move the result a lot. The recommendation is a starting point that gets you to a real customer fast, not a life sentence. Most people who build something successful have three to five dead attempts behind them.</p></details>
+      <details><summary>Will this work in my country?</summary><p>The universal laws and the models do. The specific mechanics — how you register, how you get paid, what taxes apply — vary enormously, and the playbook tells you what to look up rather than pretending to know your local rules. The outreach scripts and the 90-day plan are country-agnostic.</p></details>
+      <details><summary>Can I redo it later?</summary><p>Yes, as many times as you want, and you should — after your first customer, your answers to "capital", "skills" and "selling comfort" will all be different, and the plan should change with them. There's nothing to log into and nothing to cancel.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+<section class="final rv">
+  <div class="wrap">
+    <h2 class="h-lg">Everything is downstream<br>of one specific person.</h2>
+    <p class="lede">Not a market. Not a niche. One person with a name who has the problem you can solve. The playbook exists to get you to that person in ninety days or less. Four minutes to find out who they are.</p>
+    <button class="btn btn-primary btn-lg" data-start>Build my playbook <span class="btn-arrow">→</span></button>
+    <p class="cta-note" style="margin-top:18px">Free · no email · no account · ~4 minutes</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <div>© <span id="yr">2026</span> myfirstbusiness.com — a free community project. Educational content only, not financial, legal or tax advice.</div>
+    <div class="foot-links">
+      <a href="#method">The method</a>
+      <a href="#faq">FAQ</a>
+      <a href="#top">Back to top</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= QUIZ ================= -->
+<div class="quiz" id="quiz" role="dialog" aria-modal="true" aria-label="Business diagnostic">
+  <div class="quiz-top">
+    <div class="wrap quiz-top-in">
+      <span class="logo"><span class="logo-mark">M</span> myfirstbusiness<span class="dim3">.com</span></span>
+      <span class="q-count" id="qCount">01 / 12</span>
+      <button class="q-close" id="qClose" aria-label="Close">✕</button>
+    </div>
+    <div class="prog"><div class="prog-bar" id="progBar"></div></div>
+  </div>
+  <div class="quiz-body" id="quizBody">
+    <div class="quiz-stage" id="quizStage"></div>
+  </div>
+  <div class="q-foot" id="qFoot">
+    <div class="wrap q-foot-in">
+      <button class="q-back" id="qBack">← Back</button>
+      <span class="q-hint" id="qHint">Press <kbd>1</kbd>–<kbd>9</kbd> to choose, or just click</span>
+      <span class="q-step" id="qStep">1 of 12</span>
+      <button class="btn btn-primary" id="qNext" disabled>Continue <span class="btn-arrow">→</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+/* ============================================================================
+   MYFIRSTBUSINESS — DIAGNOSTIC + RECOMMENDATION ENGINE
+   Everything runs client-side. No network calls, no storage, no tracking.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   1. THE QUESTIONNAIRE
+   12 questions, one per screen. Research basis for the format:
+   - Lead-capture completion falls ~28% going from 3 to 10 questions, so every
+     question here has to earn its place by changing the output.
+   - One-question-per-screen + auto-advance keeps perceived effort low
+     (Value Equation: minimise Time Delay and Effort & Sacrifice).
+   - No email gate: the single biggest drop-off point in any lead magnet.
+   ------------------------------------------------------------------------ */
+const QUESTIONS = [
+  { id:'stage', kicker:'WHERE YOU ARE', title:'Where are you right now?',
+    help:'Be honest. This changes what page one of your playbook says.',
+    opts:[
+      {v:'noidea',  t:'I want to start something',  d:'I have no idea what it should be'},
+      {v:'vague',   t:'I have a vague idea',        d:'Nothing concrete, nothing tested'},
+      {v:'specific',t:'I have a specific idea',     d:'I believe in it, I just haven\'t moved'},
+      {v:'started', t:'I already started',          d:'It isn\'t working yet'}
+    ]},
+
+  { id:'capital', kicker:'MONEY', title:'How much can you put in and genuinely afford to lose?',
+    help:'Not what you have. What you could lose without it hurting your life.',
+    opts:[
+      {v:0,    t:'$0',              d:'Nothing. Not a dollar.'},
+      {v:50,   t:'Under $100',      d:'Enough for a domain and a coffee'},
+      {v:300,  t:'$100 – $500',     d:'Enough for real tools or first inventory'},
+      {v:1000, t:'$500 – $2,000',   d:'Enough to test paid acquisition'},
+      {v:3000, t:'More than $2,000',d:'Enough to make expensive mistakes'}
+    ]},
+
+  { id:'time', kicker:'TIME', title:'How many hours a week can you actually protect?',
+    help:'Not your best week. Your average week, including the bad ones.',
+    opts:[
+      {v:5,  t:'Under 5 hours',  d:'Scraps of evenings and weekends'},
+      {v:10, t:'5 – 10 hours',   d:'An hour or two most days'},
+      {v:20, t:'10 – 20 hours',  d:'A serious part-time commitment'},
+      {v:35, t:'20 – 40 hours',  d:'Most of my waking free time'},
+      {v:45, t:'40+ hours',      d:'This is what I do all day'}
+    ]},
+
+  { id:'urgency', kicker:'PRESSURE', title:'How fast does this need to make money?',
+    help:'Financial pressure isn\'t a weakness — it\'s a constraint, and constraints pick the model.',
+    opts:[
+      {v:'now',     t:'I need income within 30 days', d:'This is not optional for me'},
+      {v:'soon',    t:'Within 3 – 6 months',          d:'It would change my situation'},
+      {v:'patient', t:'No real pressure',             d:'I can build slowly and compound'}
+    ]},
+
+  { id:'skills', kicker:'WHAT YOU CAN DO', title:'What can you already do at a decent level?',
+    help:'Pick everything that applies. "Decent" means someone has told you you\'re good at it.',
+    multi:true, two:true,
+    opts:[
+      {v:'write',   t:'Writing',           d:'Words, emails, explaining things clearly'},
+      {v:'design',  t:'Design',            d:'Visuals, layout, taste'},
+      {v:'video',   t:'Video & photo',     d:'Filming, editing, being on camera'},
+      {v:'code',    t:'Code & tech',       d:'Building, scripting, automating, AI tools'},
+      {v:'talk',    t:'Talking to people', d:'Persuading, negotiating, not freezing up'},
+      {v:'hands',   t:'Practical work',    d:'Fixing, building, cleaning, physical craft'},
+      {v:'teach',   t:'Teaching',          d:'Making a hard thing click for someone'},
+      {v:'organize',t:'Organising',        d:'Systems, logistics, admin, making order'},
+      {v:'numbers', t:'Numbers',           d:'Spreadsheets, analysis, money math'},
+      {v:'none',    t:'Nothing yet',       d:'Genuinely starting from zero'}
+    ]},
+
+  { id:'interests', kicker:'WHAT YOU CARE ABOUT', title:'What subjects do you actually care about?',
+    help:'Pick up to four. Passion isn\'t a business model, but it is fuel — and fuel matters over 90 days.',
+    multi:true, two:true, max:4,
+    opts:[
+      {v:'tech',    t:'Tech & AI',            d:'Software, gadgets, automation'},
+      {v:'health',  t:'Health & fitness',     d:'Training, food, mental health'},
+      {v:'style',   t:'Fashion & beauty',     d:'Clothing, skincare, self-presentation'},
+      {v:'food',    t:'Food & drink',         d:'Cooking, baking, cafés, nutrition'},
+      {v:'gaming',  t:'Gaming & esports',     d:'Games, streaming, communities'},
+      {v:'creative',t:'Music, art & design',  d:'Making things people look at or hear'},
+      {v:'edu',     t:'Education',            d:'Courses, tutoring, exams, languages'},
+      {v:'home',    t:'Homes & local life',   d:'Property, cars, repairs, neighbourhoods'},
+      {v:'pets',    t:'Animals & pets',       d:'Dogs, cats, care, training'},
+      {v:'money',   t:'Money & business',     d:'Investing, finance, entrepreneurship'},
+      {v:'sport',   t:'Sport & outdoors',     d:'Teams, travel, adventure'},
+      {v:'people',  t:'People & relationships',d:'Events, community, coaching, dating'}
+    ]},
+
+  { id:'reach', kicker:'YOUR MARKET', title:'Where do you want your customers to be?',
+    help:'This single choice eliminates half the business models on the board.',
+    opts:[
+      {v:'online', t:'Anywhere online',         d:'I want to sell to the internet'},
+      {v:'local',  t:'Near me, in person',      d:'My town, my city, people I can drive to'},
+      {v:'both',   t:'Either — whatever works', d:'I have no preference'}
+    ]},
+
+  { id:'style', kicker:'HOW YOU WORK', title:'Which working day sounds least like torture?',
+    help:'The model you can tolerate for 90 days beats the model with the bigger ceiling.',
+    opts:[
+      {v:'screen', t:'Alone at a screen',    d:'Deep work, headphones on, nobody talking to me'},
+      {v:'people', t:'Talking to people',    d:'Calls, meetings, negotiating, closing'},
+      {v:'hands',  t:'Moving and building',  d:'On my feet, doing physical work'},
+      {v:'create', t:'Making things',        d:'Content, video, design, publishing'}
+    ]},
+
+  { id:'sales', kicker:'THE HARD PART', title:'How do you feel about asking a stranger for money?',
+    help:'Everyone says "nervous". The answer changes which channel you get, so pick truthfully.',
+    opts:[
+      {v:'hate',    t:'I hate it',        d:'The thought makes me physically avoid it'},
+      {v:'nervous', t:'Nervous, but I\'ll do it', d:'Uncomfortable, not impossible'},
+      {v:'fine',    t:'I\'m fine with it', d:'I\'ve done it, or I know I can'}
+    ]},
+
+  { id:'risk', kicker:'DOWNSIDE', title:'If you lost every dollar you put in, what happens?',
+    help:'Law 2: businesses die from lack of cash. Your plan is built around this answer.',
+    opts:[
+      {v:'none',  t:'I\'d be in real trouble', d:'I cannot afford to lose anything'},
+      {v:'small', t:'Annoyed, but fine',       d:'It would sting and pass'},
+      {v:'ok',    t:'It\'s tuition',           d:'I\'d write it off and go again'}
+    ]},
+
+  { id:'goal', kicker:'THE TARGET', title:'What does winning look like in 12 months?',
+    help:'Ambition changes which model is correct — not how hard you should work.',
+    opts:[
+      {v:'side',    t:'An extra $500 – $1,000 a month', d:'Breathing room, not a new life'},
+      {v:'replace', t:'Enough to not need a job',       d:'Full replacement income'},
+      {v:'big',     t:'The start of something big',     d:'I want a real company eventually'},
+      {v:'learn',   t:'Proof that I can do it',         d:'Money second, capability first'}
+    ]},
+
+  { id:'blocker', kicker:'THE TRUTH', title:'What has actually stopped you until now?',
+    help:'Your playbook will answer this directly, before it stops you again in week three.',
+    opts:[
+      {v:'noidea',  t:'I don\'t know what to do',       d:'No idea feels good enough'},
+      {v:'nomoney', t:'I have no money',                d:'Everything seems to need capital'},
+      {v:'noskill', t:'I don\'t think I\'m good enough',d:'Other people know more than me'},
+      {v:'fear',    t:'Fear of failing publicly',       d:'People would see me fail'},
+      {v:'notime',  t:'I have no time',                 d:'Life is already full'},
+      {v:'nostart', t:'I don\'t know what step one is', d:'I freeze before I begin'}
+    ]}
+];
+
+/* ---------------------------------------------------------------------------
+   2. THE MODELS
+   Ten business models that can be started with $0–$300 and reach a first
+   paying customer inside 90 days. Each carries its own playbook content.
+   ------------------------------------------------------------------------ */
+const MODELS = [
+{
+  id:'service', name:'The Skill Service', short:'Freelance service business',
+  line:'Sell one specific skill, done for one specific type of customer, for money, this month.',
+  capital:'$0', firstDollar:'7 – 21 days', ceiling:'$3k–$15k/mo solo, more with a team',
+  what:'You do a defined piece of work for someone who needs it done and doesn\'t want to do it themselves. No inventory, no audience, no product to build. The oldest and most reliable path from zero to a first paying customer, and the one almost every successful operator started on.',
+  examples:['Editing short-form video for coaches who post daily','Writing product descriptions for small online stores','Setting up and cleaning up spreadsheets for local businesses'],
+  dream:'The customer gets a job off their plate, done properly, without hiring anyone.',
+  obstacles:[
+    ['They don\'t know you and have no reason to trust you','Do the first two jobs at a steep discount in exchange for a specific written testimonial and permission to show the work'],
+    ['They can\'t tell good from bad before they buy','Show a finished example. Not a portfolio site — one real artefact, sent in the message'],
+    ['They\'re worried you\'ll vanish halfway','Offer a fixed scope, a fixed date, and payment split 50% up front / 50% on delivery']
+  ],
+  pricing:{ model:'Fixed price per outcome, never hourly. Hourly punishes you for getting faster.',
+    tiers:[['Starter','One deliverable, one revision, 5-day turnaround','$150'],['Standard','Three deliverables a month, priority turnaround','$450 / mo'],['Partner','Weekly volume, you own the whole function, direct line to you','$1,200 / mo']],
+    note:'Those numbers are a starting anchor for a service you can deliver in 2–4 hours. Raise them the moment two people in a row say yes without hesitating — that\'s the market telling you you\'re cheap.',
+    guarantee:'"If the first deliverable isn\'t what you wanted, you don\'t pay and you keep it." You will lose this bet less than once in twenty times, and it removes the only real objection a stranger has.'},
+  channel:{ core:'Warm outreach, then cold outreach', why:'Services have effectively infinite margin on your own time, which means you can afford to spend hours per customer to land one. That makes direct outreach the correct channel and paid ads the wrong one at your stage.',
+    volume:'20 personal messages a day, five days a week. 100 a week. Track every one.',
+    script:'Hi [name] — I watched your last three videos and noticed the captions cut off on mobile. I edited your most recent one properly, here\'s the file: [link]. Keep it either way, no strings. If you want me doing this every week I charge $150 a video, and the first one is free so you can see if I\'m any good.'},
+  weeks:[
+    ['Days 1–7','Pick the one thing you sell','Write one sentence: "I do [X] for [specific type of person] so they can [outcome]." Kill every other option. Make a list of 100 real people or businesses who fit that description — names, not categories.'],
+    ['Days 8–21','Make one thing worth showing','Build one finished example, for free, for someone who fits your target. Do it to an embarrassing standard of quality. This artefact replaces a portfolio, a website, and a pitch.'],
+    ['Days 22–45','Outreach at volume','20 personalised messages a day. Log contacts, replies, calls and closes in a spreadsheet. Expect 2–5% to convert. That is normal. 100 messages is one to five customers.'],
+    ['Days 46–65','Deliver like a professional','Fixed scope, fixed date, over-deliver on the first job. Ask for a written testimonial the day you deliver, while they\'re happy. Ask who else needs this.'],
+    ['Days 66–80','Raise the price','New customers pay 30–50% more than your first two. Your first prices were tuition, not policy.'],
+    ['Days 81–90','Turn it into a retainer','Convert one-off buyers to monthly. Recurring revenue is the difference between a hustle and a business.']
+  ],
+  econ:{ lines:['Revenue = number of customers × price per job × jobs per month','Your only real cost is your hours, so gross margin is ~100% and break-even is one customer','Capacity ceiling = your weekly hours ÷ hours per job'],
+    watch:'Watch capacity, not cash. Services die from being full, not from being broke. When you hit 70% of your hours booked, either raise price or hire.'},
+  firstTen:['Write the list of 100 target names before you send anything','Send 20 messages a day for 5 days — no exceptions, no editing the script after 3 sends','Do the first job free, publicly, for someone with an audience','Ask every single buyer: "who else do you know with this problem?"','Post the finished work where your customers already hang out'],
+  traps:['Building a website before you have a customer. Nobody has ever bought because of a freelancer\'s website.','Offering "anything you need". Specific beats broad, always. "Video editor" loses to "video editor for fitness coaches".','Going quiet after 30 messages because nobody replied. 30 is noise. 100 is data.'],
+  books:['$100M Offers — Alex Hormozi','$100M Leads — Alex Hormozi','The Win Without Pitching Manifesto — Blair Enns'],
+  tools:['Google Docs / Sheets — proposals, tracker','Canva free — anything visual','Wave or Stripe — invoicing, free to start','Calendly free — booking calls']
+},
+{
+  id:'local', name:'The Local Operation', short:'Hands-on local service',
+  line:'A physical service, sold to people who live near you, paid in cash or card the same day.',
+  capital:'$0 – $150', firstDollar:'3 – 14 days', ceiling:'$4k–$20k/mo, scales by adding people and vans',
+  what:'You show up and do something physical that people don\'t want to do themselves. It is the fastest documented path from zero to a first paying customer, because the sale can be closed on a doorstep and the competition is mostly people who don\'t answer their phone.',
+  examples:['Car detailing that comes to the customer\'s driveway','Pressure washing driveways, patios and fences','Dog walking, pet sitting, or garden maintenance for a fixed route of houses'],
+  dream:'Their problem is physically gone by tonight and they didn\'t have to think about it.',
+  obstacles:[
+    ['They don\'t know if you\'ll show up','Confirm by text the night before and the morning of. Reliability is the entire product in local services'],
+    ['They can\'t judge quality in advance','Before-and-after photos of your own work. Two photos beat any advertisement'],
+    ['They think it\'s expensive','Quote a fixed price per job with no surprises. "Ninety dollars, done in two hours, done properly."']
+  ],
+  pricing:{ model:'Fixed price per job, quoted before you start, paid on completion. Never quote hourly to a residential customer.',
+    tiers:[['Basic','The single core job, done well','$60 – $90'],['Full','Core job plus the two adjacent things they were going to nag about','$140 – $180'],['Monthly','Same job on a schedule, priority slot, ~15% off per visit','$200+ / mo']],
+    note:'Check three local competitors, then price at or slightly above the middle one. Cheapest in a local market attracts the worst customers and no margin.',
+    guarantee:'"If you\'re not happy when I finish, I redo it or you don\'t pay." Local reputation is your only marketing asset — protect it aggressively.'},
+  channel:{ core:'Warm outreach and physical local presence', why:'Your market is measured in square miles, not clicks. Door-to-door, local groups, and the people you already know will out-perform any online strategy at this scale, at zero cost.',
+    volume:'30 doors or 30 local messages a day, plus 1 post in every local group you can join.',
+    script:'Hi — I\'m [name], I live over on [street]. I\'m starting a [service] business and I\'m doing the first five houses on this road at half price so I\'ve got photos to show people. Takes about two hours, I bring everything, it\'d be $[X] instead of $[Y]. Any interest?'},
+  weeks:[
+    ['Days 1–7','Pick the job and the streets','Choose one service and a specific 2-mile radius. Check three competitors\' prices. Buy only what you need to do job one — nothing else.'],
+    ['Days 8–14','Get the first five jobs at half price','Do them for photos and reviews, not profit. Take before-and-after shots of every single one from the same angle.'],
+    ['Days 15–35','Saturate the area','Doors, local Facebook groups, neighbourhood apps, a sign on your car. Ask every finished customer for one neighbour\'s name.'],
+    ['Days 36–60','Build the route','Cluster jobs geographically to cut travel time. Travel time is your biggest hidden cost and nobody pays you for it.'],
+    ['Days 61–80','Convert to recurring','Offer the monthly version to every happy one-off customer. A route of 20 monthly customers is a real income.'],
+    ['Days 81–90','Systematise','Write down exactly how you do the job, in order, as a checklist. That checklist is what lets someone else do it later.']
+  ],
+  econ:{ lines:['Contribution per job = price − materials − fuel','Break-even jobs per month = fixed costs ÷ contribution per job','Jobs per day = usable hours ÷ (job time + travel time)'],
+    watch:'Track travel time as a real cost. Two jobs on the same street beats three jobs across town, every time.'},
+  firstTen:['Choose one service, one radius, one price. Today.','Do five jobs at half price this week for photos','Post before-and-afters in every local group you can join','Leave a card or note at the four houses either side of every job you do','Text every past customer 30 days later: "due again?"'],
+  traps:['Buying equipment before the first customer. Rent, borrow, or start with the cheap version.','Undercharging to win the job. Local customers who choose on price complain the most and refer the least.','Driving all over the city for single jobs. Density is the whole business.'],
+  books:['The E-Myth Revisited — Michael Gerber','$100M Offers — Alex Hormozi','The Checklist Manifesto — Atul Gawande'],
+  tools:['Google Business Profile — free, and the single highest-ROI local listing','Canva free — before/after posts','Square or SumUp — card payments, free to start','Google Maps — route planning']
+},
+{
+  id:'productized', name:'The Productized Service', short:'A repeatable service sold to businesses',
+  line:'One clearly defined service, one fixed price, sold to businesses on a monthly basis.',
+  capital:'$0 – $100', firstDollar:'14 – 45 days', ceiling:'$10k–$50k/mo, genuinely sellable as an asset',
+  what:'You take one service, remove every option, and sell it like a product: same scope, same price, same turnaround, every time. Businesses buy it because the decision is easy and the invoice is predictable. You like it because it is the only version of a service business that can be delegated.',
+  examples:['"Unlimited design requests, one at a time, $995/month"','"We answer your inbound emails within 2 hours, $1,200/month"','"Two edited videos a week, delivered every Monday, $800/month"'],
+  dream:'A recurring business problem stops being their problem, permanently, for a predictable monthly number.',
+  obstacles:[
+    ['Businesses are sceptical of unknown suppliers','Start with a paid pilot month at a reduced rate rather than asking for a long contract'],
+    ['They\'ve been burned by agencies before','Publish your scope, your turnaround and your price openly. Radical clarity is the differentiator in a category built on vagueness'],
+    ['Switching feels expensive','Do the migration yourself, for free, in the first week']
+  ],
+  pricing:{ model:'Flat monthly subscription. This is what makes it productized rather than freelance.',
+    tiers:[['Solo','One active request at a time, 3-day turnaround','$495 / mo'],['Growth','Two active requests, 48-hour turnaround, monthly call','$995 / mo'],['Scale','Unlimited queue, 24-hour turnaround, direct Slack access','$1,995 / mo']],
+    note:'B2B buyers spend company money, not their own. They care about outcome and reliability far more than price. Charging too little actively signals that you are not serious.',
+    guarantee:'"Cancel any time, no notice, no contract." Removes the entire risk of the decision, and if your delivery is good it costs you almost nothing.'},
+  channel:{ core:'Cold outreach, targeted', why:'A $995/month customer is worth ~$12,000 a year. That economics justifies hours of research per prospect, which makes precise cold outreach the highest-return channel available to you.',
+    volume:'15 deeply researched emails or DMs a day. Quality of targeting beats volume here — but only after volume has taught you what converts.',
+    script:'Subject: your [specific thing] — [company]\n\nHi [name], I looked at [specific evidence you actually looked]. [One specific observation about a gap.] We fix exactly this for [industry] companies — [scope] for a flat $[price] a month, cancel any time. I\'ve already done a sample for you: [link]. If it\'s useful, keep it. If you want the rest, reply and we start Monday.'},
+  weeks:[
+    ['Days 1–10','Define the product, not the service','Write the scope, the price and the turnaround on one page. If a customer can ask "how much would it be for…" you haven\'t productized it yet.'],
+    ['Days 11–25','Build the delivery system before the first sale','Write the SOP for delivering one unit. Time yourself doing it once. If it takes more than 4 hours, narrow the scope.'],
+    ['Days 26–55','Cold outreach with a sample attached','Do free sample work for the top 20 prospects. This converts several times better than any pitch, because it proves quality instead of claiming it.'],
+    ['Days 56–75','Land two pilot customers','A paid one-month pilot at 50% is a much easier yes than a subscription, and it converts to full price at a high rate if you deliver.'],
+    ['Days 76–85','Deliver ruthlessly on time','On-time delivery is the whole moat in this category. Most competitors are late. Being boringly reliable is a competitive advantage.'],
+    ['Days 86–90','Delegate the first step','Hand off one part of the SOP — even a two-hour-a-week piece. That is the exact moment this stops being a job you own.']
+  ],
+  econ:{ lines:['MRR = customers × monthly price','Gross margin = (price − delivery cost) ÷ price. Target 60%+ once you\'re paying someone else to deliver','LTV = monthly price × gross margin × average months retained','Target LTV:CAC ≥ 3:1 before you spend money on acquisition'],
+    watch:'Churn is the silent killer. Ten customers at 10% monthly churn is a treadmill; at 3% it is a compounding business.'},
+  firstTen:['Write the one-page scope-price-turnaround document','Pick a single industry. "Businesses" is not a market','Do free sample work for 20 named companies','Offer a paid pilot month, not a contract','Ask every pilot customer for one referral in the same industry'],
+  traps:['Saying yes to custom work. One exception and you are a freelancer again.','Targeting "small businesses" generically. Pick one industry so your samples and language compound.','Hiring before your SOP exists. You cannot delegate a process that only lives in your head.'],
+  books:['$100M Offers — Alex Hormozi','Built to Sell — John Warrillow','The E-Myth Revisited — Michael Gerber','Predictable Revenue — Aaron Ross'],
+  tools:['Notion free — SOPs and client portal','Loom free — sample work and async updates','Stripe — subscription billing','Google Sheets — pipeline tracker']
+},
+{
+  id:'creator', name:'The Audience Engine', short:'Content first, money second',
+  line:'Build attention around one specific topic, then sell the audience something they already asked for.',
+  capital:'$0', firstDollar:'60 – 180 days', ceiling:'Effectively uncapped, but slow and heavy-tailed',
+  what:'You publish consistently on one narrow topic until a group of people trust you, then you sell them the thing they keep asking about. It is the highest-ceiling zero-capital model and by far the slowest to first dollar. Choose it with your eyes open: most people who quit, quit in month three.',
+  examples:['Short-form video teaching one skill you already have','A newsletter for one specific profession','A YouTube channel documenting a build in public'],
+  dream:'They learn something that changes how they do a thing, from someone who feels like a real person rather than a brand.',
+  obstacles:[
+    ['Nobody watches the first fifty posts','Expected, and non-negotiable. The first fifty are your training reps, not your marketing'],
+    ['You run out of ideas','Answer one real question per post. Your comments, Reddit and Google autocomplete are an infinite supply'],
+    ['Attention doesn\'t equal money','Decide what you\'ll sell in month one, and mention it from day one, even to nobody']
+  ],
+  pricing:{ model:'Free content, paid depth. Monetise with a digital product, a service, or sponsorship — in that order of reliability.',
+    tiers:[['Free','The content itself. Builds trust and mental availability','$0'],['Product','A template, guide or short course answering your most-asked question','$27 – $97'],['Service or cohort','Doing it with them or for them','$300 – $2,000']],
+    note:'Do not wait for a big audience to sell. A thousand engaged people in a specific niche outperforms a hundred thousand random viewers, every time.',
+    guarantee:'30-day no-questions refund on anything digital. Refund rates on genuinely useful products run low, and the guarantee lifts conversion far more than refunds cost.'},
+  channel:{ core:'Warm content, at volume', why:'Content is an asset with increasing returns and a long lag. It compounds if you survive the lag. Everything about this model is a bet on your ability to keep publishing when nothing is happening.',
+    volume:'One post a day, or three a week minimum, for 90 days. Non-negotiable. Consistency beats quality early because it is how you find out what quality means here.',
+    script:'Post structure that works on every platform:\n1. Hook — the specific problem, in the first three seconds or first line\n2. Stakes — why it costs them something\n3. The actual answer — give it away completely, do not tease\n4. One next step — follow, or the link\n\nGive away your best material. The people who take it for free were never buyers; the people who buy are buying speed and depth, not secrets.'},
+  weeks:[
+    ['Days 1–7','Pick one topic and one platform','One. Not three. Narrow enough that you could name ten specific people who\'d follow it. Write down what you intend to sell eventually.'],
+    ['Days 8–30','Publish 20 pieces','Volume over polish. You are calibrating, not broadcasting. Nobody is watching yet and that is a gift — use it to get bad in private.'],
+    ['Days 31–60','Find the pattern and repeat it','Look at your top three posts. What do they have in common? Do more of exactly that. This is the entire optimisation loop.'],
+    ['Days 61–75','Build the list','Move people off the platform you don\'t own. Email is the only audience nobody can take from you. Offer one genuinely useful free thing.'],
+    ['Days 76–90','Sell something small','Take the question you get asked most and turn it into a $27 product. Small and real beats big and hypothetical.']
+  ],
+  econ:{ lines:['Revenue = audience × conversion rate × price','A 1–3% conversion on an engaged list is a normal, healthy number','1,000 engaged subscribers × 2% × $50 = $1,000 per launch'],
+    watch:'Track the follower-to-email conversion and the email-to-buyer conversion separately. Most creators track neither and then guess about why nothing works.'},
+  firstTen:['Choose one topic and commit for 90 days in writing','Publish 20 pieces before you judge anything','Reply to every single comment for the first 90 days','Put one free useful thing behind an email signup','Sell one small thing before you feel ready'],
+  traps:['Chasing views instead of a specific viewer. Broad content builds a worthless audience.','Waiting to monetise until you "have enough people". Sell at 100 followers.','Switching topics in month two because it feels slow. It is slow. That is the entry barrier, and it is why it works.'],
+  books:['$100M Leads — Alex Hormozi','How Brands Grow — Byron Sharp','Influence — Robert Cialdini','The Almanack of Naval Ravikant — Eric Jorgenson'],
+  tools:['CapCut free — video editing','Canva free — thumbnails and graphics','Beehiiv or MailerLite free tier — email list','Notion free — content calendar']
+},
+{
+  id:'digital', name:'The Digital Product', short:'Make it once, sell it many times',
+  line:'Package something you know into a file, and sell the same file repeatedly at ~100% margin.',
+  capital:'$0', firstDollar:'21 – 60 days', ceiling:'$1k–$30k/mo depending entirely on distribution',
+  what:'A template, guide, notion system, preset pack, or short course. The economics are perfect — build once, sell infinitely, no delivery cost. The catch is brutal and universally underestimated: making it is 10% of the work, distribution is the other 90%, and everyone gets this backwards.',
+  examples:['A spreadsheet system for a specific job role','A set of templates for a specific tool','A short, practical course on one narrow skill'],
+  dream:'They skip the hundred hours you already spent figuring this out.',
+  obstacles:[
+    ['They can\'t tell if it\'s any good before buying','Give away a real, usable slice of it publicly. The free slice is your advertisement'],
+    ['They\'ve bought useless digital products before','Guarantee it unconditionally and make the promise narrow enough to be obviously deliverable'],
+    ['They can find something free on YouTube','True. You are selling organisation, sequence and time saved — not information. Price and position on that basis']
+  ],
+  pricing:{ model:'Value-based with a Good/Better/Best ladder. The middle tier is what most people buy; the top tier exists to make the middle look sensible.',
+    tiers:[['The thing','The core product on its own','$27'],['Thing + support','Product plus templates, examples and a walkthrough','$67'],['Thing + you','Product plus a live session or a review of their work','$197']],
+    note:'Under $50 sells on impulse and needs volume. Over $200 needs trust, which means you need an audience or a strong guarantee first. There is very little in between that works.',
+    guarantee:'Unconditional 30-day refund, stated loudly. Risk reversal is the cheapest conversion lever that exists and digital goods cost you nothing to refund.'},
+  channel:{ core:'Warm content first, then cold content', why:'Digital products have ~100% gross margin, which is the one thing that eventually makes paid ads viable. But not at the start — build organic distribution first, and only pay for traffic once you know your conversion rate.',
+    volume:'Publish 3–5 times a week on one platform for the whole 90 days, every piece pointing at the free slice.',
+    script:'The launch sequence that works:\n1. Publish free content on the exact problem for 30 days\n2. Say "I\'m building the full version of this" — publicly, before it exists\n3. Ask what should be in it. People who answer are your first buyers\n4. Presell it at half price to that group before you build it\n5. Build it. Ship it. Raise the price.'},
+  weeks:[
+    ['Days 1–10','Find the question, don\'t invent the product','What do people repeatedly ask you, or ask in the forums where your people are? Build the answer to that, not the thing you find interesting.'],
+    ['Days 11–25','Presell before you build','Ten people paying $15 up front is a validated product. Zero people is a saved month. This step is the entire risk management of this model.'],
+    ['Days 26–50','Build the smallest complete version','It has to solve the whole problem, not all problems. Complete and small beats comprehensive and unfinished.'],
+    ['Days 51–70','Distribution, not features','Every hour after launch goes to getting it in front of people, not to improving it. This is the step everyone skips.'],
+    ['Days 71–85','Collect proof','Ask every buyer for one specific sentence about what changed for them. Social proof compounds faster than any feature.'],
+    ['Days 86–90','Raise the price and add a tier','Add the "with support" version. Same product, more margin, more value for the people who want it.']
+  ],
+  econ:{ lines:['Revenue = traffic × conversion rate × price','2% conversion on a sales page is a normal, healthy result','Gross margin ≈ 97% after payment processing','Break-even is essentially the first sale — all the risk is your time'],
+    watch:'Traffic is the constraint, not the product. If you\'re not selling, you almost certainly have a distribution problem, not a quality problem.'},
+  firstTen:['Find the question that gets asked repeatedly','Presell to ten people before building anything','Build the smallest version that fully solves it','Give away 20% of it publicly, forever','Ask every buyer for one sentence of proof'],
+  traps:['Building for three months before showing anyone. The single most common way this model fails.','Making it comprehensive. Narrow and complete sells; broad and shallow doesn\'t.','Assuming it will sell itself. Nothing sells itself. Ever.'],
+  books:['$100M Offers — Alex Hormozi','$100M Leads — Alex Hormozi','Breakthrough Advertising — Eugene Schwartz','Obviously Awesome — April Dunford'],
+  tools:['Gumroad or Payhip — free to start, they take a cut','Google Docs / Sheets / Canva — to build the thing','Notion free — if it\'s a system or template','Carrd free — a one-page sales page']
+},
+{
+  id:'ecom', name:'The Product Store', short:'Print-on-demand & niche e-commerce',
+  line:'Sell a physical product to a specific group of people who already identify as something.',
+  capital:'$50 – $500', firstDollar:'30 – 90 days', ceiling:'$2k–$100k/mo, but margin-constrained',
+  what:'Print-on-demand means no inventory and no upfront cost — the supplier prints and ships when someone orders. The design is easy. The hard part, and the part that kills 95% of stores, is that customer acquisition costs real money and your margin has to cover it.',
+  examples:['Apparel for a specific hobby community with in-group language on it','Products for a specific profession that only insiders would get','A single well-designed physical product for a niche you belong to'],
+  dream:'They own something that signals who they are to people who understand it.',
+  obstacles:[
+    ['They don\'t trust an unknown store','Real photos, a real about page, visible reviews, a clear returns policy'],
+    ['Shipping takes too long','Say the delivery window up front. Broken expectations cause chargebacks, not slow shipping'],
+    ['They can buy something similar cheaper','Then you have no business. The design and the in-group identity must be the product, not the t-shirt']
+  ],
+  pricing:{ model:'Cost-plus is the trap here. You must price on what the identity is worth, and your margin must be able to absorb acquisition cost.',
+    tiers:[['Entry','Sticker, mug, or low-ticket item — an easy first purchase','$12 – $18'],['Core','The main apparel or product piece','$32 – $48'],['Bundle','Two or three pieces at a slight discount to lift order value','$65 – $90']],
+    note:'Non-negotiable rule: gross margin must be at least 60%. On a $35 shirt costing you $14, that\'s $21 to cover ads, returns and profit. If ads cost $25 to get a sale, you are paying people to take your product.',
+    guarantee:'Free returns within 30 days. Expensive, and the single biggest conversion lever in apparel. Build the cost into the price.'},
+  channel:{ core:'Cold content — organic first, paid only once the math works', why:'Physical products have thin margin, which makes expensive acquisition fatal. Build organic short-form traction first and only switch on paid spend when you know your conversion rate and AOV.',
+    volume:'One organic short-form video a day showing the product in real use, for 90 days.',
+    script:'Organic content that sells product:\n1. Show the product being used by a real person in a real place\n2. Lead with the in-joke or identity, not the product features\n3. Never say "link in bio" for the first 30 posts — build the community feeling first\n4. Only run paid ads once an organic post has already proven it converts'},
+  weeks:[
+    ['Days 1–14','Pick the group, not the product','Which community do you already belong to and understand from the inside? You cannot fake in-group language, and in-group language is the entire product.'],
+    ['Days 15–30','Design three things and validate free','Post the designs as content before you build a store. If nobody says "where can I buy this", the design is wrong and you\'ve saved yourself a month.'],
+    ['Days 31–45','Set up the store properly','A free storefront plus a print-on-demand supplier. Order one sample yourself. Photograph it in real life, not on a mockup generator.'],
+    ['Days 46–70','Organic content daily','Every post shows the product in real use. Build the audience and the store simultaneously.'],
+    ['Days 71–85','Compute your real unit economics','Product cost, shipping, fees, returns, ad spend. Know your actual contribution margin per order before you scale anything.'],
+    ['Days 86–90','Scale or kill','If contribution margin covers acquisition with room left, spend more. If it doesn\'t, stop. Scaling broken unit economics just makes you fail faster.']
+  ],
+  econ:{ lines:['Contribution margin = price − product cost − shipping − payment fees','Break-even ad spend per order = contribution margin','Target: acquisition cost under 30% of revenue','AOV × margin % must comfortably exceed cost to acquire a customer'],
+    watch:'This is the one model on this list where you can be busy, popular and losing money at the same time. Compute the margin before you spend a dollar on ads.'},
+  firstTen:['Pick a community you are genuinely part of','Post the designs before you build the store','Order a sample and photograph it in real life','Post daily organic content for 30 days before spending on ads','Compute contribution margin per order in a spreadsheet'],
+  traps:['Generic designs anyone could sell. If it isn\'t an in-group signal, it\'s a commodity.','Spending on ads before organic proves the product converts.','Ignoring returns and fees in the margin math. They are 10–20% of revenue.'],
+  books:['$100M Offers — Alex Hormozi','How Brands Grow — Byron Sharp','DotCom Secrets — Russell Brunson','Financial Intelligence for Entrepreneurs — Berman & Knight'],
+  tools:['Printful / Printify — print-on-demand, no upfront cost','Shopify trial or Payhip free — storefront','CapCut free — product video','Canva free — designs and mockups']
+},
+{
+  id:'flip', name:'The Flip', short:'Buy low, sell high, repeat',
+  line:'Buy underpriced things, sell them at market, and learn the entire business loop in a week.',
+  capital:'$20 – $300', firstDollar:'3 – 14 days', ceiling:'$1k–$10k/mo — a fast teacher, not a long-term home',
+  what:'Buy items that are mispriced because of where they are, then sell them where they\'re worth more. It is the fastest complete business education available: sourcing, pricing, margin, negotiation and customer service, all inside seven days, for under a hundred dollars.',
+  examples:['Thrift store clothing resold on a fashion resale app','Furniture bought free from local listings, cleaned, resold','Retail clearance resold on a marketplace at normal price'],
+  dream:'They get the thing they wanted at a price that feels like a win, without hunting for it themselves.',
+  obstacles:[
+    ['They don\'t trust a private seller','Photograph everything honestly, including flaws. Honest flaw photos increase conversion, they don\'t reduce it'],
+    ['They want to haggle','Price 15% above your floor and let them win the negotiation'],
+    ['They don\'t want to travel','Meet halfway, or ship. Convenience is worth more than the last five dollars']
+  ],
+  pricing:{ model:'Market-based, informed by sold listings — never asking prices. Asking prices are fantasy; sold prices are data.',
+    tiers:[['Quick flip','Priced to move in under 7 days','Cost × 2'],['Patient flip','Priced at full market, may sit for a month','Cost × 3+'],['Bundle','Several related items sold together','Higher total, faster clearance']],
+    note:'The rule: never buy anything you cannot sell for at least 3× what you paid. That multiple is what absorbs the items that don\'t sell, and some won\'t.',
+    guarantee:'Accurate description with honest flaw photos. In resale, your rating is your entire business — protect it above any individual sale.'},
+  channel:{ core:'Warm and cold content on marketplaces', why:'The marketplaces already have all the buyers. You don\'t need marketing, you need supply and good listings. That is why this is the fastest model to first money.',
+    volume:'List 5 items a day. Sourcing 3 hours a week. The constraint is almost always listings, not buyers.',
+    script:'A listing that sells:\n1. Title = exactly what a buyer would type into search, brand and model included\n2. First photo in natural light on a plain background\n3. Photograph every flaw and say so in the description\n4. Include measurements — the number one question and the number one cause of returns\n5. Price from sold listings, not from what other people are asking'},
+  weeks:[
+    ['Days 1–7','Learn the prices before you buy anything','Pick one category. Spend a week looking only at sold listings. You are building price knowledge, which is the actual asset here.'],
+    ['Days 8–14','Buy five items, sell five items','Small budget, fast loop. The goal is completing the cycle, not profit.'],
+    ['Days 15–35','Systematise sourcing','Which sources, which days, which categories. Track cost, sale price, days-to-sell and profit per item in a spreadsheet.'],
+    ['Days 36–60','Narrow to your best category','Whatever has the highest profit per hour, do only that. Specialists beat generalists in resale because price knowledge is category-specific.'],
+    ['Days 61–80','Increase volume','Same process, more items. This is where you feel Law 5 — volume negates luck — in your hands.'],
+    ['Days 81–90','Decide what it taught you','Flipping is a superb teacher and a hard business to scale. Use the cash and the lessons to fund the next thing, or specialise deeply.']
+  ],
+  econ:{ lines:['Profit per item = sale price − cost − fees − shipping','Return on capital = profit ÷ cost, per cycle','Cash cycle = days from buying to being paid. This is your real constraint','Profit per hour = total profit ÷ (sourcing + listing + shipping hours)'],
+    watch:'Track profit per hour, not profit per item. A $40 profit on an item that took four hours is a bad job, not a good business.'},
+  firstTen:['Pick one category and study sold prices for a week','Buy five items with a strict $100 total budget','List within 24 hours of buying — inventory sitting is dead cash','Track every item: cost, price, days to sell, profit','Reinvest 100% of profit for the first 60 days'],
+  traps:['Buying things you personally like instead of things that sell.','Not counting your own time. Profit per hour is the only honest metric here.','Letting inventory sit unlisted. Unlisted stock is money you\'ve set on fire slowly.'],
+  books:['The Goal — Eliyahu Goldratt','Financial Intelligence for Entrepreneurs — Berman & Knight','$100M Offers — Alex Hormozi'],
+  tools:['eBay sold-listings filter — free price data','Vinted / Depop / Facebook Marketplace — free listing','Google Sheets — inventory and profit tracker','Your phone camera + a white sheet — product photos']
+},
+{
+  id:'software', name:'The Small Software', short:'Micro-SaaS & AI automation',
+  line:'Build a narrow tool that solves one annoying problem for one specific kind of business.',
+  capital:'$0 – $100', firstDollar:'45 – 120 days', ceiling:'$5k–$100k/mo, the best margins in business',
+  what:'A small tool, an automation, or an AI workflow that removes a specific manual task. Modern no-code and AI tooling means you no longer need to be a strong engineer to ship something people will pay for. You do need patience and a genuine willingness to talk to customers.',
+  examples:['An automation that turns a business\'s messy inbox into a clean task list','A single-purpose tool for a niche profession that Excel handles badly','An AI workflow that does a repetitive back-office job'],
+  dream:'A task that ate four hours a week now takes four minutes and doesn\'t need thinking about.',
+  obstacles:[
+    ['They doubt a small tool from an unknown developer','Do the job manually for the first three customers before automating it. Sell the outcome, deliver by hand, then build'],
+    ['Switching costs','Import their existing data yourself, personally, for free'],
+    ['"We could build this internally"','They won\'t. Price low enough that building it internally is obviously not worth their engineering time']
+  ],
+  pricing:{ model:'Monthly subscription, per seat or per usage. Land low, expand as usage grows.',
+    tiers:[['Solo','One user, core function','$19 / mo'],['Team','Up to five users, integrations, support','$79 / mo'],['Business','Unlimited users, priority support, onboarding','$249 / mo']],
+    note:'B2B software is chronically underpriced by first-time founders. If nobody has complained about your price, it\'s too low. Test doubling it on new signups only.',
+    guarantee:'Free 14-day trial with no card required, plus you do the setup yourself. Removes both the money risk and the effort risk at once.'},
+  channel:{ core:'Cold outreach, then warm content', why:'Software has near-100% gross margin, which means you can afford almost any acquisition cost — eventually. At the start you have no proof, so direct outreach to a narrow niche is the only channel that works.',
+    volume:'10 highly targeted messages a day plus one build-in-public post. Your first ten customers come from conversations, not from marketing.',
+    script:'Hi [name] — I build small tools for [industry]. I noticed [specific manual process] usually eats a few hours a week at companies your size. I\'ve built something that does it automatically. I\'ll set it up on your data myself, free, and if it doesn\'t save you time you never hear from me again. Worth 15 minutes?'},
+  weeks:[
+    ['Days 1–15','Find the pain by talking, not building','Interview 15 people in one industry. Ask what they do manually every week and hate. Do not describe an idea. Listen for a repeated complaint.'],
+    ['Days 16–30','Sell it before it exists','Describe the solution to five of them. Ask for a pre-order or a signed intent. Anyone who says "sounds cool" is a no.'],
+    ['Days 31–50','Deliver manually first','Do the job by hand for the first three customers. You will learn what to build and get paid while learning it.'],
+    ['Days 51–75','Automate the manual work','Now build the tool — but only the parts you actually did by hand. Everything else is speculation.'],
+    ['Days 76–85','Onboard by hand, every time','Personally set up every customer. This is how you find the real friction and keep churn near zero.'],
+    ['Days 86–90','Measure retention','Are people still using it after 30 days? Retention is the only honest signal in software. Everything else is vanity.']
+  ],
+  econ:{ lines:['MRR = customers × average revenue per account','Gross margin ≈ 85–95% after hosting','LTV = ARPA × gross margin ÷ monthly churn rate','CAC payback should be under 12 months, ideally under 6'],
+    watch:'Churn above 5% monthly means the product isn\'t solving the problem. Fix retention before you touch acquisition — a leaky bucket cannot be filled faster than it drains.'},
+  firstTen:['Interview 15 people in one industry before writing any code','Get five to commit before building','Do the work manually for the first three','Personally onboard every early customer','Track 30-day retention from customer one'],
+  traps:['Building for six months in silence. The classic and fatal error.','Building for "everyone". Ten customers in one industry beats a hundred scattered.','Adding features instead of fixing retention.'],
+  books:['The Lean Startup — Eric Ries','The SaaS Playbook — Rob Walling','$100M Offers — Alex Hormozi','Obviously Awesome — April Dunford'],
+  tools:['AI coding assistants — free tiers, genuinely capable now','Make / Zapier / n8n free tiers — automation without code','Supabase or Airtable free tier — database','Vercel or Netlify free tier — hosting']
+},
+{
+  id:'coach', name:'The Teaching Business', short:'Tutoring, coaching & instruction',
+  line:'Get paid for what you already know, one person or one small group at a time.',
+  capital:'$0', firstDollar:'7 – 30 days', ceiling:'$2k–$15k/mo solo, more via groups and products',
+  what:'You know something someone else wants to learn. Tutoring, skill coaching, language practice, instrument lessons, exam prep, fitness. It requires no capital and no product, and the bar is not "expert" — the bar is being two steps ahead of the person you\'re teaching.',
+  examples:['Exam or subject tutoring for a specific year group','Teaching a software or creative skill you use daily','Language conversation practice with a specific profession']
+  ,dream:'They get to the thing they want faster, with someone who won\'t let them quit.',
+  obstacles:[
+    ['They doubt your credentials','Offer a free first session. Results in one session beat any certificate'],
+    ['They\'ve tried and failed before','Sell the structure and the accountability, not the information. The information is free and they know it'],
+    ['Price feels high per hour','Sell a package of six sessions with an outcome attached, not loose hours. Outcomes justify prices that loose hours never can']
+  ],
+  pricing:{ model:'Package pricing tied to an outcome. Never sell single hours — single hours make you a commodity and guarantee churn.',
+    tiers:[['Single session','One-off, mostly for trials','$30 – $60'],['Six-session package','A defined outcome over six weeks','$250 – $450'],['Group program','Six to ten people, same outcome, weekly','$150 per person']],
+    note:'The group version is the leverage. Same hour of your time, six times the revenue, and peer accountability makes the results better rather than worse.',
+    guarantee:'"If you don\'t feel the first session was worth it, it\'s free." Costs you almost nothing and removes the entire barrier to trying you.'},
+  channel:{ core:'Warm outreach, then referrals', why:'Teaching is a trust purchase, and trust travels by recommendation. Your existing network and your first students\' networks will out-perform any advertising you could buy.',
+    volume:'20 personal messages in week one, then one referral request per satisfied student, every month.',
+    script:'Hi [name] — I\'m tutoring [subject] for [specific group] and I\'m taking on three students this month. First session is free so you can see if it clicks. If it does, it\'s $[X] for six weeks and we work toward [specific outcome]. Know anyone it might suit — or is that you?'},
+  weeks:[
+    ['Days 1–7','Define the outcome, not the subject','"Maths tutoring" is a commodity. "Get from a C to an A in GCSE maths in one term" is a product with a price.'],
+    ['Days 8–20','Get three free students','Family, friends of friends, local groups. Free students give you reps, testimonials and referrals — three things you cannot buy.'],
+    ['Days 21–40','Convert to paid packages','Six sessions with a defined outcome. Everyone who got value from free will consider paid, if you ask directly.'],
+    ['Days 41–60','Build the referral loop','Every satisfied student is asked for one name. This is the whole growth engine and it costs nothing.'],
+    ['Days 61–80','Run one group','Take your best six students and run them together. Test that your time can serve more than one person at once.'],
+    ['Days 81–90','Package the repeated part','Whatever you explain in every single session becomes a video or a worksheet. That is the seed of a digital product.']
+  ],
+  econ:{ lines:['Revenue = students × package price × packages per year','Capacity = teachable hours per week ÷ hours per student','Group revenue per hour = participants × price per participant ÷ total hours','Gross margin ≈ 100%; your constraint is hours, not money'],
+    watch:'Hours are your inventory and they don\'t restock. Once you\'re at 70% booked, the only ways up are price and groups.'},
+  firstTen:['Define one measurable outcome you can deliver','Teach three people free, this month','Ask each for one written sentence about the result','Convert free students to six-session packages','Ask every student for one referral name'],
+  traps:['Charging hourly. It caps you and attracts people who count minutes.','Teaching anything to anyone. Specialists command double.','Waiting until you feel "qualified". Two steps ahead is enough, and always was.'],
+  books:['$100M Offers — Alex Hormozi','Influence — Robert Cialdini','SPIN Selling — Neil Rackham'],
+  tools:['Google Meet or Zoom free — sessions','Calendly free — booking','Google Slides / Docs — materials','Stripe payment links — packages upfront']
+},
+{
+  id:'community', name:'The Community & Events', short:'Bring the right people together',
+  line:'Gather a specific group of people repeatedly, and monetise the gathering itself.',
+  capital:'$0 – $200', firstDollar:'30 – 90 days', ceiling:'$1k–$20k/mo, unusually durable once established',
+  what:'A recurring meetup, a run club, a professional dinner, a paid online group, a local class night. You create the thing people show up to. It is slow to monetise and unusually defensible once it exists, because a community cannot be copied — only rebuilt.',
+  examples:['A monthly meetup for one profession in your city','A weekend club around a hobby, with paid membership','A paid online group with a weekly call and a real curriculum'],
+  dream:'They stop feeling alone in the thing they care about, and they meet people who make it better.',
+  obstacles:[
+    ['Nobody comes to a new event','Personally invite 30 people for your first one. Never rely on a public post for event one'],
+    ['They won\'t pay for something social','Charge for the format and the curation, not the socialising. Or monetise via sponsors and vendors instead'],
+    ['It dies after three months','Fixed schedule, same day every month, no exceptions. Reliability is what turns an event into an institution']
+  ],
+  pricing:{ model:'Free at first to build density, then paid membership, ticketed events, or sponsorship once people show up reliably.',
+    tiers:[['Free','Open meetup — builds the base','$0'],['Membership','Monthly access, priority, extra content','$15 – $40 / mo'],['Premium event','Workshop, dinner, or intensive with a speaker','$40 – $150 per ticket']],
+    note:'Sponsors pay for access to a defined audience. Twenty reliable attendees from one profession is genuinely sellable to a company that wants to reach them.',
+    guarantee:'"Come to your first one free. If it wasn\'t worth your evening, don\'t come back." Zero risk to attend is how you solve the cold-start problem.'},
+  channel:{ core:'Warm outreach, then warm content', why:'Communities are cold-start problems. Nobody joins an empty room, so the first thirty people have to be personally invited by you. There is no shortcut and no channel that replaces this.',
+    volume:'30 personal invitations for event one. Then document every event publicly — the photos are what sell event two.',
+    script:'Hi [name] — I\'m starting a monthly meetup for [specific group] in [city]. First one is [date] at [place], about 15 of us, free, just drinks and conversation with people doing the same thing. I thought of you specifically because [genuine reason]. Come?'},
+  weeks:[
+    ['Days 1–14','Define who it is emphatically not for','Specific communities thrive; general ones die. "People in tech" fails. "Junior developers in their first job in this city" works.'],
+    ['Days 15–30','Personally invite 30 people','Not a post. Thirty individual messages. Expect 12 to say yes and 8 to actually come. That is a successful first event.'],
+    ['Days 31–45','Run event one and document it','Photos, a group chat set up on the night, and the next date announced before anyone leaves.'],
+    ['Days 46–70','Same day, every month','Reliability is the product. Third Thursday, every month, forever. Attendance compounds only if people can predict it.'],
+    ['Days 71–85','Introduce money carefully','Membership, ticketed premium events, or a sponsor. Never make the core gathering feel like a sales channel.'],
+    ['Days 86–90','Hand out roles','Give regulars jobs — greeter, photographer, host. Ownership is what turns attendees into a community.']
+  ],
+  econ:{ lines:['Revenue = members × membership fee + tickets × price + sponsorship','Cost per event = venue + food + materials (often $0 with the right venue)','Contribution per event = revenue − direct cost','Retention: what percentage come back next month? Under 40% means the format is wrong'],
+    watch:'Attendance retention is the health metric. Growing an event that nobody returns to is just churn wearing a costume.'},
+  firstTen:['Define the group narrowly enough to exclude most people','Personally invite 30 named humans','Set the next date before the first event ends','Start a group chat on the night','Find a venue that hosts you free for the footfall'],
+  traps:['Posting publicly and hoping. Event one is always personal invitations.','Irregular scheduling. Predictability is the entire value.','Monetising too early. Density first, money second.'],
+  books:['Influence — Robert Cialdini','How Brands Grow — Byron Sharp','$100M Leads — Alex Hormozi'],
+  tools:['WhatsApp or Discord — free community infrastructure','Luma or Eventbrite free tier — event pages and RSVPs','Canva free — event graphics','Google Forms — feedback after every event']
+}
+];
+
+/* ---------------------------------------------------------------------------
+   3. SCORING
+   Every model carries a weight table. Each answer moves that model's raw fit
+   up or down; the raw fit is then standardised against the model's own
+   distribution so models are comparable. Deliberately transparent rather than
+   clever: the same inputs always produce the same output, and every point of
+   the score can be traced back to a specific answer.
+   ------------------------------------------------------------------------ */
+const W = {
+  service:{
+    style:{screen:6,people:10,hands:-2,create:5}, sales:{hate:-8,nervous:6,fine:12},
+    urgency:{now:12,soon:9,patient:0}, risk:{none:9,small:5,ok:1},
+    reach:{local:1,online:9,both:8}, goal:{side:8,replace:11,big:3,learn:6},
+    skills:{write:6,design:6,video:6,code:5,talk:5,organize:4,numbers:4,teach:3,hands:1,none:-10},
+    interests:{tech:2,money:2,creative:2,edu:2,style:2,health:2}, capMin:0, timeMin:5
+  },
+  local:{
+    style:{screen:-10,people:8,hands:15,create:-4}, sales:{hate:-2,nervous:6,fine:9},
+    urgency:{now:14,soon:8,patient:-2}, risk:{none:11,small:6,ok:2},
+    reach:{local:16,online:-22,both:7}, goal:{side:11,replace:9,big:2,learn:6},
+    skills:{hands:13,talk:6,organize:5,none:4,code:-3,write:-2},
+    interests:{home:8,pets:7,health:3,food:3,sport:2}, capMin:0, timeMin:5
+  },
+  productized:{
+    style:{screen:11,people:9,hands:-6,create:4}, sales:{hate:-10,nervous:5,fine:14},
+    urgency:{now:-2,soon:14,patient:9}, risk:{none:6,small:8,ok:6},
+    reach:{local:0,online:13,both:8}, goal:{side:-2,replace:14,big:22,learn:2},
+    skills:{organize:10,write:8,design:8,video:7,code:8,talk:7,numbers:7,none:-12},
+    interests:{money:7,tech:6,edu:3}, capMin:0, timeMin:10
+  },
+  creator:{
+    style:{screen:4,people:2,hands:-5,create:20}, sales:{hate:9,nervous:6,fine:2},
+    urgency:{now:-22,soon:-5,patient:19}, risk:{none:9,small:7,ok:4},
+    reach:{local:-10,online:15,both:6}, goal:{side:0,replace:7,big:17,learn:9},
+    skills:{video:12,write:9,design:7,teach:7,talk:5,none:0},
+    interests:{gaming:7,creative:7,health:6,style:6,tech:5,food:5,money:5,sport:4,pets:4,people:4,edu:4,home:3}, capMin:0, timeMin:10
+  },
+  digital:{
+    style:{screen:12,people:-5,hands:-7,create:11}, sales:{hate:7,nervous:5,fine:3},
+    urgency:{now:-15,soon:6,patient:12}, risk:{none:10,small:6,ok:3},
+    reach:{local:-12,online:13,both:5}, goal:{side:10,replace:8,big:9,learn:6},
+    skills:{write:11,design:9,organize:9,numbers:8,teach:10,code:7,video:6,none:-10},
+    interests:{edu:8,money:7,tech:7,creative:6,style:5,health:5}, capMin:0, timeMin:5
+  },
+  ecom:{
+    style:{screen:6,people:-4,hands:3,create:15}, sales:{hate:9,nervous:5,fine:2},
+    urgency:{now:-12,soon:4,patient:12}, risk:{none:-12,small:4,ok:13},
+    reach:{local:-8,online:15,both:6}, goal:{side:7,replace:7,big:12,learn:2},
+    skills:{design:15,video:10,numbers:6,organize:5,none:-4},
+    interests:{style:11,gaming:9,creative:9,sport:7,pets:7,health:6,home:3}, capMin:100, timeMin:10
+  },
+  flip:{
+    style:{screen:2,people:6,hands:12,create:-3}, sales:{hate:1,nervous:8,fine:8},
+    urgency:{now:13,soon:7,patient:-4}, risk:{none:-10,small:8,ok:10},
+    reach:{local:12,online:8,both:12}, goal:{side:11,replace:3,big:-8,learn:11},
+    skills:{hands:6,numbers:7,organize:7,talk:5,design:3,none:5},
+    interests:{style:7,home:6,gaming:5,tech:4,sport:3}, capMin:30, timeMin:5
+  },
+  software:{
+    style:{screen:19,people:4,hands:-10,create:0}, sales:{hate:-5,nervous:6,fine:11},
+    urgency:{now:-18,soon:0,patient:18}, risk:{none:7,small:8,ok:7},
+    reach:{local:-6,online:15,both:7}, goal:{side:-6,replace:9,big:22,learn:5},
+    skills:{code:24,numbers:9,organize:7,write:5,talk:5,none:-18},
+    interests:{tech:15,money:7,edu:4}, capMin:0, timeMin:15
+  },
+  coach:{
+    style:{screen:5,people:15,hands:0,create:5}, sales:{hate:-7,nervous:8,fine:12},
+    urgency:{now:12,soon:12,patient:4}, risk:{none:12,small:7,ok:2},
+    reach:{local:11,online:11,both:12}, goal:{side:11,replace:11,big:2,learn:10},
+    skills:{teach:17,talk:10,write:5,organize:5,numbers:5,none:-8},
+    interests:{edu:12,health:9,money:7,creative:6,people:6,sport:6,gaming:4,tech:4}, capMin:0, timeMin:5
+  },
+  community:{
+    style:{screen:-6,people:18,hands:3,create:7}, sales:{hate:3,nervous:7,fine:9},
+    urgency:{now:-16,soon:4,patient:17}, risk:{none:7,small:7,ok:7},
+    reach:{local:15,online:3,both:11}, goal:{side:3,replace:3,big:12,learn:15},
+    skills:{talk:12,organize:14,teach:7,design:4,none:2},
+    interests:{people:14,sport:7,gaming:7,health:6,creative:6,food:6,money:5,tech:5}, capMin:0, timeMin:8
+  }
+};
+
+const SKILL_CAP = 18, INT_CAP = 14, NUDGE_CAP = 10, CAP_PEN = 30, TIME_PEN = 18;
+const DIMS = ['style','sales','urgency','risk','reach','goal'];
+
+/* Raw fit for one model: the sum of every weight this person's answers
+   triggered, with caps so that selecting many skills or many interests
+   cannot swamp the constraint dimensions. */
+function rawFit(a, id){
+  const w = W[id]; let s = 0, n = 0; const notes = [];
+
+  DIMS.forEach(d=>{ s += (w[d][a[d]] || 0); });
+
+  let sk = 0; (a.skills||[]).forEach(k=>{ sk += (w.skills[k]||0); });
+  s += Math.max(-SKILL_CAP, Math.min(SKILL_CAP, sk));
+
+  let iv = 0; (a.interests||[]).forEach(k=>{ iv += (w.interests[k]||0); });
+  s += Math.max(0, Math.min(INT_CAP, iv));
+
+  // Hard constraints — you cannot start what you cannot fund or staff
+  if(a.capital < w.capMin){ s -= CAP_PEN; notes.push('needs roughly $'+w.capMin+' to start, which is more than you said you can risk'); }
+  if(a.time < w.timeMin){ s -= TIME_PEN; notes.push('realistically needs '+w.timeMin+'+ hours a week'); }
+
+  // Stage nudges
+  if(a.stage==='noidea' && (id==='digital'||id==='software')) n -= 6;
+  if(a.stage==='noidea' && (id==='service'||id==='local'||id==='flip'||id==='coach')) n += 6;
+  if(a.stage==='started' && (id==='service'||id==='productized')) n += 4;
+  if(a.stage==='specific' && (id==='digital'||id==='software'||id==='ecom')) n += 4;
+
+  // Blocker nudges — the recommended plan should attack the stated blocker
+  if(a.blocker==='nomoney' && id==='ecom') n -= 8;
+  if(a.blocker==='nomoney' && (id==='service'||id==='local'||id==='coach')) n += 6;
+  if(a.blocker==='noskill' && (id==='local'||id==='flip')) n += 8;
+  if(a.blocker==='noskill' && (id==='software'||id==='productized')) n -= 6;
+  if(a.blocker==='fear' && id==='creator') n -= 8;
+  if(a.blocker==='fear' && (id==='flip'||id==='digital'||id==='local')) n += 5;
+  if(a.blocker==='notime' && (id==='creator'||id==='software'||id==='community')) n -= 8;
+  if(a.blocker==='notime' && (id==='flip'||id==='digital')) n += 5;
+  s += Math.max(-NUDGE_CAP, Math.min(NUDGE_CAP, n));
+
+  return {s, notes};
+}
+
+/* Raw sums are not comparable across models: a model with big weights would
+   always win on magnitude rather than on fit. So each model's raw score is
+   standardised against its own distribution over the whole answer space
+   (mean and standard deviation precomputed by Monte Carlo — see
+   BRAND-AND-STRATEGY.md). The result answers the right question: "how
+   unusually well does this person fit this model, compared to everyone else?"
+   That is what makes the recommendation responsive to distinctive answers
+   instead of to arbitrary weight magnitudes. */
+const NORM = {
+  service:[44.49,14.20], local:[39.79,22.70], productized:[44.19,21.13], creator:[37.70,25.34],
+  digital:[41.61,20.83], ecom:[22.43,26.76], flip:[41.90,20.72], software:[26.11,27.96],
+  coach:[63.39,15.28], community:[49.06,21.04]
+};
+
+function scoreModels(a){
+  return MODELS.map(m=>{
+    const {s, notes} = rawFit(a, m.id);
+    const nz = NORM[m.id];
+    const z = (s - nz[0]) / nz[1];
+    const score = Math.max(24, Math.min(97, Math.round(74 + 8 * z)));
+    return { m, score, z, notes };
+  }).sort((x,y)=> y.z - x.z);
+}
+
+/* ---------------------------------------------------------------------------
+   4. PERSONALISED REASONING
+   Turns the winning score into sentences that reference the user's own
+   answers. This is what makes the document feel written for one person.
+   ------------------------------------------------------------------------ */
+const LABEL = {
+  stage:{noidea:'no idea yet',vague:'a vague idea',specific:'a specific idea',started:'already started'},
+  urgency:{now:'income needed within 30 days',soon:'income wanted within 3–6 months',patient:'no financial pressure'},
+  reach:{online:'online, anywhere',local:'local and in person',both:'no preference'},
+  style:{screen:'alone at a screen',people:'talking to people',hands:'moving and building',create:'making things'},
+  sales:{hate:'hates asking for money',nervous:'nervous but willing',fine:'comfortable selling'},
+  risk:{none:'cannot afford to lose anything',small:'small losses survivable',ok:'treats losses as tuition'},
+  goal:{side:'$500–$1,000 a month on the side',replace:'replace a full income',big:'build something big',learn:'prove capability'},
+  blocker:{noidea:'not knowing what to do',nomoney:'having no money',noskill:'not feeling good enough',fear:'fear of failing publicly',notime:'having no time',nostart:'not knowing what step one is'},
+  skills:{write:'writing',design:'design',video:'video and photo',code:'code and tech',talk:'talking to people',hands:'practical work',teach:'teaching',organize:'organising',numbers:'numbers',none:'no defined skill yet'},
+  interests:{tech:'tech and AI',health:'health and fitness',style:'fashion and beauty',food:'food and drink',gaming:'gaming',creative:'music, art and design',edu:'education',home:'homes and local life',pets:'animals and pets',money:'money and business',sport:'sport and outdoors',people:'people and relationships'}
+};
+const capLabel = c => c===0?'$0':c===50?'under $100':c===300?'$100–$500':c===1000?'$500–$2,000':'over $2,000';
+const timeLabel = t => t===5?'under 5 hours a week':t===10?'5–10 hours a week':t===20?'10–20 hours a week':t===35?'20–40 hours a week':'40+ hours a week';
+const list = (arr,map) => arr && arr.length ? arr.map(k=>map[k]).filter(Boolean).join(', ') : 'nothing specified';
+
+function whyThis(a, m){
+  const bits = [];
+  if(a.capital===0) bits.push('you have no capital, and this model needs none');
+  else bits.push('it fits inside the '+capLabel(a.capital)+' you said you could risk');
+  if(a.urgency==='now') bits.push('you need money inside 30 days, and this is one of the few models that can produce a paying customer that fast');
+  else if(a.urgency==='patient') bits.push('you have no immediate financial pressure, which is what makes a slower-compounding model rational for you');
+  else bits.push('your 3–6 month window is enough time for this to reach real revenue');
+  bits.push('it matches your preference for working '+LABEL.style[a.style]);
+  if(a.sales==='hate') bits.push('and it does not require you to cold-call strangers before you have any proof');
+  else if(a.sales==='fine') bits.push('and it rewards the fact that you are already comfortable asking for money');
+  if(a.time<=10) bits.push('it can be run inside '+timeLabel(a.time));
+  return bits;
+}
+
+function altWhyNot(a, r, topScore){
+  if(r.notes.length) return 'Held back because it '+r.notes[0]+'.';
+  const d = (topScore||100) - r.score;
+  if(d <= 3)  return 'Effectively tied — pick whichever you would enjoy more.';
+  if(d <= 8)  return 'A strong second option if the primary does not appeal.';
+  if(d <= 16) return 'Workable, but slower for your constraints than the primary.';
+  return 'Worth revisiting once you have capital, proof or time you lack today.';
+}
+
+/* ---------------------------------------------------------------------------
+   5. THE BLOCKER RESPONSES
+   Whatever the user said is stopping them gets answered directly, by name,
+   inside their own document. Section 8 of every playbook.
+   ------------------------------------------------------------------------ */
+const BLOCKERS = {
+  noidea:{ t:'"I don\'t know what to do."',
+    p:['You were never going to think your way to the answer, because the answer isn\'t upstream of action — it\'s downstream of it. Ideas are not found by sitting still and considering options; they are found by making contact with reality and noticing what people complain about.',
+       'The trap is that "no idea" feels like a knowledge problem, so you try to solve it by consuming more information. It is actually a contact problem. You do not have enough contact with people who have problems. Twenty conversations will generate more usable ideas than two hundred hours of videos, because a business idea is just a problem that somebody described to you out loud.',
+       'This is precisely why your recommended model does not require you to have an idea. It requires you to pick a specific type of person and do a specific useful thing for them. The idea arrives on its own once money has changed hands once.'],
+    do:'This week: have five conversations with people in the group your model targets. Ask one question — "what part of this eats the most time and you hate the most?" Write down every answer verbatim. Your idea is in there.' },
+  nomoney:{ t:'"I have no money."',
+    p:['This is the most solvable of all the blockers, and also the most commonly used as a reason not to start — which is why it deserves a direct answer rather than sympathy.',
+       'Capital buys two things: speed and inventory. Every model recommended by this site is chosen specifically because it needs neither. You are selling either your time, your knowledge, or your ability to physically show up — none of which require you to buy anything first. The people who need capital are the ones who chose a model that requires it, usually because it looked more like a "real business".',
+       'The real constraint hiding behind "no money" is almost always time or nerve. Be honest with yourself about which one it actually is, because the fix is completely different.'],
+    do:'This week: write down every cost in your plan. If the total is above $50, your plan is wrong for your situation — cut it until it isn\'t. Then spend zero and get your first customer anyway.' },
+  noskill:{ t:'"I don\'t think I\'m good enough."',
+    p:['The bar is not "expert". The bar is "more useful than the alternative the customer currently has", and the alternative is usually nothing at all, or themselves at 11pm on a Sunday doing it badly.',
+       'You are comparing your inside — every doubt, every gap — to other people\'s outside, which is their marketing. Everybody who is now good was, at some point, charging money while being mediocre. That is not a scandal, it is the only way anyone gets good. Competence is built on paid reps, not before them.',
+       'There is a completely legitimate way to handle this that costs you nothing: do the first two jobs free or cheap, over-deliver, and take the testimonial. Now you have proof, and the doubt has been replaced with evidence rather than argument.'],
+    do:'This week: do one piece of work for free, to a standard that slightly embarrasses you with how much effort you put in. Get one sentence in writing about the result. That sentence is now your qualification.' },
+  fear:{ t:'"I\'m afraid of failing publicly."',
+    p:['Reasonable. Also worth examining precisely, because the fear is usually pointing at something much smaller than it feels.',
+       'Almost nobody is watching. That sounds harsh and it is actually the good news — the audience you are imagining, the one that will notice and judge, does not exist. Everyone is busy with their own situation. The handful of people who do notice will forget within a week. The asymmetry is severe: the downside of visible failure is a few days of discomfort, and the upside is a business.',
+       'The other half of the fix is structural. Make the bet small and reversible. A first customer is a reversible decision — if it goes badly you have lost a few hours and gained information. Reversible decisions should be made fast. Only irreversible ones deserve the deliberation you are currently applying to everything.'],
+    do:'This week: make one offer to one person you do not know well. Just one. Notice how completely the world fails to end. Then do it nineteen more times.' },
+  notime:{ t:'"I have no time."',
+    p:['Sometimes true. More often it means the available time is fragmented rather than absent, and fragmented time feels like no time because you cannot do deep work in it.',
+       'Your plan has been scaled to the hours you actually reported, not to an idealised week. If you said five hours, the plan assumes five hours and does not secretly require twenty. That matters, because plans that quietly assume more time than you have are how people conclude they are lazy when they were simply given the wrong plan.',
+       'The leverage is in ruthless narrowing rather than in finding more hours. One offer, one channel, one type of customer. Most people burn their limited time on variety — three ideas, three platforms, three audiences — and get nowhere on all three. Five focused hours a week for twelve weeks is sixty hours, and sixty hours is more than enough to reach a first paying customer in every model here.'],
+    do:'This week: block two fixed appointments in your calendar with yourself. Same days, same times, every week. Protect them like a job. Do not add a third thing until the first is producing.' },
+  nostart:{ t:'"I don\'t know what step one is."',
+    p:['This is the most honest answer on the list, and the easiest for a document to actually solve, which is more or less why this site exists.',
+       'Paralysis at step one is almost never about the step. It is about the fact that step one has never been separated from steps two through fifty. When all fifty are in your head at once, the whole thing is unliftable. Separate them and each one is trivial.',
+       'The 90-day plan in this document is built as a sequence for exactly this reason. You do not need to believe in the whole plan or even understand it. You need to do the first block and then look at the second. That is all.'],
+    do:'This week: do only the first line of the Days 1–7 block. Nothing else. Then come back and read the second line. Sequence beats motivation.' }
+};
+
+/* ---------------------------------------------------------------------------
+   6. PDF BUILDER (pdfmake)
+   Cover page is dark and branded; body pages are light so the document is
+   actually printable — which matters, because people mark these up.
+   ------------------------------------------------------------------------ */
+const INK = '#0A0E16', INK2 = '#3C4657', VOLT = '#C8FF3C', VOLTINK = '#4F7A00', RULE = '#DDE3EC';
+const NUM = {1:'One',2:'Two',3:'Three',4:'Four',5:'Five',6:'Six'};
+
+function pdfRule(){ return {canvas:[{type:'rect',x:0,y:0,w:515,h:1,color:RULE}],margin:[0,4,0,14]}; }
+function pdfH2(t){ return {stack:[
+  {canvas:[{type:'rect',x:0,y:0,w:46,h:4,color:VOLT}],margin:[0,0,0,10]},
+  {text:t, style:'h2'}
+], margin:[0,0,0,12]}; }
+function pdfKicker(t){ return {text:t, style:'kicker'}; }
+function pdfP(t,m){ return {text:t, style:'p', margin:m||[0,0,0,10]}; }
+function pdfBullets(arr){ return {ul:arr, style:'p', margin:[0,2,0,12]}; }
+
+function buildPdf(a, ranked){
+  const top = ranked[0], m = top.m;
+  const alts = ranked.slice(1,3);
+  const bl = BLOCKERS[a.blocker];
+  const today = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+
+  const content = [];
+
+  /* ---------- COVER ---------- */
+  content.push(
+    {text:'MYFIRSTBUSINESS.COM', color:VOLT, fontSize:9, characterSpacing:3, bold:true, margin:[0,150,0,0]},
+    {text:'Your First\nBusiness Plan', color:'#FFFFFF', fontSize:44, bold:true, lineHeight:1.02, margin:[0,22,0,0]},
+    {canvas:[{type:'rect',x:0,y:0,w:70,h:5,color:VOLT}], margin:[0,26,0,26]},
+    {text:m.name.toUpperCase(), color:VOLT, fontSize:13, bold:true, characterSpacing:1.5},
+    {text:m.line, color:'#98A4B8', fontSize:11.5, margin:[0,10,0,0], lineHeight:1.4, width:400},
+    {text:'Generated '+today+'  ·  from 12 answers  ·  free, and yours to keep', color:'#616D80', fontSize:9, margin:[0,120,0,0]},
+    {text:'Educational content only. Not financial, legal or tax advice.', color:'#6B7688', fontSize:8, margin:[0,6,0,0], pageBreak:'after'}
+  );
+
+  /* ---------- 01 SITUATION ---------- */
+  content.push(pdfKicker('SECTION 01'), pdfH2('Your situation, stated honestly'),
+    pdfP('A plan that ignores your constraints is fiction. Here is what you told us, written back to you as the boundary conditions everything else in this document had to fit inside.'),
+    {table:{widths:[150,'*'], body:[
+      ['Where you are', LABEL.stage[a.stage]],
+      ['Capital you can risk', capLabel(a.capital)],
+      ['Time you can protect', timeLabel(a.time)],
+      ['Financial pressure', LABEL.urgency[a.urgency]],
+      ['Skills you already have', list(a.skills, LABEL.skills)],
+      ['Subjects you care about', list(a.interests, LABEL.interests)],
+      ['Where your customers are', LABEL.reach[a.reach]],
+      ['How you want to work', LABEL.style[a.style]],
+      ['Asking for money', LABEL.sales[a.sales]],
+      ['If you lost the money', LABEL.risk[a.risk]],
+      ['Winning in 12 months', LABEL.goal[a.goal]],
+      ['What has stopped you', LABEL.blocker[a.blocker]]
+    ]}, layout:'lightHorizontalLines', style:'tbl', margin:[0,6,0,16]},
+    pdfP('Two of these matter more than the rest. Your capital sets which models are even available to you, and your available time sets how fast any of them can move. Everything that follows was filtered through those two numbers first — which is why this plan will look different from advice written for someone with money and a free calendar.'),
+    {text:'', pageBreak:'after'}
+  );
+
+  /* ---------- 02 VERDICT ---------- */
+  content.push(pdfKicker('SECTION 02'), pdfH2('The business you should start'),
+    {table:{widths:['*'], body:[[{
+      stack:[
+        {text:'YOUR MATCH · '+top.score+'/100', color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,8]},
+        {text:m.name, fontSize:26, bold:true, color:INK, margin:[0,0,0,8]},
+        {text:m.line, fontSize:11.5, color:INK2, lineHeight:1.4}
+      ], margin:[14,14,14,14]
+    }]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,0,0,14]},
+    pdfP(m.what),
+    {columns:[
+      {width:'*', stack:[{text:'STARTING CAPITAL', style:'micro'},{text:m.capital, style:'stat'}]},
+      {width:'*', stack:[{text:'FIRST DOLLAR IN', style:'micro'},{text:m.firstDollar, style:'stat'}]},
+      {width:'*', stack:[{text:'REALISTIC CEILING', style:'micro'},{text:m.ceiling, style:'statSm'}]}
+    ], columnGap:16, margin:[0,6,0,14]},
+    {text:'Why this one, for you specifically', style:'h3', margin:[0,2,0,6]},
+    pdfBullets(whyThis(a, m).map(s=>s.charAt(0).toUpperCase()+s.slice(1)+'.')),
+    {text:'What it looks like in practice', style:'h3', margin:[0,4,0,6]},
+    pdfBullets(m.examples),
+    {text:'Your two alternates', style:'h3', margin:[0,6,0,6]},
+    pdfP('Take one of these if the primary does not appeal after a week — but not a fourth option. The cost of switching is the ninety days you keep restarting.', [0,0,0,8]),
+    {table:{widths:[38,'*'], body: alts.map((r,i)=>[
+      {text:'0'+(i+2), color:VOLTINK, bold:true, fontSize:10},
+      {stack:[
+        {text:r.m.name+'  ·  '+r.score+'/100', bold:true, fontSize:11, color:INK, margin:[0,0,0,3]},
+        {text:r.m.line, fontSize:9.5, color:INK2, margin:[0,0,0,3]},
+        {text:altWhyNot(a,r,top.score), fontSize:9, color:VOLTINK, italics:true}
+      ]}
+    ])}, layout:'lightHorizontalLines', margin:[0,0,0,26]}
+  );
+
+  /* ---------- 03 OFFER ----------
+     Deliberately no page break before this one: section 02 runs a little long
+     for some models, and an orphan page with three lines on it looks broken.
+     Letting 02 and 03 share a spread keeps every page full. */
+  content.push(pdfKicker('SECTION 03'), pdfH2('Your offer'),
+    pdfP('Hormozi\'s Value Equation is the most practically useful formula in modern business, and it is the whole of offer design:'),
+    {table:{widths:['*'],body:[[{text:'Value  =  ( Dream Outcome  ×  Perceived Likelihood of Achievement )  ÷  ( Time Delay  ×  Effort and Sacrifice )', alignment:'center', fontSize:10.5, bold:true, color:INK, margin:[10,12,10,12]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,4,0,16]},
+    pdfP('You raise value by increasing the top two and decreasing the bottom two. That is the entire game, and it is why "lower my price" is almost never the right lever — price is not even in the equation.'),
+    {text:'The dream outcome you are selling', style:'h3', margin:[0,8,0,6]},
+    pdfP(m.dream),
+    {text:'Their obstacles, converted into your solutions', style:'h3', margin:[0,10,0,6]},
+    pdfP('Every objection is an obstacle you failed to remove in advance. Pre-handle them inside the offer instead of fighting them on the call.', [0,0,0,10]),
+    {table:{widths:['45%','55%'], headerRows:1, body:[
+      [{text:'THEIR OBSTACLE', style:'th'},{text:'YOUR BUILT-IN SOLUTION', style:'th'}],
+      ...m.obstacles.map(o=>[{text:o[0], style:'td'},{text:o[1], style:'td'}])
+    ]}, layout:'lightHorizontalLines', margin:[0,0,0,16]},
+    {text:'Your risk reversal', style:'h3', margin:[0,4,0,6]},
+    pdfP(m.pricing.guarantee),
+    {text:'', pageBreak:'after'}
+  );
+
+  /* ---------- 04 PRICING ---------- */
+  content.push(pdfKicker('SECTION 04'), pdfH2('What to charge on day one'),
+    pdfP('Law 7: price is a strategic decision, not an arithmetic one. It signals quality, filters your customers, and funds your acquisition. A 1% price increase produces a bigger profit change than a 1% volume increase or a 1% cost cut, because it flows straight to the bottom line.'),
+    pdfP(m.pricing.model, [0,0,0,14]),
+    {table:{widths:['22%','48%','30%'], headerRows:1, body:[
+      [{text:'TIER', style:'th'},{text:'WHAT THEY GET', style:'th'},{text:'STARTING PRICE', style:'th'}],
+      ...m.pricing.tiers.map(t=>[{text:t[0], style:'td', bold:true},{text:t[1], style:'td'},{text:t[2], style:'td', bold:true, color:VOLTINK}])
+    ]}, layout:'lightHorizontalLines', margin:[0,0,0,14]},
+    pdfP(m.pricing.note),
+    pdfP('Why three tiers and not one: price discrimination. Different customers have different willingness to pay, and a single price captures only one slice of the demand curve. The top tier does most of its work by making the middle tier look reasonable — most people buy the middle, which is the point.'),
+    {text:'', pageBreak:'after'}
+  );
+
+  /* ---------- 05 CHANNEL ---------- */
+  content.push(pdfKicker('SECTION 05'), pdfH2('How you get customers'),
+    pdfP('Every lead on earth comes from one of four places: warm outreach (people who know you), cold outreach (people who don\'t), warm content (an audience you built), or cold content (paid advertising). Everything else is a variation. Choosing more than one at the start is the most common way beginners get nowhere on all of them.'),
+    {table:{widths:['*'],body:[[{stack:[
+      {text:'YOUR CHANNEL', color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,6]},
+      {text:m.channel.core, fontSize:17, bold:true, color:INK, margin:[0,0,0,8]},
+      {text:m.channel.why, fontSize:10, color:INK2, lineHeight:1.4}
+    ], margin:[16,14,16,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,4,0,16]},
+    {text:'Your required volume', style:'h3', margin:[0,0,0,6]},
+    pdfP(m.channel.volume),
+    pdfP('Law 5: volume negates luck. One attempt tells you nothing; a hundred tells you everything. The single biggest difference between people who succeed at this and people who do not is number of attempts, not quality of thinking. Track every attempt in a spreadsheet from day one — contacts, replies, calls, closes. Without those four numbers you are guessing.', [0,0,0,14]),
+    {text:'Use this, word for word, until you have your own data', style:'h3', margin:[0,0,0,8]},
+    {table:{widths:['*'],body:[[{text:m.channel.script, fontSize:10, color:INK, lineHeight:1.5, margin:[14,14,14,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,0,0,12]},
+    pdfP('Do not "improve" this before you have sent it fifty times. You cannot tell what needs changing from a sample size of three, and rewriting the script is the most popular way to avoid sending it.'),
+    {text:'', pageBreak:'after'}
+  );
+
+  /* ---------- 06 TIMELINE ---------- */
+  content.push(pdfKicker('SECTION 06'), pdfH2('Your 90-day plan'),
+    pdfP('Scaled to the '+timeLabel(a.time)+' you said you can protect. It ends with money in your account, not with a finished logo. If you fall behind, do not restart — carry on from where you are.', [0,0,0,14]),
+    ...m.weeks.map(w=>({
+      stack:[
+        {columns:[
+          {width:74, text:w[0], color:VOLTINK, bold:true, fontSize:9.5},
+          {width:'*', text:w[1], bold:true, fontSize:12, color:INK}
+        ], margin:[0,0,0,5]},
+        {text:w[2], fontSize:10, color:INK2, lineHeight:1.45, margin:[74,0,0,0]},
+        {canvas:[{type:'rect',x:0,y:0,w:515,h:0.6,color:RULE}],margin:[0,11,0,11]}
+      ]
+    })),
+    pdfP('The accountability loop that makes this work: every Saturday, three questions. What did I commit to last week? Did I do it — yes or no, no explanations? What is the one adjustment? Ten minutes. It is the difference between a plan and a habit.', [0,6,0,0]),
+    {text:'', pageBreak:'after'}
+  );
+
+  /* ---------- 07 NUMBERS ---------- */
+  content.push(pdfKicker('SECTION 07'), pdfH2('The numbers you must know cold'),
+    pdfP('Law 2: businesses die from lack of cash, not lack of profit. Law 8: if unit economics are broken, growing just makes you fail faster. Compute this before you spend a dollar on growth.'),
+    {text:'For your model specifically', style:'h3', margin:[0,10,0,8]},
+    pdfBullets(m.econ.lines),
+    {table:{widths:['*'],body:[[{stack:[
+      {text:'THE ONE TO WATCH', color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,6]},
+      {text:m.econ.watch, fontSize:10.5, color:INK, lineHeight:1.45}
+    ], margin:[14,14,14,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,4,0,18]},
+    {text:'The universal formulas', style:'h3', margin:[0,0,0,6]},
+    pdfP('These apply to every business that has ever existed. Learn them from memory and you are ahead of most people who have read fifty business books.', [0,0,0,8]),
+    {table:{widths:['48%','52%'], headerRows:1, body:[
+      [{text:'METRIC', style:'th'},{text:'FORMULA', style:'th'}],
+      [{text:'Gross margin', style:'td'},{text:'(Revenue − COGS) ÷ Revenue', style:'tdm'}],
+      [{text:'Contribution margin', style:'td'},{text:'Price − variable cost per unit', style:'tdm'}],
+      [{text:'Break-even units', style:'td'},{text:'Fixed costs ÷ contribution margin per unit', style:'tdm'}],
+      [{text:'Customer acquisition cost', style:'td'},{text:'Total sales & marketing spend ÷ new customers', style:'tdm'}],
+      [{text:'Lifetime value', style:'td'},{text:'AOV × gross margin % × frequency × lifespan', style:'tdm'}],
+      [{text:'LTV : CAC', style:'td'},{text:'Target ≥ 3:1. Below 3 is weak, above 5 you are underspending', style:'tdm'}],
+      [{text:'Churn rate', style:'td'},{text:'Customers lost in period ÷ customers at start', style:'tdm'}],
+      [{text:'Runway', style:'td'},{text:'Cash on hand ÷ monthly net burn', style:'tdm'}]
+    ]}, layout:'lightHorizontalLines', margin:[0,0,0,14]},
+    {text:'', pageBreak:'after'}
+  );
+
+  /* ---------- 08 FIRST TEN + TRAPS ---------- */
+  content.push(pdfKicker('SECTION 08'), pdfH2('Your first ten customers'),
+    pdfP('Not a strategy. A list of physical actions in order. Do them in this sequence.', [0,0,0,12]),
+    {ol:m.firstTen, style:'p', margin:[0,0,0,18]},
+    {text:'The three traps that kill this model', style:'h3', margin:[0,4,0,8]},
+    pdfP('These are not hypothetical. They are the specific, documented ways people fail at this exact business, and you will feel the pull of at least one of them.', [0,0,0,10]),
+    pdfBullets(m.traps),
+    {text:'Invert, always invert', style:'h3', margin:[0,10,0,6]},
+    pdfP('Munger\'s tool, and the most reliable one in this document. When you are stuck, do not ask "how do I succeed at this?" Ask "what would guarantee that this fails?" — then refuse to do those things. The answer is almost always: stop sending messages, change the plan every week, and never ask anyone for money.'),
+    {text:'', pageBreak:'after'}
+  );
+
+  /* ---------- 09 BLOCKER ---------- */
+  content.push(pdfKicker('SECTION 09'), pdfH2('The thing that stopped you'),
+    {text:bl.t, fontSize:19, bold:true, color:INK, margin:[0,0,0,14]},
+    ...bl.p.map(x=>pdfP(x)),
+    {table:{widths:['*'],body:[[{stack:[
+      {text:'THIS WEEK', color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,6]},
+      {text:bl.do, fontSize:11, color:INK, lineHeight:1.45}
+    ], margin:[14,14,14,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,8,0,0]},
+    {text:'', pageBreak:'after'}
+  );
+
+  /* ---------- 10 RESOURCES ---------- */
+  content.push(pdfKicker('SECTION 10'), pdfH2('What to read, what to use'),
+    {text:'Your reading path — in this order', style:'h3', margin:[0,0,0,6]},
+    pdfP('Not a library. '+NUM[m.books.length]+' books, sequenced for your model. Read one at a time, and after each one write a single page: three concepts, one application to a real business you can observe, one thing you disagree with. If you cannot write the page, you did not read the book.', [0,0,0,10]),
+    pdfBullets(m.books),
+    pdfP('Do not read them all before starting. Read the first one this week and begin the Days 1–7 block at the same time. Reading without reps is studying swim technique on a whiteboard.', [0,0,0,16]),
+    {text:'Free tools that are genuinely enough', style:'h3', margin:[0,0,0,8]},
+    pdfBullets(m.tools),
+    {text:'Free learning worth the time', style:'h3', margin:[0,10,0,8]},
+    pdfBullets([
+      'Alex Hormozi\'s YouTube channel — largely the same material as the books, free',
+      'Y Combinator Startup Library — dense, free, no fluff',
+      'Acquired (podcast) — long-form histories of how real companies were actually built',
+      'Aswath Damodaran (NYU) — full valuation and corporate finance courses, free',
+      'Berkshire Hathaway shareholder letters, 1977 onward — the best business writing at any price',
+      'SEC EDGAR — read three 10-Ks in your target industry and you will know more about its economics than most people working in it'
+    ]),
+    {text:'', pageBreak:'after'}
+  );
+
+  /* ---------- 11 TRACKER ---------- */
+  content.push(pdfKicker('SECTION 11'), pdfH2('The only number that predicts anything'),
+    pdfP('Not books read. Not notes taken. Not plans made — including this one.'),
+    {table:{widths:['*'],body:[[{stack:[
+      {text:'TRACK THIS', color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,8]},
+      {text:'The number of times you have made an offer to a real human being and asked for money.', fontSize:15, bold:true, color:INK, lineHeight:1.3}
+    ], margin:[16,16,16,16]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,8,0,18]},
+    pdfP('It is the only leading indicator that predicts whether any of this becomes a business. Print this page. Put a mark in a box every time you ask. Anything below fifty in ninety days means you were reading, not building.'),
+    {text:'Ninety days. Fill these in.', style:'h3', margin:[0,14,0,10]},
+    ...[0,1,2,3,4,5].map(r=>({
+      canvas:[
+        ...Array.from({length:10},(_,i)=>({type:'rect',x:i*52,y:0,w:44,h:26,lineWidth:1,lineColor:RULE}))
+      ], margin:[0,0,0,8]
+    })),
+    pdfP('Sixty boxes. If you fill them, the business follows. That is not motivation, it is arithmetic — outcomes in business are heavy-tailed and probabilistic, and the person who takes ten times the shots gets ten times the lottery tickets.', [0,14,0,0]),
+    {canvas:[{type:'rect',x:0,y:0,w:515,h:1,color:RULE}],margin:[0,24,0,14]},
+    {text:'Redo the questionnaire any time your situation changes — after your first customer, your answers on capital, skills and selling comfort will all be different, and the plan should change with them. myfirstbusiness.com is free, has no account, and nothing to cancel.', fontSize:9, color:INK2, italics:true}
+  );
+
+  const doc = {
+    pageSize:'A4', pageMargins:[40,52,40,54],
+    info:{ title:'Your First Business Plan — '+m.name, author:'myfirstbusiness.com', subject:'Personalised business playbook' },
+    background: cp => cp===1 ? {canvas:[{type:'rect',x:0,y:0,w:595.28,h:841.89,color:'#05070C'}]} : null,
+    footer: (cp,pc) => cp===1 ? null : ({columns:[
+      {text:'myfirstbusiness.com  ·  '+m.name, fontSize:8, color:'#7C8A9E', margin:[40,0,0,0]},
+      {text:cp+' / '+pc, fontSize:8, color:'#7C8A9E', alignment:'right', margin:[0,0,40,0]}
+    ], margin:[0,18,0,0]}),
+    content,
+    defaultStyle:{ font:'Roboto', fontSize:10, color:INK2, lineHeight:1.4 },
+    styles:{
+      kicker:{fontSize:8.5, bold:true, color:VOLTINK, characterSpacing:2, margin:[0,0,0,10]},
+      h2:{fontSize:21, bold:true, color:INK, lineHeight:1.08, margin:[0,0,0,4]},
+      h3:{fontSize:12.5, bold:true, color:INK},
+      p:{fontSize:10, color:INK2, lineHeight:1.45},
+      micro:{fontSize:7.5, bold:true, color:'#8A96A8', characterSpacing:1.4, margin:[0,0,0,4]},
+      stat:{fontSize:15, bold:true, color:INK},
+      statSm:{fontSize:10, bold:true, color:INK, lineHeight:1.25},
+      th:{fontSize:7.8, bold:true, color:'#8A96A8', characterSpacing:1.2, margin:[0,6,0,6]},
+      td:{fontSize:9.4, color:INK2, margin:[0,5,0,5], lineHeight:1.35},
+      tdm:{fontSize:9.2, color:INK, margin:[0,5,0,5], lineHeight:1.35},
+      tbl:{fontSize:10}
+    }
+  };
+  return pdfMake.createPdf(doc);
+}
+
+/* ---------------------------------------------------------------------------
+   7. UI
+   ------------------------------------------------------------------------ */
+const $ = s => document.querySelector(s);
+const answers = {};
+let idx = 0, ranked = null, currentPdf = null;
+
+const stage=$('#quizStage'), quiz=$('#quiz'), body=$('#quizBody'), foot=$('#qFoot');
+const bar=$('#progBar'), count=$('#qCount'), next=$('#qNext'), back=$('#qBack');
+
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._x); t._x=setTimeout(()=>t.classList.remove('show'),2600); }
+
+/* ---------- lazy PDF engine ----------
+   Loaded when the questionnaire opens, so it is ready long before anyone
+   finishes 12 questions, but never downloaded by someone who just reads the
+   landing page. Falls back to a CDN only if the local copy is missing. */
+let pdfReady = null;
+function loadScript(src){
+  return new Promise((res,rej)=>{
+    const s=document.createElement('script'); s.src=src; s.async=true;
+    s.onload=res; s.onerror=()=>rej(new Error('failed: '+src));
+    document.head.appendChild(s);
+  });
+}
+function ensurePdfEngine(){
+  if(pdfReady) return pdfReady;
+  const CDN='https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/';
+  pdfReady = loadScript('vendor/pdfmake.min.js')
+    .then(()=>loadScript('vendor/vfs_fonts.js'))
+    .catch(()=>loadScript(CDN+'pdfmake.min.js').then(()=>loadScript(CDN+'vfs_fonts.js')));
+  return pdfReady;
+}
+
+/* ---------- open / close ---------- */
+function openQuiz(){
+  ensurePdfEngine();
+  idx=0; ranked=null; currentPdf=null;
+  Object.keys(answers).forEach(k=>delete answers[k]);
+  quiz.classList.add('open'); document.body.classList.add('locked');
+  foot.style.display=''; render();
+}
+function closeQuiz(){ quiz.classList.remove('open'); document.body.classList.remove('locked'); }
+document.querySelectorAll('[data-start]').forEach(b=>b.addEventListener('click',openQuiz));
+$('#qClose').addEventListener('click',()=>{
+  if(ranked || !Object.keys(answers).length || confirm('Leave now and your answers are gone. Close anyway?')) closeQuiz();
+});
+
+/* ---------- render a question ---------- */
+function render(){
+  const q = QUESTIONS[idx];
+  const pct = (idx/QUESTIONS.length)*100;
+  bar.style.width = pct+'%';
+  count.textContent = String(idx+1).padStart(2,'0')+' / '+QUESTIONS.length;
+  back.style.visibility = idx===0 ? 'hidden' : 'visible';
+
+  const cur = answers[q.id];
+  const isSel = v => q.multi ? (cur||[]).includes(v) : cur===v;
+
+  stage.innerHTML = '<div class="q-card">'
+    + '<div class="q-kicker">'+q.kicker+'</div>'
+    + '<h2 class="q-title">'+q.title+'</h2>'
+    + '<p class="q-help">'+q.help+(q.multi?'<br><span class="dim3">Select all that apply'+(q.max?', up to '+q.max:'')+'.</span>':'')+'</p>'
+    + '<div class="opts'+(q.two?' two':'')+'" role="group">'
+    + q.opts.map((o,i)=>'<button class="opt'+(isSel(o.v)?' sel':'')+'" data-v="'+o.v+'" type="button">'
+        + '<span class="opt-key">'+(i<9?(i+1):'·')+'</span>'
+        + '<span class="opt-txt"><strong>'+o.t+'</strong><span>'+o.d+'</span></span></button>').join('')
+    + '</div></div>';
+
+  stage.querySelectorAll('.opt').forEach(btn=>btn.addEventListener('click',()=>pick(q, btn.dataset.v)));
+  // On single-select the answer auto-advances, so a permanently greyed-out
+  // Continue button is just visual noise. Show it only where it does work.
+  const last = idx===QUESTIONS.length-1;
+  next.style.display = q.multi ? '' : 'none';
+  next.disabled = q.multi ? !(cur && cur.length) : false;
+  next.childNodes[0].nodeValue = last ? 'Build my playbook ' : 'Continue ';
+  next.querySelector('span').textContent = last ? '↑' : '→';
+  $('#qStep').textContent = (idx+1)+' of '+QUESTIONS.length;
+  $('#qHint').innerHTML = q.multi
+    ? 'Press <kbd>1</kbd>–<kbd>9</kbd> to toggle · <kbd>Enter</kbd> to continue'
+    : 'Press <kbd>1</kbd>–<kbd>9</kbd> to choose, or just click';
+  body.scrollTop = 0;
+}
+
+function pick(q, raw){
+  const v = isNaN(raw) || raw==='' ? raw : Number(raw);
+  if(q.multi){
+    let a = answers[q.id] || [];
+    if(a.includes(v)) a = a.filter(x=>x!==v);
+    else {
+      if(q.id==='skills' && v==='none') a=[];
+      else if(q.id==='skills') a = a.filter(x=>x!=='none');
+      if(q.max && a.length>=q.max){ toast('Pick up to '+q.max+'. Deselect one first.'); return; }
+      a = a.concat([v]);
+    }
+    answers[q.id]=a; render();
+  } else {
+    answers[q.id]=v;
+    render();
+    setTimeout(advance, 190);   // auto-advance keeps perceived effort low
+  }
+}
+
+function advance(){
+  const q = QUESTIONS[idx];
+  if(q.multi ? !(answers[q.id]||[]).length : answers[q.id]===undefined) return;
+  if(idx < QUESTIONS.length-1){ idx++; render(); }
+  else finish();
+}
+next.addEventListener('click', advance);
+back.addEventListener('click', ()=>{ if(idx>0){ idx--; render(); } });
+
+document.addEventListener('keydown', e=>{
+  if(!quiz.classList.contains('open') || ranked) return;
+  if(e.key==='Escape'){ closeQuiz(); return; }
+  if(e.key==='Enter'){ e.preventDefault(); advance(); return; }
+  const n = parseInt(e.key,10);
+  if(n>=1 && n<=9){
+    const q=QUESTIONS[idx];
+    if(q.opts[n-1]){ e.preventDefault(); pick(q, q.opts[n-1].v); }
+  }
+});
+
+/* ---------- build ---------- */
+const BUILD_STEPS = [
+  'Reading your constraints',
+  'Scoring 10 business models against your profile',
+  'Selecting your acquisition channel',
+  'Calculating your pricing ladder',
+  'Writing your 90-day plan',
+  'Answering what has been stopping you',
+  'Assembling your PDF'
+];
+
+function finish(){
+  bar.style.width='100%';
+  foot.style.display='none';
+  count.textContent = 'BUILDING';
+  ranked = scoreModels(answers);
+  stage.innerHTML = '<div class="building"><div class="build-ring"></div>'
+    + '<h2 class="h-md">Building your playbook</h2>'
+    + '<p class="dim" style="margin-top:10px">Twelve answers, ten models, one document.</p>'
+    + '<div class="build-log">'+BUILD_STEPS.map(s=>'<div>'+s+'</div>').join('')+'</div></div>';
+  const logs = stage.querySelectorAll('.build-log div');
+  logs.forEach((el,i)=>setTimeout(()=>el.classList.add('on'), 260 + i*330));
+  setTimeout(showResults, 260 + logs.length*330 + 500);
+}
+
+/* ---------- results ---------- */
+function showResults(){
+  const top = ranked[0], m = top.m, alts = ranked.slice(1,3);
+  count.textContent = 'YOUR RESULT';
+  stage.innerHTML = '<div class="results">'
+  + '<div class="res-hero">'
+    + '<div class="res-label">YOUR RECOMMENDED MODEL</div>'
+    + '<div class="res-name">'+m.name+'</div>'
+    + '<p class="res-why">'+m.line+'</p>'
+    + '<div class="res-fit"><span class="dim">Match score</span> <b>'+top.score+'/100</b> <span class="dim3">·</span> <span class="dim">'+m.capital+' to start</span> <span class="dim3">·</span> <span class="dim">first dollar in '+m.firstDollar+'</span></div>'
+  + '</div>'
+  + '<div class="res-grid">'
+    + '<div class="res-box"><span class="mono">WHY THIS ONE, FOR YOU</span><ul>'
+      + whyThis(answers,m).slice(0,4).map(s=>'<li>'+s.charAt(0).toUpperCase()+s.slice(1)+'.</li>').join('')
+    + '</ul></div>'
+    + '<div class="res-box"><span class="mono">WHAT IT LOOKS LIKE</span><ul>'
+      + m.examples.map(s=>'<li>'+s+'</li>').join('')
+    + '</ul></div>'
+    + '<div class="res-box"><span class="mono">YOUR CHANNEL</span><ul><li>'+m.channel.core+'</li><li>'+m.channel.volume+'</li></ul></div>'
+    + '<div class="res-box"><span class="mono">YOUR FIRST WEEK</span><ul><li>'+m.weeks[0][0]+' — '+m.weeks[0][1]+'</li><li>'+m.firstTen[0]+'</li></ul></div>'
+  + '</div>'
+  + '<div class="res-dl">'
+    + '<h3>Your playbook is ready</h3>'
+    + '<p>Around 20 pages: your offer, your prices, your outreach script, a 90-day plan scaled to your hours, your unit economics, and a direct answer to the thing that has been stopping you.</p>'
+    + '<button class="btn btn-primary btn-lg" id="dl">Download the PDF <span class="btn-arrow">↓</span></button>'
+    + '<p style="margin-top:16px;font-size:.85rem;color:var(--text-3)">No email. Nothing was uploaded. Download it now — it isn\'t saved anywhere.</p>'
+  + '</div>'
+  + '<div class="res-alt"><span class="mono dim3">IF THIS ONE DOESN\'T APPEAL</span>'
+    + alts.map((r,i)=>'<div class="alt-item"><b>0'+(i+2)+'</b><div><strong>'+r.m.name+' · '+r.score+'/100</strong><span>'+altWhyNot(answers,r,top.score)+'</span></div></div>').join('')
+  + '</div>'
+  + '<div class="res-actions">'
+    + '<button class="btn btn-ghost" id="redo">Redo the questionnaire</button>'
+    + '<button class="btn btn-ghost" id="done">Back to the site</button>'
+  + '</div></div>';
+
+  $('#dl').addEventListener('click', download);
+  $('#redo').addEventListener('click', openQuiz);
+  $('#done').addEventListener('click', closeQuiz);
+}
+
+async function download(){
+  const btn = $('#dl');
+  btn.disabled = true; btn.childNodes[0].nodeValue = 'Generating ';
+  try{
+    await ensurePdfEngine();
+    if(typeof pdfMake === 'undefined') throw new Error('pdfmake unavailable');
+    const pdf = buildPdf(answers, ranked);
+    pdf.download('My-First-Business-Plan.pdf', ()=>{
+      btn.disabled=false; btn.childNodes[0].nodeValue='Download again ';
+      toast('Downloaded. Now do the Days 1–7 block.');
+    });
+  }catch(err){
+    console.error(err);
+    btn.disabled=false; btn.childNodes[0].nodeValue='Try again ';
+    toast('Could not build the PDF. Check your connection and try again.');
+  }
+}
+
+/* ---------- site chrome ---------- */
+const nav = $('#nav');
+addEventListener('scroll', ()=>nav.classList.toggle('stuck', scrollY>8), {passive:true});
+
+const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }}), {threshold:.08, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
