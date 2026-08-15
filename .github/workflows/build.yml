@@ -1,0 +1,37 @@
+name: Rebuild index.html
+
+on:
+  push:
+    branches: [main]
+    paths: ['parts/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble index.html from parts
+        run: |
+          cat parts/01-head.html \
+              parts/02-body.html \
+              parts/03-data.js \
+              parts/04-scoring.js \
+              parts/05-pdf.js \
+              parts/06-app.js > index.html
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain index.html)" ]; then
+            git add index.html
+            git commit -m "Rebuild index.html from parts"
+            git push
+          else
+            echo "index.html already up to date"
+          fi
