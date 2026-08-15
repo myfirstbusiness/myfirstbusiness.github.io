@@ -20,6 +20,7 @@ jobs:
           cat parts/01-head.html \
               parts/02-body.html \
               parts/03-data.js \
+              parts/03b-context.js \
               parts/04-scoring.js \
               parts/05-pdf.js \
               parts/06-app.js > index.html
