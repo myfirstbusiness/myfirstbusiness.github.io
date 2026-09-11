@@ -1,0 +1,23 @@
+name = "mfb-writer"
+main = "src/index.js"
+compatibility_date = "2026-06-01"
+
+# Burst protection. The daily ceiling is Gemini's own free-tier limit, which
+# returns an error instead of a charge — so this only needs to stop one person
+# hammering the endpoint, not to protect a budget.
+[[ratelimits]]
+name = "MFB_LIMIT"
+namespace_id = "1001"
+
+[ratelimits.simple]
+limit = 4
+period = 60
+
+# Optional. Overrides the model chain in src/index.js without editing code —
+# useful if Google renames a model and the site starts falling back.
+# [vars]
+# MFB_MODELS = "gemini-2.5-flash-lite,gemini-2.5-flash"
+
+# The API key is NOT here and must never be. Set it once with:
+#   npx wrangler secret put GEMINI_API_KEY
+# or in the Cloudflare dashboard under Settings > Variables > Secrets.

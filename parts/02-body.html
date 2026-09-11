@@ -28,7 +28,7 @@
     <div class="trust-row">
       <span class="trust-item"><svg class="tick" viewBox="0 0 20 20" fill="currentColor"><path d="M8 14.5 3.5 10l1.4-1.4L8 11.7l7.1-7.1L16.5 6z"/></svg> Nothing to pay, ever</span>
       <span class="trust-item"><svg class="tick" viewBox="0 0 20 20" fill="currentColor"><path d="M8 14.5 3.5 10l1.4-1.4L8 11.7l7.1-7.1L16.5 6z"/></svg> No email required to download</span>
-      <span class="trust-item"><svg class="tick" viewBox="0 0 20 20" fill="currentColor"><path d="M8 14.5 3.5 10l1.4-1.4L8 11.7l7.1-7.1L16.5 6z"/></svg> Your answers never leave your device</span>
+      <span class="trust-item" id="tPrivacy"><svg class="tick" viewBox="0 0 20 20" fill="currentColor"><path d="M8 14.5 3.5 10l1.4-1.4L8 11.7l7.1-7.1L16.5 6z"/></svg> Your answers never leave your device</span>
       <span class="trust-item"><svg class="tick" viewBox="0 0 20 20" fill="currentColor"><path d="M8 14.5 3.5 10l1.4-1.4L8 11.7l7.1-7.1L16.5 6z"/></svg> Built on documented business science</span>
     </div>
   </div>
@@ -96,9 +96,9 @@
     <span class="eyebrow mono">How it works</span>
     <h2 class="h-lg">Three steps. No account anywhere.</h2>
     <div class="steps">
-      <div class="step"><h3>Answer 15 questions</h3><p>Your idea, your field, your work history, money, time, skills, pressure, fear. One question per screen, roughly five minutes. Everything runs in your browser — nothing is uploaded.</p></div>
+      <div class="step"><h3>Answer 15 questions</h3><p>Your idea, your field, your work history, money, time, skills, pressure, fear. One question per screen, roughly five minutes. <span id="tStep1">Everything runs in your browser — nothing is uploaded.</span></p></div>
       <div class="step"><h3>We score you against 10 models</h3><p>Ten proven zero-capital business models are scored against your constraints. The one that wins isn't the trendiest — it's the one you can actually finish.</p></div>
-      <div class="step"><h3>Download the PDF and start</h3><p>A ~15-page playbook lands in your downloads, written for your field. Print it, mark it up, work the 90-day plan. Come back and redo it any time your situation changes.</p></div>
+      <div class="step"><h3>Download the PDF and start</h3><p><span id="tStep3">A ~15-page playbook lands in your downloads, written for your field.</span> Print it, mark it up, work the 90-day plan. Come back and redo it any time your situation changes.</p></div>
     </div>
   </div>
 </section>
@@ -163,6 +163,7 @@
     <span class="eyebrow mono">Questions</span>
     <h2 class="h-lg">Fair things to be suspicious about.</h2>
     <div class="faq">
+      <details id="faqAI" hidden><summary>Does anything I type get sent anywhere?</summary><p>Only if you choose it, and only at the very end. After the last question you pick between two versions of the same playbook. One is written entirely in your browser and sends nothing at all — no request leaves the page. The other sends your fifteen answers, as plain words, to be written up for your exact idea instead of for your general field. That screen lists precisely what goes and what doesn't. Either way there is no account, no email, no identifier, and nothing about you is stored or used to train anything. Both versions are free and always will be.</p></details>
       <details><summary>What's the catch? Everything free online is bait.</summary><p>Reasonable instinct, and usually correct. Here the catch is: there is no email capture, no account, no paid tier, and no product behind the free product. It runs as a static page on free hosting, which costs the operator nothing to keep online. The whole thing is one HTML file. If that ever changes, it'll say so on this page.</p></details>
       <details><summary>Do you store my answers?</summary><p>No. The questionnaire runs entirely in your browser's memory. Nothing is sent to a server, because there is no server — just a file being served to you. Close the tab and the answers are gone. That's also why you have to download the PDF now rather than "check your email."</p></details>
       <details><summary>I'm 16 and I have literally zero dollars. Is this for me?</summary><p>Yes — that's the design centre. Every model recommended can be started with no capital, and the questionnaire specifically asks about money and time so the plan matches reality rather than assuming a budget. Note that in most countries there are age rules around registering a business and signing contracts; the playbook flags where you'd want a parent or guardian involved.</p></details>

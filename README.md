@@ -1,90 +1,98 @@
 # myfirstbusiness.com
 
-A free diagnostic that turns 15 honest answers into a personalised 15-page PDF business playbook, written for your field and your work history. No account, no email, no cost, no server.
-
-**Live:** https://myfirstbusiness.github.io
+A free diagnostic that turns 15 honest answers into a personalised PDF business playbook. No account, no email, no cost.
 
 ---
 
-## What's in here
+## What's in the repo
 
 ```
-index.html                     the whole website — built automatically, do not edit by hand
-myfirstbusiness-preview.html   standalone single-file copy (fonts inlined, works offline)
-parts/                         the real source files — edit these
-vendor/                        PDF library, loaded lazily
-fonts/                         self-hosted web fonts (latin subsets)
-docs/                          strategy, research and a sample output
-.github/workflows/build.yml    rebuilds index.html whenever parts/ changes
+index.html                    the entire website — landing page, questionnaire, engine, PDF builder
+parts/                        the seven sources index.html is assembled from
+worker/                       the optional AI writer (a single Cloudflare Worker)
+vendor/pdfmake.min.js         PDF library (vendored, loaded lazily)
+vendor/vfs_fonts.js           PDF fonts
+fonts/*.woff2                 self-hosted web fonts (latin subsets)
+docs/                         setup, testing and distribution guides
 ```
 
-## How to change the site
+## Deploy it
 
-**Edit files in `parts/`. Never edit `index.html` directly.**
+Push to the repo. A GitHub Action rebuilds `index.html` from `parts/` on every push that touches `parts/**`, and GitHub Pages serves it. There is no other build step.
 
-`index.html` is assembled from the six files in `parts/`, in numeric order, by the GitHub Action in `.github/workflows/build.yml`. Commit a change to any part and the Action rebuilds and commits `index.html` within a minute or two, which redeploys the site automatically.
+To preview locally:
 
-| To change | Edit |
+```bash
+python3 -m http.server 8000
+# open http://localhost:8000
+```
+
+(It must be served over HTTP rather than opened as a `file://` — the fonts and the lazy-loaded PDF library won't resolve otherwise.)
+
+## How it's built
+
+`index.html` is assembled from seven sources in `parts/`, concatenated in this order:
+
+| Part | What it holds |
 |---|---|
-| Questions, business models, prices, outreach scripts, 90-day plans | `parts/03-data.js` |
-| Industry specifics (who pays, where they are, price anchors, regulation) and career advantages | `parts/03b-context.js` |
-| Which model gets recommended to whom | `parts/04-scoring.js` |
-| The contents and layout of the PDF | `parts/05-pdf.js` |
-| Landing page copy and structure | `parts/02-body.html` |
-| Colours, fonts, spacing, all CSS | `parts/01-head.html` |
-| Quiz behaviour and results screen | `parts/06-app.js` |
+| `01-head.html` | Design tokens, full CSS, font loading |
+| `02-body.html` | Landing page markup and quiz shell |
+| `03-data.js` | The 15 questions and all 10 business models with their playbook content |
+| `03b-context.js` | Industry and career context tables, text sanitising, the writer client |
+| `04-scoring.js` | Weight tables, scoring, normalisation, personalised reasoning |
+| `05-pdf.js` | Blocker responses and the pdfmake document builder |
+| `06-app.js` | Quiz UI, consent screen, lazy PDF loading, results screen |
 
-Press `.` on any page of this repo to open a full VS Code editor in the browser — much better than GitHub's plain file editor for the JS files.
-
-If you ever need to rebuild by hand:
+Rebuild after editing a part:
 
 ```bash
 cat parts/01-head.html parts/02-body.html parts/03-data.js parts/03b-context.js \
     parts/04-scoring.js parts/05-pdf.js parts/06-app.js > index.html
 ```
 
-### One rule about the scoring engine
+You can also edit `index.html` directly — it's a normal file, the parts only exist to keep things navigable — but the Action will overwrite it on the next push to `parts/`.
 
-`parts/04-scoring.js` holds a `NORM` table — the mean and standard deviation of each model's raw score, precomputed by Monte Carlo over 150,000 simulated profiles. It exists so that models with larger weight values don't win on magnitude instead of on fit.
+## The two paths
 
-**If you meaningfully change the `W` weight tables, that `NORM` table becomes stale and the recommendations will skew.** The method for recomputing it is in `docs/BRAND-AND-STRATEGY.md` §5.
+The site produces the same playbook two different ways, and the user picks which on a screen shown after the last question.
 
-## Deploying
+**Offline.** Everything runs in the browser. No backend, no database, no analytics, no request of any kind. Answers live in a JavaScript object and are gone when the tab closes. 15 pages, written for their field and work history.
 
-Already deployed via GitHub Pages from `main` / root. Nothing to build, no dependencies to install.
+**Written.** The 15 answers are sent once to a Cloudflare Worker, which asks a language model to write the sections that should be about their specific idea rather than about their category. 15–19 pages. Nothing is stored.
 
-To preview locally, serve the folder over HTTP rather than opening the file directly — the fonts and lazily-loaded PDF library won't resolve from a `file://` URL:
+**The recommendation is deterministic in both cases.** `scoreModels()` runs before any request goes out and its result is never revisited. Same answers, same verdict, whether the writer ran or not — the writer only rewrites prose inside a decision the engine already made.
 
-```bash
-python3 -m http.server 8000
-# then open http://localhost:8000
-```
+The writer is off unless `WRITER_URL` in `parts/03b-context.js` has a value. With it empty there is no consent screen, no network request, and no mention of AI anywhere on the page. Setup is in `docs/SETUP-THE-WRITER.md`.
 
-Or just double-click `myfirstbusiness-preview.html`, which is self-contained and works offline.
+## Changing the content
 
-## How it works
+Most of what you'd want to change lives in `03-data.js`:
 
-Everything runs in the visitor's browser. No backend, no database, no analytics, no third-party requests. Answers live in a JavaScript object and are gone when the tab closes — which is why the site can honestly claim that nothing leaves your device.
+- **Questions** — the `QUESTIONS` array. Add or remove one and the progress bar, keyboard shortcuts and counter all adapt automatically. `showIf` makes a question conditional.
+- **Business models** — the `MODELS` array. Each entry carries its own pricing tiers, outreach script, 90-day timeline, unit economics, traps, books and tools, and that content flows straight into the PDF.
 
-Fifteen answers are scored against ten business models, each carrying its own pricing tiers, acquisition channel, 90-day timeline, unit economics and reading path. The winning model's content is assembled into a PDF client-side with pdfmake. Same answers in, same document out, every time — no randomness and no model call.
+Industry and career context tables are in `03b-context.js`. The writer's prompt — which is where nearly all of the AI output quality lives — is in `worker/src/index.js`.
 
-## Docs
+Tuning which model wins is done in `04-scoring.js` via the `W` weight tables. **If you change weights meaningfully, recompute the `NORM` table** — it holds the per-model mean and standard deviation used to standardise scores, and stale values will skew every recommendation. The method is in `BRAND-AND-STRATEGY.md` §5.
 
-- `docs/BRAND-AND-STRATEGY.md` — positioning, the colour and conversion research behind every design decision, and how the recommendation engine was validated
-- `docs/ZERO-BUDGET-LAUNCH-PLAN.md` — running and growing this for $0, the 90-day distribution plan, and where $0 stops being true
-- `docs/sample-playbook.pdf` — an example of what a user downloads
+## Known issues
+
+- **`retail` leans toward reselling.** The "Products & retail" option covers both making things and reselling them, but its weights point at The Flip (18) ahead of Ecommerce (14). Someone who wants to *make* a physical product tends to get a resell recommendation. Fixing it means editing weights and recomputing `NORM`.
+- **English only.** The original target audience was Spanish-speaking.
+- **No analytics, by choice**, so completion and download rates are unknown. The feedback form (`FEEDBACK_URL` in `03b-context.js`) is the only signal available and is currently off.
 
 ## Verified
 
-- End-to-end run in Chromium: questionnaire → scoring → results → PDF download, zero console errors
-- PDFs generated across all 14 industries: 15 pages each, no sparse or orphan pages
+- End-to-end runs in Chromium on both paths: questionnaire → consent → scoring → results → PDF, zero console errors
+- Deterministic PDFs across all 14 industries: 15 pages each, no sparse or orphan pages
+- Written PDFs at full, partial and near-empty AI payloads: 16–19 pages, no sparse pages, every missing field falls back individually
+- The verdict is identical with the writer off, on, and failing — proven by test, not by inspection
+- The offline path makes zero outbound requests, asserted by intercepting every request the page makes
+- Worker unit tests cover origin locking, rate limiting, model fallback, quota vs outage, prompt injection stripping, and malformed upstream responses
 - Scoring balance checked over 20,000 random profiles — no model wins less than 6.8% or more than 16.7%
-- Industry sensitivity verified: holding every other answer fixed and changing only the industry changes the recommendation
-- Eight hand-built archetype profiles each return the obviously correct model
 - Every colour pair audited against WCAG — all pass AA, body text passes AAA
-- Mobile (390×844) and desktop (1440×1000) layouts checked
-- First paint 246 KB; the 2.1 MB PDF library loads only when the questionnaire opens
+- Mobile (390×844) and desktop (1440×1000) layouts checked, including the consent screen
 
 ## Licence & disclaimer
 
-MIT. Educational content only — not financial, legal or tax advice. Business registration, tax and contract law vary by country, and age restrictions apply to minors in most jurisdictions.
+Educational content. Not financial, legal or tax advice. Business registration, tax and contract law vary by country, and age restrictions apply to minors in most jurisdictions. Where the writer is used, parts of the document are AI-generated and figures should be checked before being relied on.

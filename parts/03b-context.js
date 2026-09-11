@@ -201,6 +201,15 @@ const CAREERS = {
     edge:'You look established before you are.' }
 };
 
+/* ---------------------------------------------------------------------------
+   1d. THE FEEDBACK LOOP
+   The site collects nothing, which is the whole promise — so the only honest
+   way to learn whether any of this produces a real business is to ask, and to
+   let people decline by doing nothing. Paste a form URL below to switch it on;
+   leave it empty and every trace of it stays hidden.
+   ------------------------------------------------------------------------ */
+const FEEDBACK_URL = '';          // e.g. 'https://forms.gle/xxxxxxxx'
+
 const YEARS_LABEL = {1:'under a year', 2:'one to three years', 5:'three to seven years', 10:'more than seven years'};
 
 /* Two-stage handling of the free-text idea.
@@ -226,4 +235,84 @@ function esc(t){
   return String(t == null ? '' : t)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ---------------------------------------------------------------------------
+   1e. THE WRITER
+   The deterministic engine writes very good advice about a CATEGORY. It was
+   never able to write about the thing someone actually typed. Three people
+   tested the site and all three said the same word: generic. They were right —
+   two people who both picked "Cars & vehicles" got identical documents.
+
+   This is the fix. At the end of the questionnaire the answers can be sent to
+   a small Cloudflare Worker, which asks a language model to write the parts of
+   the playbook that should be about their idea rather than about their bucket.
+
+   Three rules govern it, and they are the reason this doesn't wreck the
+   project's one real differentiator:
+
+     1. It is OFF unless the user chooses it, on a screen that says plainly
+        what gets sent and where. Refusing produces the exact document the site
+        produces today, and that path stays first-class forever.
+     2. It never decides anything. The model recommendation, the score and the
+        ranking stay deterministic — same answers, same verdict, always. The
+        writer only rewrites prose inside a decision already made.
+     3. Every field is optional. If the Worker is slow, capped, down, or
+        returns junk, the deterministic text for that section is used instead.
+        There is no failure mode where somebody leaves without a playbook.
+
+   Leave WRITER_URL empty and none of this exists: no request, no consent
+   screen, no mention of AI anywhere on the site.
+   ------------------------------------------------------------------------ */
+const WRITER_URL = '';    // e.g. 'https://mfb-writer.<subdomain>.workers.dev'
+
+const AI_ON = () => !!WRITER_URL;
+const AI_TIMEOUT_MS = 16000;
+
+/* What actually goes over the wire. Worth reading, because this is the list
+   the consent screen promises and the two must not drift apart: fifteen
+   answers as plain words, and nothing else. No name, no email, no IP beyond
+   what any web request carries, no identifier of any kind. */
+function writerPayload(a, m){
+  return {
+    idea:      a.idea || '',
+    industry:  LABEL.industry[a.industry] || 'not sure yet',
+    model:     m.name,
+    modelLine: m.line,
+    career:    a.career === 'none'
+                 ? 'has never worked'
+                 : (LABEL.career[a.career] || '') + ', ' + (YEARS_LABEL[a.years] || ''),
+    capital:   capLabel(a.capital),
+    time:      timeLabel(a.time),
+    urgency:   LABEL.urgency[a.urgency] || '',
+    sales:     LABEL.sales[a.sales] || '',
+    skills:    list(a.skills, LABEL.skills),
+    reach:     LABEL.reach[a.reach] || '',
+    goal:      LABEL.goal[a.goal] || '',
+    blocker:   LABEL.blocker[a.blocker] || ''
+  };
+}
+
+/* Resolves to the enrichment object, or to null. Never rejects — a rejected
+   promise here would have to be handled at every call site, and the only
+   correct handling is "carry on without it". */
+function requestWriter(a, m){
+  if(!AI_ON()) return Promise.resolve(null);
+
+  const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timer = setTimeout(()=>{ if(ctl) ctl.abort(); }, AI_TIMEOUT_MS);
+
+  return fetch(WRITER_URL, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(writerPayload(a, m)),
+    signal: ctl ? ctl.signal : undefined,
+    mode: 'cors',
+    cache: 'no-store',
+    referrerPolicy: 'no-referrer'
+  })
+  .then(r => r.ok ? r.json() : null)
+  .then(d => (d && d.ok && d.ai) ? d.ai : null)
+  .catch(()  => null)
+  .then(v => { clearTimeout(timer); return v; });
 }

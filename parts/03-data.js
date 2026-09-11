@@ -1,7 +1,11 @@
 <script>
 /* ============================================================================
    MYFIRSTBUSINESS — DIAGNOSTIC + RECOMMENDATION ENGINE
-   Everything runs client-side. No network calls, no storage, no tracking.
+   The engine runs client-side and always will: the scoring, the ranking and
+   the whole document are computed in the browser with no storage and no
+   tracking. The only network request this site can ever make is the optional
+   writer described in 03b-context.js, and only after someone asks for it on a
+   screen that says so.
    ========================================================================== */
 
 /* ---------------------------------------------------------------------------
@@ -30,7 +34,7 @@ const QUESTIONS = [
     skip:'I don\'t have anything in mind yet', maxlen:120 },
 
   { id:'industry', kicker:'THE FIELD', title:'Which world does it live in?',
-    help:'Pick the closest. This decides who your customer is, what you can charge, and where you find people — the parts most advice leaves generic.',
+    help:'Pick the closest one — it does not have to fit exactly, and picking roughly right costs you nothing. What you typed a moment ago carries more weight than this does.',
     two:true,
     opts:[
       {v:'food',     t:'Food & drink',            d:'Cooking, baking, catering, coffee'},
@@ -45,8 +49,8 @@ const QUESTIONS = [
       {v:'pets',     t:'Pets & animals',          d:'Walking, sitting, grooming, training'},
       {v:'events',   t:'Events & entertainment',  d:'Parties, weddings, DJing, gaming'},
       {v:'prof',     t:'Business services',       d:'Admin, marketing, bookkeeping, support'},
-      {v:'retail',   t:'Products & retail',       d:'Making or reselling physical things'},
-      {v:'notsure',  t:'I genuinely don\'t know', d:'Help me work it out'}
+      {v:'retail',   t:'Products & retail',       d:'Making, reselling, wholesaling or shipping physical things'},
+      {v:'notsure',  t:'None of these really fit', d:'Or I honestly don\'t know yet — either is fine'}
     ]},
 
   { id:'career', kicker:'WHAT YOU HAVE DONE', title:'What have you done for work so far?',
@@ -104,8 +108,8 @@ const QUESTIONS = [
       {v:'patient', t:'No real pressure',             d:'I can build slowly and compound'}
     ]},
 
-  { id:'skills', kicker:'WHAT YOU CAN DO', title:'What can you already do at a decent level?',
-    help:'Pick everything that applies. "Decent" means someone has told you you\'re good at it.',
+  { id:'skills', kicker:'WHAT YOU CAN DO', title:'Which of these have you actually done?',
+    help:'Not "are you an expert". Have you done it at all — for a job, for school, for yourself, even badly? Then tick it. Nobody is checking, and undertelling here only makes your playbook worse.',
     multi:true, two:true,
     opts:[
       {v:'write',   t:'Writing',           d:'Words, emails, explaining things clearly'},
@@ -117,7 +121,7 @@ const QUESTIONS = [
       {v:'teach',   t:'Teaching',          d:'Making a hard thing click for someone'},
       {v:'organize',t:'Organising',        d:'Systems, logistics, admin, making order'},
       {v:'numbers', t:'Numbers',           d:'Spreadsheets, analysis, money math'},
-      {v:'none',    t:'Nothing yet',       d:'Genuinely starting from zero'}
+      {v:'none',    t:'None of these yet',  d:'Starting from zero, which changes less than you think'}
     ]},
 
   { id:'reach', kicker:'YOUR MARKET', title:'Where do you want your customers to be?',

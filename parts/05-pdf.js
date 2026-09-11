@@ -53,8 +53,45 @@ function pdfH2(t){ return {stack:[
 function pdfKicker(t){ return {text:t, style:'kicker'}; }
 function pdfP(t,m){ return {text:t, style:'p', margin:m||[0,0,0,10]}; }
 function pdfBullets(arr){ return {ul:arr, style:'p', margin:[0,2,0,12]}; }
+/* The ruled callout box used throughout. It existed inline in a dozen places
+   before the writer landed; factoring it out keeps the new sections readable. */
+function pdfBox(label, body, m, size, pad){
+  const y = pad || 14;
+  return {table:{widths:['*'],body:[[{stack:[
+    {text:label, color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,7]},
+    {text:body, fontSize:size||11.5, color:INK, lineHeight:1.45}
+  ], margin:[16,y,16,y]}]]},
+  layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE},
+  margin:m||[0,4,0,14]};
+}
+/* Title + paragraph pairs, used for the writer's `specifics` and `risks`.
 
-function buildPdf(a, ranked){
+   These were `{stack:[...], unbreakable:true}` first, which reads better and
+   silently DELETED content: when an unbreakable block did not fit the
+   remaining space, pdfmake dropped it rather than pushing it to the next page,
+   and a run of six specifics came out as four with no error anywhere. Flat
+   nodes paginate honestly. The heading carries a bottom margin small enough
+   that an orphaned one still reads as attached to the text below it. */
+function pdfPairs(pairs){
+  const out = [];
+  pairs.forEach(x=>{
+    out.push({text:x[0], style:'h3', margin:[0,0,0,5]});
+    out.push({text:x[1], style:'p', margin:[0,0,0,13]});
+  });
+  return out;
+}
+
+/* `ai` is the optional enrichment from the Worker (see 1e in 03b-context.js).
+   Every read of it goes through A(), which returns null for anything missing,
+   so the document degrades field by field rather than all at once.
+
+   Called with no third argument \u2014 which is what happens whenever the writer is
+   off, declined, slow, rate-capped or down \u2014 this produces exactly the document
+   the site produced before the writer existed. That path is not a fallback in
+   the apologetic sense; it is still the product. */
+function buildPdf(a, ranked, ai){
+  const A  = k => (ai && ai[k]) ? ai[k] : null;
+  const AI = !!ai;
   const top = ranked[0], m = top.m;
   const alts = ranked.slice(1,3);
   const bl = BLOCKERS[a.blocker];
@@ -75,8 +112,10 @@ function buildPdf(a, ranked){
     hasIdea
       ? {text:'\u201C'+a.idea+'\u201D', color:'#FFFFFF', fontSize:13, italics:true, margin:[0,22,0,0], lineHeight:1.35}
       : {text:'', margin:[0,0,0,0]},
-    {text:'Generated '+today+'  ·  built for '+ind.name.toLowerCase()+'  ·  free, and yours to keep', color:'#616D80', fontSize:9, margin:[0,120,0,0]},
-    {text:'Educational content only. Not financial, legal or tax advice.', color:'#6B7688', fontSize:8, margin:[0,6,0,0], pageBreak:'after'}
+    {text:'Generated '+today+'  ·  '+(AI ? 'written for your idea' : 'built for '+ind.name.toLowerCase())+'  ·  free, and yours to keep', color:'#616D80', fontSize:9, margin:[0,120,0,0]},
+    {text:'Educational content only. Not financial, legal or tax advice.'
+       + (AI ? ' Parts of this document were written by AI from your answers — check any figure or rule before you rely on it.' : ''),
+     color:'#6B7688', fontSize:8, margin:[0,6,0,0], pageBreak:'after'}
   );
 
   /* ---------- 01 SITUATION ---------- */
@@ -144,25 +183,38 @@ function buildPdf(a, ranked){
   content.push({text:'', pageBreak:'before'},
     pdfKicker('SECTION 03'), pdfH2(hasIdea ? 'Your idea, made specific' : 'Where your customers actually are'),
     hasIdea
-      ? {table:{widths:['*'],body:[[{stack:[
-          {text:'WHAT YOU TOLD US', color:VOLTINK, fontSize:8, bold:true, characterSpacing:1.6, margin:[0,0,0,7]},
-          {text:'\u201C'+a.idea+'\u201D', fontSize:15, italics:true, color:INK, lineHeight:1.35}
-        ], margin:[16,14,16,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,0,0,16]}
+      ? pdfBox('WHAT YOU TOLD US', '\u201C'+a.idea+'\u201D', [0,0,0,16], 15)
       : pdfP('You said you have nothing specific in mind yet, which is the honest answer and not a problem. What follows is the shape of the opportunity in '+ind.name.toLowerCase()+' \u2014 read it as a starting position, not a verdict.'),
-    hasIdea
-      ? pdfP('That is the thing to build. Everything below is what it takes to make it real in '+ind.name.toLowerCase()+' \u2014 not business advice in general, but the specifics of this field.')
-      : {text:'', margin:[0,0,0,0]},
+
+    /* The writer's reading of their idea. This is the sentence that decides
+       whether the rest of the document feels written or assembled, so it goes
+       high and it goes in a box. */
+    AI && A('read')
+      ? pdfBox(hasIdea ? 'WHAT THAT MEANS, CONCRETELY' : 'THE BUSINESS THIS PLAN IS FOR', A('read'), [0,0,0,14], 12)
+      : (hasIdea
+          ? pdfP('That is the thing to build. Everything below is what it takes to make it real in '+ind.name.toLowerCase()+' \u2014 not business advice in general, but the specifics of this field.')
+          : {text:'', margin:[0,0,0,0]}),
+
+    ...(AI && A('viable') ? [
+      {text:'The honest case, both ways', style:'h3', margin:[0,4,0,5]},
+      pdfP(A('viable'), [0,0,0,10])
+    ] : []),
 
     {text:'Who actually pays in this field', style:'h3', margin:[0,6,0,5]},
     pdfP(ind.customer, [0,0,0,8]),
 
     {text:'Where you find them', style:'h3', margin:[0,4,0,5]},
-    pdfP(ind.where, [0,0,0,8]),
+    pdfP((AI && A('where')) || ind.where, [0,0,0,8]),
 
-    {table:{widths:['*'],body:[[{stack:[
-      {text:'YOUR FIRST WEEK, CONCRETELY', color:VOLTINK, fontSize:8, bold:true, characterSpacing:1.6, margin:[0,0,0,7]},
-      {text:ind.first, fontSize:11.5, color:INK, lineHeight:1.45}
-    ], margin:[16,13,16,13]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,6,0,14]},
+    /* First week. The writer gives five ordered actions sized to the hours
+       they said they have; without it, the industry default stands. */
+    AI && A('week1')
+      ? {table:{widths:['*'],body:[[{stack:[
+          {text:'YOUR FIRST WEEK, CONCRETELY', color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,9]},
+          {ol:A('week1'), fontSize:10.5, color:INK, lineHeight:1.45}
+        ], margin:[16,14,16,14]}]]},
+        layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,6,0,14]}
+      : pdfBox('YOUR FIRST WEEK, CONCRETELY', ind.first, [0,6,0,14], null, 13),
 
     {text:'What proof looks like here', style:'h3', margin:[0,0,0,5]},
     pdfP(ind.proof, [0,0,0,8]),
@@ -173,6 +225,35 @@ function buildPdf(a, ranked){
     {text:'Before you take money \u2014 check this', style:'h3', margin:[0,4,0,5]},
     pdfP(ind.reg + ' Realistic cost to start here: ' + ind.cost, [0,0,0,0])
   );
+
+  /* ---------- 03 CONTINUED: THE THINGS ONLY THIS BUSINESS HAS ----------
+     The reason the writer exists. Everything above is true of a category;
+     this page is true of one business and nothing else \u2014 the licence that
+     actually applies, the cost nobody mentions, the physical constraint, the
+     month the demand disappears. It is the page a reader would have paid for,
+     and it does not exist at all without the writer. */
+  if(AI && A('specifics')){
+    /* Only claim a fresh page if there is enough to fill one. A short answer
+       used to open a page for three short paragraphs and leave two thirds of
+       it white, which reads as a printing fault rather than as a section. */
+    const roomy = A('specifics').length >= 4 || !!A('risks');
+    content.push(
+      roomy ? {text:'', pageBreak:'before'} : {canvas:[{type:'rect',x:0,y:0,w:515,h:1,color:RULE}],margin:[0,20,0,16]},
+      roomy ? pdfKicker('SECTION 03 \u00b7 CONTINUED') : {text:'', margin:[0,0,0,0]},
+      roomy ? pdfH2('What nobody tells you about this one')
+            : {text:'What nobody tells you about this one', style:'h3', margin:[0,0,0,6]},
+      pdfP('Not general business advice. These are the things about this specific business that people normally find out by losing money on them first.', [0,0,0,14]),
+      ...pdfPairs(A('specifics'))
+    );
+    if(A('risks')){
+      content.push(
+        {canvas:[{type:'rect',x:0,y:0,w:515,h:1,color:RULE}],margin:[0,6,0,16]},
+        {text:'Three things that could sink this', style:'h3', margin:[0,0,0,6]},
+        pdfP('Read these before you spend anything. At least one of them is legal or financial rather than practical, and that is the kind people skip.', [0,0,0,12]),
+        ...pdfPairs(A('risks'))
+      );
+    }
+  }
 
   /* ---------- 04 WHAT YOUR WORK HISTORY GIVES YOU ---------- */
   content.push({text:'', pageBreak:'before'},
@@ -204,6 +285,23 @@ function buildPdf(a, ranked){
     pdfP('You raise value by increasing the top two and decreasing the bottom two. That is the entire game, and it is why "lower my price" is almost never the right lever — price is not even in the equation.'),
     {text:'The dream outcome you are selling', style:'h3', margin:[0,8,0,6]},
     pdfP(m.dream),
+
+    /* The writer turns the model's generic offer into one specific enough to
+       put at the top of a page. The exclusion line matters as much as the
+       inclusions: saying no to the wrong first job is what keeps a beginner
+       from working three weeks for nothing. */
+    ...(AI && A('headline') ? [
+      pdfBox('YOUR OFFER, IN ONE LINE', A('headline'), [0,10,0,12], 13)
+    ] : []),
+    ...(AI && A('includes') ? [
+      {text:'What they actually get', style:'h3', margin:[0,2,0,6]},
+      pdfBullets(A('includes'))
+    ] : []),
+    ...(AI && A('excludes') ? [
+      {text:'What to refuse, at least at first', style:'h3', margin:[0,2,0,6]},
+      pdfP(A('excludes'), [0,0,0,12])
+    ] : []),
+
     {text:'Their obstacles, converted into your solutions', style:'h3', margin:[0,10,0,6]},
     pdfP('Every objection is an obstacle you failed to remove in advance. Pre-handle them inside the offer instead of fighting them on the call.', [0,0,0,10]),
     {table:{widths:['45%','55%'], headerRows:1, body:[
@@ -219,11 +317,14 @@ function buildPdf(a, ranked){
   content.push(pdfKicker('SECTION 06'), pdfH2('What to charge on day one'),
     pdfP('Law 7: price is a strategic decision, not an arithmetic one. It signals quality, filters your customers, and funds your acquisition. A 1% price increase produces a bigger profit change than a 1% volume increase or a 1% cost cut, because it flows straight to the bottom line.'),
     pdfP(m.pricing.model, [0,0,0,14]),
+    /* Real prices for the real thing where the writer supplied them. A generic
+       ladder is the single most skipped page in the old document, because
+       nobody believes a price that was not quoted for their own product. */
     {table:{widths:['22%','48%','30%'], headerRows:1, body:[
       [{text:'TIER', style:'th'},{text:'WHAT THEY GET', style:'th'},{text:'STARTING PRICE', style:'th'}],
-      ...m.pricing.tiers.map(t=>[{text:t[0], style:'td', bold:true},{text:t[1], style:'td'},{text:t[2], style:'td', bold:true, color:VOLTINK}])
+      ...((AI && A('tiers')) || m.pricing.tiers).map(t=>[{text:t[0], style:'td', bold:true},{text:t[1], style:'td'},{text:t[2], style:'td', bold:true, color:VOLTINK}])
     ]}, layout:'lightHorizontalLines', margin:[0,0,0,14]},
-    pdfP(m.pricing.note),
+    pdfP((AI && A('pricingNote')) || m.pricing.note),
     {text:'What this field specifically supports', style:'h3', margin:[0,6,0,6]},
     pdfP(ind.price),
     pdfP('Why three tiers and not one: price discrimination. Different customers have different willingness to pay, and a single price captures only one slice of the demand curve. The top tier does most of its work by making the middle tier look reasonable — most people buy the middle, which is the point.'),
@@ -239,12 +340,12 @@ function buildPdf(a, ranked){
       {text:m.channel.why, fontSize:10, color:INK2, lineHeight:1.4}
     ], margin:[16,14,16,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,4,0,16]},
     {text:'Where your people are, in this field', style:'h3', margin:[0,0,0,6]},
-    pdfP(ind.where),
+    pdfP((AI && A('where')) || ind.where),
     {text:'Your required volume', style:'h3', margin:[0,6,0,6]},
-    pdfP(m.channel.volume),
+    pdfP((AI && A('volume')) || m.channel.volume),
     pdfP('Law 5: volume negates luck. One attempt tells you nothing; a hundred tells you everything. Track every attempt in a spreadsheet from day one — contacts, replies, calls, closes. Without those four numbers you are guessing.', [0,0,0,12]),
     {text:'Use this, word for word, until you have your own data', style:'h3', margin:[0,0,0,8]},
-    {table:{widths:['*'],body:[[{text:m.channel.script, fontSize:10, color:INK, lineHeight:1.5, margin:[14,14,14,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,0,0,12]},
+    {table:{widths:['*'],body:[[{text:(AI && A('script')) || m.channel.script, fontSize:10, color:INK, lineHeight:1.5, margin:[14,14,14,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,0,0,12]},
     pdfP('Do not "improve" this before you have sent it fifty times. Rewriting the script is the most popular way to avoid sending it.'),
     {text:'', pageBreak:'after'}
   );
@@ -270,11 +371,11 @@ function buildPdf(a, ranked){
   /* ---------- 07 NUMBERS ---------- */
   content.push(pdfKicker('SECTION 09'), pdfH2('The numbers you must know cold'),
     pdfP('Law 2: businesses die from lack of cash, not lack of profit. Law 8: if unit economics are broken, growing just makes you fail faster. Compute this before you spend a dollar on growth.'),
-    {text:'For your model specifically', style:'h3', margin:[0,10,0,8]},
-    pdfBullets(m.econ.lines),
+    {text:(AI && A('econLines')) ? 'Your numbers, for this exact business' : 'For your model specifically', style:'h3', margin:[0,10,0,8]},
+    pdfBullets((AI && A('econLines')) || m.econ.lines),
     {table:{widths:['*'],body:[[{stack:[
       {text:'THE ONE TO WATCH', color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,6]},
-      {text:m.econ.watch, fontSize:10.5, color:INK, lineHeight:1.45}
+      {text:(AI && A('econWatch')) || m.econ.watch, fontSize:10.5, color:INK, lineHeight:1.45}
     ], margin:[14,14,14,14]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,4,0,18]},
     {text:'The universal formulas', style:'h3', margin:[0,0,0,6]},
     pdfP('These apply to every business that has ever existed. Learn them from memory and you are ahead of most people who have read fifty business books.', [0,0,0,8]),
@@ -295,7 +396,7 @@ function buildPdf(a, ranked){
   /* ---------- 08 FIRST TEN + TRAPS ---------- */
   content.push(pdfKicker('SECTION 10'), pdfH2('Your first ten customers'),
     pdfP('Not a strategy. A list of physical actions in order. Do them in this sequence.', [0,0,0,12]),
-    {ol:m.firstTen, style:'p', margin:[0,0,0,18]},
+    {ol:(AI && A('firstTen')) || m.firstTen, style:'p', margin:[0,0,0,18]},
     {text:'The three traps that kill this model', style:'h3', margin:[0,4,0,8]},
     pdfP('These are not hypothetical. They are the specific, documented ways people fail at this exact business, and you will feel the pull of at least one of them.', [0,0,0,10]),
     pdfBullets(m.traps),
@@ -344,16 +445,20 @@ function buildPdf(a, ranked){
       {text:'TRACK THIS', color:VOLTINK, fontSize:8.5, bold:true, characterSpacing:1.6, margin:[0,0,0,8]},
       {text:'The number of times you have made an offer to a real human being and asked for money.', fontSize:15, bold:true, color:INK, lineHeight:1.3}
     ], margin:[16,16,16,16]}]]}, layout:{hLineWidth:()=>1,vLineWidth:()=>1,hLineColor:()=>RULE,vLineColor:()=>RULE}, margin:[0,8,0,18]},
-    pdfP('It is the only leading indicator that predicts whether any of this becomes a business. Print this page. Put a mark in a box every time you ask. Anything below fifty in ninety days means you were reading, not building.'),
+    pdfP('The only leading indicator that predicts whether any of this becomes a business. Print this page and mark a box every time you ask. Below fifty in ninety days means you were reading, not building.'),
     {text:'Ninety days. Fill these in.', style:'h3', margin:[0,14,0,10]},
     ...[0,1,2,3,4,5].map(r=>({
       canvas:[
         ...Array.from({length:10},(_,i)=>({type:'rect',x:i*52,y:0,w:44,h:26,lineWidth:1,lineColor:RULE}))
       ], margin:[0,0,0,8]
     })),
-    pdfP('Sixty boxes. If you fill them, the business follows. That is not motivation, it is arithmetic — outcomes in business are heavy-tailed and probabilistic, and the person who takes ten times the shots gets ten times the lottery tickets.', [0,14,0,0]),
-    {canvas:[{type:'rect',x:0,y:0,w:515,h:1,color:RULE}],margin:[0,24,0,14]},
-    {text:'Redo the questionnaire any time your situation changes — after your first customer, your answers on capital, skills and selling comfort will all be different, and the plan should change with them. myfirstbusiness.com is free, has no account, and nothing to cancel.', fontSize:9, color:INK2, italics:true}
+    pdfP('Sixty boxes. If you fill them, the business follows. That is arithmetic rather than motivation — the person who takes ten times the shots gets ten times the lottery tickets.', [0,14,0,0]),
+    {canvas:[{type:'rect',x:0,y:0,w:515,h:1,color:RULE}],margin:[0,20,0,12]},
+    ...(FEEDBACK_URL ? [
+      {text:'One favour', style:'h3', margin:[0,0,0,6]},
+      pdfP('This site tracks nothing and never asked for your email, which means nobody finds out whether any of it worked. If you do something with this — or if it turned out to be useless — say so here: '+FEEDBACK_URL+'. Two minutes, and it is the only way the next person gets a better version.', [0,0,0,14])
+    ] : []),
+    {text:'Redo the questionnaire any time your situation changes — after your first customer your answers on capital, skills and selling comfort will all be different. Free, no account, nothing to cancel.', fontSize:9, color:INK2, italics:true}
   );
 
   const doc = {
