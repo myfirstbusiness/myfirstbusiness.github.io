@@ -1,5 +1,5 @@
 /* =========================================================================
-   myfirstbusiness.com — the writer
+   myfirstbusiness.com, the writer
    -------------------------------------------------------------------------
    A single Cloudflare Worker. It is the only server this project has, and it
    exists for exactly one reason: an API key cannot live in a public HTML file.
@@ -33,11 +33,12 @@ const ALLOWED = [
    feature down. Override the whole chain with the MFB_MODELS variable
    (comma-separated) without touching this file. */
 const DEFAULT_MODELS = [
-  'gemini-2.5-flash-lite',
-  'gemini-2.5-flash',
-  'gemini-flash-latest'
+  'gemini-3.5-flash-lite',
+  'gemini-3.6-flash',
+  'gemini-flash-latest'   // an alias, so it survives the next renaming too
 ];
-const UPSTREAM_TIMEOUT_MS = 14000;
+const UPSTREAM_TIMEOUT_MS = 20000;   // three sequential attempts have to fit
+const SELFTEST_TOKEN = 'qRRmkVd6RVq0Nmva';
 const MAX_IDEA = 160;
 
 /* ---------- CORS ---------------------------------------------------- */
@@ -159,7 +160,7 @@ function buildPrompt(p) {
 THE PERSON
 Their idea, in their own words: <<<${p.idea || '(they said they have nothing specific in mind yet)'}>>>
 Field they picked: ${p.industry}
-Recommended business model, chosen by the scoring engine: ${p.model} — ${p.modelLine}
+Recommended business model, chosen by the scoring engine: ${p.model}. ${p.modelLine}
 Work history: ${p.career}
 Money they can afford to lose: ${p.capital}
 Hours per week they can protect: ${p.time}
@@ -175,12 +176,27 @@ A reader must be unable to swap their idea for a different one and have your tex
 
 Concretely that means:
 - Name the actual things. Real materials, real equipment, real unit costs, real job titles of the people who buy, real places those people are found.
-- Use numbers. Prices in USD with a range and a reason. Costs per unit. Time per job. If you are estimating, say roughly, but still give the number — a wrong number they can correct beats no number.
+- Use numbers. Prices in USD with a range and a reason. Costs per unit. Time per job. If you are estimating, say roughly, but still give the number, because a wrong number they can correct beats no number.
 - Surface what only someone in this specific business would know: the licence or registration that applies, the thing that goes wrong on the first job, the hidden cost, the seasonality, the part that does not scale.
 
-BANNED — these make the document worthless:
+BANNED. These make the document worthless:
 "provide value", "build your brand", "leverage social media", "identify your target audience", "the sky is the limit", "passion", "hustle", "game-changer", "in today's market", any sentence that begins "Remember,".
 Do not invent statistics, studies, or named companies. Do not promise income.
+
+HOW IT HAS TO SOUND
+This text is pasted into a document a person wrote, and it has to be indistinguishable from the rest of it. Readers can smell machine writing and they stop trusting the numbers when they do.
+
+Never use an em dash. Not once, anywhere, for any reason. Where you would reach for one, use a full stop, a comma, a colon, or rewrite the sentence. This is the single most recognisable tell and it is non-negotiable.
+
+Also avoid:
+- "It's not X, it's Y" and "This isn't about X. It's about Y."
+- Three-item lists where two would do, especially three adjectives in a row.
+- Closing a paragraph by restating it in a short punchy fragment. No "That's the whole game." No "Simple as that." No "And that changes everything."
+- "Think of it as", "At its core", "The key is", "Here's the thing", "The beauty of this is", "Let's be clear".
+- Starting consecutive sentences with the same word.
+- Rhetorical questions you then answer yourself.
+
+Vary your sentence length. Let some run long and some be four words. Say one thing per sentence and move on. Where a normal person would be blunt, be blunt.
 
 THE MODEL VERSUS THE IDEA
 The recommended model is the shape the engine thinks fits their constraints, and it is usually right. Use it. But what they typed is what they want to build, and that wins on substance: write about their actual business, run the way that model suggests.
@@ -190,7 +206,7 @@ If their idea is vague, one word, or contradicts the field they picked, do not c
 If they gave no idea at all, invent one specific, sensible starter business that fits every constraint above, state it plainly in "read", and write everything else about that one business.
 
 WHAT EACH FIELD IS
-read: 2-3 sentences. What you understood their business to be, made concrete — what exactly gets sold, to exactly whom. If you had to assume something, say so here.
+read: 2-3 sentences. What you understood their business to be, made concrete: what exactly gets sold, to exactly whom. If you had to assume something, say so here.
 viable: 2-3 sentences. The honest case for and against this idea given their money, hours and pressure. Say the real risk out loud. Do not soften it and do not talk them out of it.
 offer.headline: one sentence they could put at the top of a page and someone would understand what they are buying.
 offer.includes: 3-5 items, each a concrete deliverable, not a benefit.
@@ -200,12 +216,12 @@ pricing.note: one paragraph on why these numbers and what specifically justifies
 channel.where: where these exact customers physically or digitally are. Name the kinds of places.
 channel.script: the actual message they send, 40-80 words, ready to copy. Their words, not corporate ones. No placeholders except [name].
 channel.volume: how many of these to send per week to expect a first customer, and roughly what reply rate is normal here.
-specifics: 4-6 items. THIS IS THE MOST IMPORTANT FIELD. Each is a fact about this exact business someone would otherwise learn the hard way — regulation, a real cost, a physical constraint, a shipping or storage problem, a seasonal pattern, a supplier trap. Title is 2-5 words. Body is 2-4 sentences with numbers where possible.
-firstTen: exactly 10 items. Physical actions in order to get the first ten customers, specific to this business — named types of places to walk into, exact people to message, the order to do it in. Not strategy. Actions.
+specifics: 4-6 items. THIS IS THE MOST IMPORTANT FIELD. Each is a fact about this exact business someone would otherwise learn the hard way: regulation, a real cost, a physical constraint, a shipping or storage problem, a seasonal pattern, a supplier trap. Title is 2-5 words. Body is 2-4 sentences with numbers where possible.
+firstTen: exactly 10 items. Physical actions in order to get the first ten customers, specific to this business: named types of places to walk into, exact people to message, the order to do it in. Not strategy. Actions.
 numbers.lines: 4-6 lines of unit economics for this exact business, each with real figures. e.g. "Wax and wick for one 8oz candle: roughly $2.40-$3.10, so a $18 retail price leaves about $15 gross before packaging."
 numbers.watch: the single number that will tell them first if this is working or not, and what value is bad.
 week1: exactly 5 actions for their first seven days, doable inside the hours they said they have. Each starts with a verb.
-risks: exactly 3. Title plus 2-3 sentences. At least one must be a legal, licensing, insurance, tax or customs issue that genuinely applies to this specific business — if none applies, say plainly that none does and name the one that would if they grew.
+risks: exactly 3. Title plus 2-3 sentences. At least one must be a legal, licensing, insurance, tax or customs issue that genuinely applies to this specific business. If none applies, say plainly that none does and name the one that would if they grew.
 
 Return only the JSON object.`;
 }
@@ -269,6 +285,36 @@ export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
 
+    /* ---------- self-check ------------------------------------------------
+       GET /?selftest=<token> sends one small real request per model in the
+       chain and reports what the API said. Token-gated, capped tiny, and
+       worth keeping: when Google retires a model in a year, this is the
+       difference between a five-minute diagnosis and a wasted evening.      */
+    if (new URL(request.url).searchParams.get('selftest') === SELFTEST_TOKEN) {
+      const ms = (env.MFB_MODELS ? String(env.MFB_MODELS).split(',') : DEFAULT_MODELS)
+        .map(x => x.trim()).filter(Boolean);
+      const out = [];
+      for (const name of ms) {
+        try {
+          const rr = await fetch(
+            'https://generativelanguage.googleapis.com/v1beta/models/' + name + ':generateContent',
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY || '' },
+              body: JSON.stringify({
+                contents: [{ role: 'user', parts: [{ text: 'Reply with the single word OK.' }] }],
+                generationConfig: { maxOutputTokens: 300 }
+              })
+            }
+          );
+          out.push({ model: name, status: rr.status, detail: (await rr.text()).slice(0, 200) });
+        } catch (e) {
+          out.push({ model: name, status: 0, detail: String(e).slice(0, 200) });
+        }
+      }
+      return json({ selftest: true, keyPresent: !!env.GEMINI_API_KEY, results: out }, 200, origin);
+    }
+
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
@@ -285,7 +331,7 @@ export default {
     }
 
     // Burst protection per IP. The daily ceiling is Gemini's own free-tier
-    // limit, which errors rather than charges — so the worst case here is
+    // limit, which errors rather than charges, so the worst case here is
     // that the site quietly goes back to deterministic playbooks.
     if (env.MFB_LIMIT) {
       const ip = request.headers.get('CF-Connecting-IP') || 'anon';
@@ -322,18 +368,18 @@ export default {
 
     const payload = JSON.stringify({
       contents: [{ role: 'user', parts: [{ text: buildPrompt(p) }] }],
+      // maxOutputTokens is generous because newer models spend part of the
+      // budget thinking before they write, and a tight ceiling comes back as
+      // an empty answer rather than an error, which is hard to diagnose.
+      // safetySettings are deliberately absent: the defaults suit business
+      // writing, and every optional field is one more thing that can break
+      // when a model is retired.
       generationConfig: {
         temperature: 0.75,
-        maxOutputTokens: 4096,
+        maxOutputTokens: 8192,
         responseMimeType: 'application/json',
         responseSchema: SCHEMA
-      },
-      safetySettings: [
-        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' },
-        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' },
-        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_ONLY_HIGH' },
-        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' }
-      ]
+      }
     });
 
     const ctl = new AbortController();
@@ -354,15 +400,33 @@ export default {
             body: payload
           }
         );
-        // 404 means that model name no longer exists — try the next one.
-        // Anything else (including 429) is a real answer; stop here.
-        if (r.status !== 404) break;
+        // 404 means the name is gone. 400 means this model will not accept
+        // the request as written. Both mean "not usable", so both fall
+        // through to the next name. Anything else, 429 included, is a real
+        // answer about the account rather than the model, so stop there.
+        //
+        // Learned the hard way: Google retired the 2.5 family for new API
+        // keys while leaving it working for existing ones, so this chain is
+        // what stops a silent retirement from taking the feature down.
+        if (r.status !== 404 && r.status !== 400) break;
       }
 
       if (!r || !r.ok) {
         // 429 here is the free-tier daily cap. It is not an outage and it is
-        // not a bill — it is the budget doing its job.
-        return json({ error: r && r.status === 429 ? 'quota' : 'upstream' }, 503, origin);
+        // not a bill, it is the budget doing its job.
+        //
+        // status and detail are passed through because "upstream" on its own
+        // is undebuggable: a bad key, a project with the API disabled, and a
+        // retired model name look identical from outside and have three
+        // different fixes. Google's error text names the problem and never
+        // contains the key, and this endpoint is origin-locked.
+        let detail = '';
+        try { detail = (await r.text()).slice(0, 300); } catch { /* body gone */ }
+        return json({
+          error: r && r.status === 429 ? 'quota' : 'upstream',
+          status: r ? r.status : 0,
+          detail
+        }, 503, origin);
       }
 
       const data = await r.json();

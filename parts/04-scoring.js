@@ -110,7 +110,7 @@ function rawFit(a, id){
   let sk = 0; (a.skills||[]).forEach(k=>{ sk += (w.skills[k]||0); });
   s += Math.max(-SKILL_CAP, Math.min(SKILL_CAP, sk));
 
-  // Industry: single choice, and the strongest single signal in the model —
+  // Industry: single choice, and the strongest single signal in the model.
   // it drives the entire content layer, so it earns a gain over the other
   // dimensions rather than being one vote among many.
   s += (w.industry[a.industry] || 0) * INDUSTRY_GAIN;
@@ -119,7 +119,7 @@ function rawFit(a, id){
   const cw = w.career[a.career] || 0;
   s += cw * (a.career === 'none' ? 1 : (YEAR_FACTOR[a.years] || 1));
 
-  // Hard constraints — you cannot start what you cannot fund or staff
+  // Hard constraints: you cannot start what you cannot fund or staff
   if(a.capital < w.capMin){ s -= CAP_PEN; notes.push('needs roughly $'+w.capMin+' to start, which is more than you said you can risk'); }
   if(a.time < w.timeMin){ s -= TIME_PEN; notes.push('realistically needs '+w.timeMin+'+ hours a week'); }
 
@@ -131,7 +131,7 @@ function rawFit(a, id){
   // Someone who typed a concrete idea is ready to execute, not to explore
   if(a.idea && (id==='service'||id==='local'||id==='productized'||id==='coach')) n += 3;
 
-  // Blocker nudges — the recommended plan should attack the stated blocker
+  // Blocker nudges: the recommended plan should attack the stated blocker
   if(a.blocker==='nomoney' && id==='ecom') n -= 8;
   if(a.blocker==='nomoney' && (id==='service'||id==='local'||id==='coach')) n += 6;
   if(a.blocker==='noskill' && (id==='local'||id==='flip')) n += 8;
@@ -148,7 +148,7 @@ function rawFit(a, id){
 /* Raw sums are not comparable across models: a model with big weights would
    always win on magnitude rather than on fit. So each model's raw score is
    standardised against its own distribution over the whole answer space
-   (mean and standard deviation precomputed by Monte Carlo over 150,000 simulated profiles — see
+   (mean and standard deviation precomputed by Monte Carlo over 150,000 simulated profiles, see
    BRAND-AND-STRATEGY.md). The result answers the right question: "how
    unusually well does this person fit this model, compared to everyone else?"
    That is what makes the recommendation responsive to distinctive answers
@@ -213,7 +213,7 @@ function whyThis(a, m){
    This is the sentence people screenshot, so it has to be concrete. */
 function sharpen(a, m){
   const ind = INDUSTRIES[a.industry] || INDUSTRIES.notsure;
-  if(a.idea) return '"' + a.idea + '" — run as ' + m.name.replace(/^The /,'a ').toLowerCase() + ' in ' + ind.name.toLowerCase() + '.';
+  if(a.idea) return 'Run "' + a.idea + '" as ' + m.name.replace(/^The /,'a ').toLowerCase() + ' in ' + ind.name.toLowerCase() + '.';
   if(a.industry && a.industry !== 'notsure') return m.name.replace(/^The /,'A ') + ' in ' + ind.name.toLowerCase() + ', aimed at the one customer described below.';
   return m.name.replace(/^The /,'A ') + ', pointed at the first specific person you can find who has the problem.';
 }
@@ -221,7 +221,7 @@ function sharpen(a, m){
 function altWhyNot(a, r, topScore){
   if(r.notes.length) return 'Held back because it '+r.notes[0]+'.';
   const d = (topScore||100) - r.score;
-  if(d <= 3)  return 'Effectively tied — pick whichever you would enjoy more.';
+  if(d <= 3)  return 'Effectively tied, so pick whichever you would enjoy more.';
   if(d <= 8)  return 'A strong second option if the primary does not appeal.';
   if(d <= 16) return 'Workable, but slower for your constraints than the primary.';
   return 'Worth revisiting once you have capital, proof or time you lack today.';
